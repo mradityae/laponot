@@ -1,0 +1,18 @@
+#Fix Rewrite
+Options -Multiviews
+Options All -Indexes
+ 
+# Mod Rewrite
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /laponot/
+ 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+# used for php pages such as "yoursite.com/login.php" will become "yoursite.com/login/"
+RewriteRule ^([a-z_]+)\/?$ $1.php [NC]
+
+RewriteCond %{SCRIPT_FILENAME} -d [OR] 
+RewriteCond %{SCRIPT_FILENAME} -f 
+RewriteRule "(^|/)\." - [F]
