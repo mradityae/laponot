@@ -1,0 +1,2 @@
+[16:51:16] ERROR saat pengunggahan laporan oleh Notaris ID 23: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'judul_akta' in 'field list'
+[16:52:23] Notaris ID 23 mengunggah laporan 'fidusia' dengan nomor 1 pada 2025-07-16 - BERHASIL.
