@@ -56,6 +56,7 @@
     
     <script src="<?=$url;?>assets/chart/Chart.bundle.js"></script>
     <script src="<?=$url;?>assets/chart/utils.js"></script>
+    <script src="<?=$url;?>assets/echart/echarts.js"></script>
     
     <style type="text/css">
     /* Style all input fields */
@@ -139,7 +140,15 @@
 
                     </li>
                     <li>
-                        <a href="index"><i class="fa fa-dashboard "></i>Dashboard</a>
+                        <a href=""><i class="fa fa-dashboard"></i>Dashboard<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level ">
+                            <li>
+                                <a href="index"><i class="fa fa-file-text-o"></i>Laporan Notaris</a>
+                            </li>
+                            <li>
+                                <a href="dashboard_fidusia"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-file-text-o"></i>Daftar Laporan <span class="fa arrow"></span></a>

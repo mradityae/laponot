@@ -130,7 +130,15 @@
                         </div>
                     </li>
                      <li>
-                        <a  href="index"><i class="fa fa-dashboard "></i>Dashboard</a>
+                        <a href=""><i class="fa fa-dashboard"></i>Dashboard<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level ">
+                            <li>
+                                <a href="index"><i class="fa fa-file-text-o"></i>Dashboard Laporan Notaris</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="fa fa-file-text-o"></i>Dashboard Aplikasi Fidusia</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-file-text-o "></i>Daftar Laporan <span class="fa arrow"></span></a>
