@@ -147,6 +147,17 @@
                         </ul>
                     </li>
                     <li>
+                        <a href="index"><i class="fa fa-file-text-o"></i>Fidusia <span class="fa arrow"></span></a></a>
+                            <ul class="nav nav-second-level ">
+                                <li>
+                                    <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Rekap Laporan Fidusia</a>
+                                </li>
+                                <li>
+                                    <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Daftar Laporan Fidusia</a>
+                                </li>
+                            </ul>
+                    </li>
+                    <li>
                         <a  href="hasil_survey"><i class="fa fa-bar-chart "></i>Survey</a>
                     </li>
                     <li>

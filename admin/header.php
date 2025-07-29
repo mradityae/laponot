@@ -170,6 +170,12 @@
                             </li>
                             <li> <a href="rekap_data_notaris"><i class="fa fa-book"></i>Notaris</a>
                             </li>
+                            <li>
+                                 <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Rekap Laporan Fidusia</a>
+                            </li>
+                            <li>
+                                 <a href="rekap_laporan_entitas"><i class="fa fa-file-text-o"></i>Daftar Laporan Fidusia</a>
+                            </li>
                         </ul>
                     </li>
                     <li>

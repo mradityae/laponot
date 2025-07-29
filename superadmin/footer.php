@@ -68,6 +68,28 @@
               "responsive": true,
               "scrollCollapse": true
           });
+
+    $('#rekapTable').DataTable({
+      scrollX: true,
+      scrollY: 400,
+      scrollCollapse: true,
+      paging: true,
+      searching: true,
+      ordering: true,
+      responsive: true,
+      language: {
+        search: "Cari:",
+        lengthMenu: "Tampilkan _MENU_ data",
+        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+        zeroRecords: "Tidak ada data ditemukan",
+        paginate: {
+          first: "Awal",
+          last: "Akhir",
+          next: "Berikutnya",
+          previous: "Sebelumnya"
+        }
+      }
+    });
     </script>
     <script type="text/javascript">
       function jam() {
