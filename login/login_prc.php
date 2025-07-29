@@ -58,7 +58,7 @@ if(!isset($_GET['prc']))
 				}
 				else if($_SESSION['user_role'] == 2)
 				{
-					header('Location:../pengguna/index');
+					header('Location:../pengguna/dashboard_fidusia');
 				}
 				else if($_SESSION['user_role'] == 0)
 				{
