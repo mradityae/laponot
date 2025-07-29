@@ -141,19 +141,27 @@
                         </ul>
                     </li>
                     <li>
-                        <a href=""><i class="fa fa-file-text-o "></i>Daftar Laporan <span class="fa arrow"></span></a>
-                        <ul class="nav nav-second-level ">
+                        <a href="#"><i class="fa fa-file-text-o"></i>Daftar Laporan <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
                             <li>
-                                <a href="daftar_laporan"><i class="fa fa-file-text-o"></i>Semua</a>
-                            </li>
-                             <li>
-                                <a href="daftar_laporan.php?status=Laporan%20Terkirim"><i class="fa fa-file-text-o"></i>Laporan Terkirim</a>
+                                <a href="#"><i class="fa fa-file-text-o"></i>Daftar Laporan Bulanan <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="daftar_laporan.php"><i class="fa fa-file-text-o"></i>Semua</a>
+                                    </li>
+                                    <li>
+                                        <a href="daftar_laporan.php?status=Laporan%20Terkirim"><i class="fa fa-file-text-o"></i>Laporan Terkirim</a>
+                                    </li>
+                                    <li>
+                                        <a href="daftar_laporan.php?status=Terverifikasi"><i class="fa fa-file-text-o"></i>Laporan Terverifikasi</a>
+                                    </li>
+                                    <li>
+                                        <a href="daftar_laporan.php?status=Ditolak"><i class="fa fa-file-text-o"></i>Laporan Ditolak</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li>
-                                <a href="daftar_laporan.php?status=Terverifikasi"><i class="fa fa-file-text-o"></i>Laporan Terverifikasi</a>
-                            </li>
-                            <li>
-                                <a href="daftar_laporan.php?status=ditolak"><i class="fa fa-file-text-o"></i>Laporan Ditolak</a>
+                                <a href="rekap_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
                             </li>
                         </ul>
                     </li>
@@ -174,15 +182,12 @@
                         <a href=""><i class="fa fa-book "></i>Rekap Data <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level ">
                             <li>
-                                 <a href="rekap_data"><i class="fa fa-file-text-o"></i>Laporan</a>
+                                 <a href="rekap_data"><i class="fa fa-file-text-o"></i>Laporan Bulanan</a>
                             </li>
                             <li> <a href="rekap_data_notaris"><i class="fa fa-book"></i>Notaris</a>
                             </li>
                             <li>
-                                 <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Rekap Laporan Fidusia</a>
-                            </li>
-                            <li>
-                                 <a href="rekap_laporan_entitas"><i class="fa fa-file-text-o"></i>Daftar Laporan Fidusia</a>
+                                 <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
                             </li>
                         </ul>
                     </li>

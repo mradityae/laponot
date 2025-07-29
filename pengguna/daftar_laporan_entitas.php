@@ -71,7 +71,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped table-bordered data">
+                    <table id="rekapTable" class="table table-hover table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>No</th>
