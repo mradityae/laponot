@@ -9,6 +9,7 @@ $tgl_a = $_GET['tgl_a'] ?? '';
 $tgl_b = $_GET['tgl_b'] ?? '';
 $id_kedudukan = $_GET['id_kedudukan'] ?? '';
 $id_notaris = $_GET['id_notaris'] ?? '';
+$jenis_transaksi = $_GET['jenis_transaksi'] ?? '';
 $filter_ready = $tgl_a && $tgl_b && $id_kedudukan;
 
 // Ambil daftar kedudukan
@@ -67,6 +68,16 @@ if (!empty($id_kedudukan)) {
               <?php endforeach; ?>
             </select>
           </div>
+          <div class="form-group">
+            <label>Jenis Transaksi</label>
+            <select name="jenis_transaksi" class="form-control">
+              <option value="">-- Semua Jenis Transaksi --</option>
+              <option value="Pendaftaran" <?= ($_GET['jenis_transaksi'] ?? '') == 'Pendaftaran' ? 'selected' : '' ?>>Pendaftaran</option>
+              <option value="Perubahan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Perubahan' ? 'selected' : '' ?>>Perubahan</option>
+              <option value="Penghapusan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Penghapusan' ? 'selected' : '' ?>>Penghapusan</option>
+              <option value="Pembatalan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Pembatalan' ? 'selected' : '' ?>>Pembatalan</option>
+            </select>
+          </div>
           <?php endif; ?>
         </div>
 
@@ -79,10 +90,10 @@ if (!empty($id_kedudukan)) {
 
     <?php if ($filter_ready): ?>
       <div style="margin-bottom: 20px;">
-        <a href="<?= $url; ?>act/export_excel.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>" class="btn btn-success">
+        <a href="<?= $url; ?>act/export_excel.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&jenis_transaksi=<?= $jenis_transaksi ?>" class="btn btn-success">
           <i class="fa fa-file-excel-o"></i> Export Excel
         </a>
-        <a href="<?= $url; ?>act/export_pdf.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>" class="btn btn-danger">
+        <a href="<?= $url; ?>act/export_pdf.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&jenis_transaksi=<?= $jenis_transaksi ?>" class="btn btn-danger">
           <i class="fa fa-file-pdf-o"></i> Export PDF
         </a>
       </div>
@@ -98,13 +109,14 @@ if (!empty($id_kedudukan)) {
                   <th>Nama Notaris</th>
                   <th>Pemberi</th>
                   <th>Penerima</th>
+                  <th>Jenis Transaksi</th>
                   <th>Tanggal</th>
                 </tr>
               </thead>
               <tbody>
               <?php
                 try {
-                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status
+                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi
                   FROM laporan_entitas l
                   JOIN notaris n ON l.id_notaris = n.id_notaris
                   WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b
@@ -113,15 +125,21 @@ if (!empty($id_kedudukan)) {
                   if (!empty($id_notaris)) {
                       $sql .= " AND n.id_notaris = :id_notaris";
                   }
+                  
+                  if (!empty($jenis_transaksi)) {
+                      $sql .= " AND l.jenis_transaksi = :jenis_transaksi";
+                  }
 
                   $sql .= " ORDER BY l.tanggal ASC";
-
                   $stmt = $koneksi->prepare($sql);
                   $stmt->bindParam(":tgl_a", $tgl_a);
                   $stmt->bindParam(":tgl_b", $tgl_b);
                   $stmt->bindParam(":id_kedudukan", $id_kedudukan);
                   if (!empty($id_notaris)) {
                       $stmt->bindParam(":id_notaris", $id_notaris);
+                  }
+                  if (!empty($jenis_transaksi)) {
+                      $stmt->bindParam(":jenis_transaksi", $jenis_transaksi);
                   }
                   $stmt->execute();
 
@@ -132,6 +150,7 @@ if (!empty($id_kedudukan)) {
                     echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['pemberi']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['penerima']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['jenis_transaksi']) . "</td>";
                     echo "<td>" . date('d-m-Y', strtotime($row['tanggal'])) . "</td>";
                     echo "</tr>";
                     $no++;
