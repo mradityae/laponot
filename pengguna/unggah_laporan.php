@@ -26,7 +26,7 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="form-group">
                             <label>Periode Laporan</label>
                             <input type="date" name="tanggal_laporan" class="form-control" required/>
-                            <small class="form-text text-muted text-danger">Untuk Chrome: klik ikon kalender. Untuk Firefox: klik kolom lalu pilih tanggal.</small>
+                            <small class="form-text text-muted text-danger">Untuk mengisi periode laporan, jika menggunakan browser Google Chrome, klik icon kalender pada bagian pojok kanan tempat mengisi periode laporan lalu pilih bulan dan tanggal dari kalender yang muncul. Jika menggunakan browser Firefox, klik pada tempat mengisi periode, lalu pilih tanggal dan bulan dari kalender yang muncul.</small>
                         </div>
 
                         <div class="form-group">
@@ -60,7 +60,7 @@ date_default_timezone_set('Asia/Jakarta');
 
                 <div class="form-group mt-3">
                     <input type="checkbox" id="terms_bulanan" onclick="document.getElementById('submit_bulanan').disabled = !this.checked;">
-                    <label style="color:red;">Saya bertanggung jawab atas keabsahan data ini</label>
+                    <label style="color:red;">Pastikan data Anda benar dan dapat dipertanggungjawabkan sesuai dengan perundang - undangan yang berlaku</label>
                 </div>
 
                 <input type="submit" name="submit" id="submit_bulanan" class="btn btn-success" value="Simpan" disabled>

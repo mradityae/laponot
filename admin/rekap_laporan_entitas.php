@@ -10,6 +10,7 @@ $tgl_b = $_GET['tgl_b'] ?? '';
 $id_notaris = $_GET['id_notaris'] ?? '';
 $id_kedudukan_session = $_SESSION['kedudukan'] ?? '';
 $filter_ready = $tgl_a && $tgl_b;
+$jenis_transaksi = $_GET['jenis_transaksi'] ?? '';
 
 // Ambil daftar notaris berdasarkan kedudukan session
 if (!empty($id_kedudukan_session)) {
@@ -43,8 +44,8 @@ if (!empty($id_kedudukan_session)) {
           </div>
           <div class="form-group">
             <label>Nama Notaris</label>
-            <select name="id_notaris" class="form-control">
-              <option value="">-- Semua Notaris --</option>
+            <select name="id_notaris" class="form-control" required>
+              <option value="" disabled <?= empty($id_notaris) ? 'selected' : '' ?>>-- Pilih Notaris --</option>
               <?php while ($n = $daftar_nama->fetch()) : ?>
                 <option value="<?= $n['id_notaris'] ?>" <?= ($id_notaris == $n['id_notaris']) ? 'selected' : '' ?>>
                   <?= htmlspecialchars($n['nama']) ?>
@@ -52,6 +53,19 @@ if (!empty($id_kedudukan_session)) {
               <?php endwhile; ?>
             </select>
           </div>
+          <div class="form-group">
+            <label>Jenis Laporan</label>
+            <select name="jenis_transaksi" class="form-control">
+              <option value="">-- Semua Jenis --</option>
+              <?php
+                $jenis_list = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+                foreach ($jenis_list as $j) {
+                  $selected = ($_GET['jenis_transaksi'] ?? '') === $j ? 'selected' : '';
+                  echo "<option value=\"$j\" $selected>$j</option>";
+                }
+              ?>
+            </select>
+        </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-success">Tampilkan</button>
@@ -62,10 +76,10 @@ if (!empty($id_kedudukan_session)) {
 
     <?php if ($filter_ready): ?>
       <div style="margin-bottom: 20px;">
-        <a href="<?php echo $url; ?>act/export_excel.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>" class="btn btn-success">
+        <a href="<?php echo $url; ?>act/export_excel.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&jenis_transaksi=<?= $jenis_transaksi ?>" class="btn btn-success">
           <i class="fa fa-file-excel-o"></i> Export Excel
         </a>
-        <a href="<?php echo $url; ?>act/export_pdf.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>" class="btn btn-danger">
+        <a href="<?php echo $url; ?>act/export_pdf.php?id=<?= $id_notaris ?>&tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&jenis_transaksi=<?= $jenis_transaksi ?>" class="btn btn-danger">
           <i class="fa fa-file-pdf-o"></i> Export PDF
         </a>
       </div>
@@ -81,6 +95,7 @@ if (!empty($id_kedudukan_session)) {
                   <th>Nama Notaris</th>
                   <th>Pemberi</th>
                   <th>Penerima</th>
+                  <th>Jenis Transaksi</th>
                   <th>Tanggal Akta</th>
                   <th>No Sertifikat</th>
                   <th>Keterangan</th>
@@ -89,7 +104,7 @@ if (!empty($id_kedudukan_session)) {
               <tbody>
               <?php
                   try {
-                    $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.no_sertifikat, l.keterangan_pelanggaran
+                    $sql = "SELECT n.nama, l.jenis_transaksi, l.pemberi, l.penerima, l.tanggal, l.status, l.no_sertifikat, l.keterangan_pelanggaran
                             FROM laporan_entitas l
                             JOIN notaris n ON l.id_notaris = n.id_notaris
                             WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b 
@@ -99,6 +114,11 @@ if (!empty($id_kedudukan_session)) {
                     if (!empty($id_notaris)) {
                         $sql .= " AND n.id_notaris = :id_notaris";
                     }
+                    if (!empty($jenis_transaksi)) {
+                        $sql .= " AND l.jenis_transaksi = :jenis_transaksi";
+                    }
+                    
+
 
                     $sql .= " ORDER BY l.tanggal ASC";
 
@@ -109,6 +129,9 @@ if (!empty($id_kedudukan_session)) {
 
                     if (!empty($id_notaris)) {
                         $stmt->bindParam(":id_notaris", $id_notaris);
+                    }
+                    if (!empty($jenis_transaksi)) {
+                        $stmt->bindParam(":jenis_transaksi", $jenis_transaksi);
                     }
 
                     $stmt->execute();
@@ -122,6 +145,7 @@ if (!empty($id_kedudukan_session)) {
                         echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['pemberi']) . "</td>";
                         echo "<td>" . htmlspecialchars($row['penerima']) . "</td>";
+                        echo "<td>" . htmlspecialchars($row['jenis_transaksi']) . "</td>";
                         echo "<td>" . date('d-m-Y', strtotime($row['tanggal'])) . "</td>";
                         echo "<td>" . htmlspecialchars($row['no_sertifikat']) . "</td>";
                         echo "<td>" . (empty($row['tanggal']) ? '-' : $row['keterangan_pelanggaran'])  . "</td>";
