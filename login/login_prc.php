@@ -54,7 +54,7 @@ if(!isset($_GET['prc']))
 			        $koneksi = null;
 
 				if ($_SESSION['user_role'] == 1) {
-					header('Location:../admin/index');
+					header('Location:../admin/dashboard_fidusia');
 				}
 				else if($_SESSION['user_role'] == 2)
 				{

@@ -136,7 +136,7 @@
                                 <a href="index"><i class="fa fa-file-text-o"></i>Dashboard Laporan Notaris</a>
                             </li>
                             <li>
-                                <a href="#"><i class="fa fa-file-text-o"></i>Dashboard Aplikasi Fidusia</a>
+                                <a href="dashboard_fidusia"><i class="fa fa-file-text-o"></i>Dashboard Aplikasi Fidusia</a>
                             </li>
                         </ul>
                     </li>
@@ -161,7 +161,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <a href="rekap_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
+                                <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
                             </li>
                         </ul>
                     </li>

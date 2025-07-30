@@ -14,6 +14,38 @@
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	function getTopJenisTransaksiAdmin($koneksi, $id_kedudukan) {
+		$sql = "SELECT le.jenis_transaksi, COUNT(*) AS jumlah
+				FROM laporan_entitas le 
+				join notaris n on le.id_notaris = n.id_notaris
+				WHERE n.id_kedudukan = :id_kedudukan
+				GROUP BY le.jenis_transaksi
+				ORDER BY jumlah DESC
+				LIMIT 5";
+		$stmt = $koneksi->prepare($sql);
+		$stmt->execute([':id_kedudukan' => $id_kedudukan]);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function jmlLaporanAdmin($koneksi, $id_kedudukan, $status){
+		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    	if ($status == "All") {
+    		$ambil=$koneksi->prepare("SELECT count(id_laporan) as 'jml' FROM laporan_entitas le join notaris n on le.id_notaris = n.id_notaris WHERE n.id_kedudukan = :id_kedudukan");
+    	}
+    	else{
+    		$ambil=$koneksi->prepare("SELECT count(id_laporan) as 'jml' FROM laporan_entitas le join notaris n on le.id_notaris = n.id_notaris WHERE n.id_kedudukan = :id_kedudukan and status=:status");
+    		$ambil->BindParam(":status",$status,PDO::PARAM_STR);
+    	}
+
+        $ambil->BindParam(":id_kedudukan",$id_kedudukan,PDO::PARAM_STR);
+
+		$ambil->execute();
+		$row=$ambil->fetch();
+		$koneksi = null;
+		return $row['jml'];
+	}
+
 	function jmlLaporan($koneksi, $id_notaris, $status){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -53,6 +85,7 @@
 
 		return $output;
 	}
+	
 	
 	function getChartLaporanTahunan(PDO $koneksi, int $tahun, $kedudukan = null, $id_notaris = null): array {
 		try {

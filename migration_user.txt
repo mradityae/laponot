@@ -120,7 +120,7 @@ SELECT
     telepon,
     sk,
     NULL AS tanggal_sk,
-    level,
+    2 AS level,
     aktif,
     tanggal_lahir_,
     tanggal_pensiun_,
@@ -130,4 +130,7 @@ FROM data_notaris dn
 WHERE aktif IN (0, 1)
   AND email NOT IN (
       SELECT email FROM notaris
-  );
+  )
+  AND email NOT IN ('-', '(belum diset)')
+  AND email IS NOT NULL
+  AND TRIM(email) != '';
