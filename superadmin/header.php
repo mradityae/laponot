@@ -144,6 +144,9 @@
                             <li>
                                 <a href="tambah_pengguna_super"><i class="fa fa-plus-square-o "></i>Tambah</a>
                             </li>
+                            <li>
+                                <a href="daftar_generate_password"><i class="fa fa-file-text-o"></i>Generate Password</a>
+                            </li>
                         </ul>
                     </li>
                     <li>
