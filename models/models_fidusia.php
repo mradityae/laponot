@@ -2,6 +2,54 @@
     include_once '../log_activity.php';
     date_default_timezone_set('Asia/Jakarta');
 
+	function getNotarisKurangAktif($koneksi, $id_kedudukan)
+	{
+		$query = "
+			SELECT 
+				n.nama,
+				n.telepon,
+				COUNT(le.id_laporan) AS jumlah_laporan
+			FROM notaris n
+			LEFT JOIN laporan_entitas le ON n.id_notaris = le.id_notaris
+			WHERE n.id_kedudukan = :id_kedudukan
+			GROUP BY n.id_notaris
+			ORDER BY jumlah_laporan ASC
+			LIMIT 10
+		";
+
+		$stmt = $koneksi->prepare($query);
+		$stmt->bindParam(":id_kedudukan", $id_kedudukan);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function getTopNotarisAktif($koneksi, $id_kedudukan)
+	{
+		$query = "
+			SELECT 
+				n.nama,
+				n.telepon,
+				COUNT(*) AS jumlah_laporan
+			FROM laporan_entitas le
+			JOIN notaris n ON le.id_notaris = n.id_notaris
+			WHERE n.id_kedudukan = :id_kedudukan
+			GROUP BY le.id_notaris
+			ORDER BY jumlah_laporan DESC
+			LIMIT 10
+		";
+
+		$stmt = $koneksi->prepare($query);
+		$stmt->bindParam(":id_kedudukan", $id_kedudukan, PDO::PARAM_INT);
+		$stmt->execute();
+
+		// Gantikan get_result dengan fetchAll
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		return $data;
+	}
+
+
+
 	function getTopJenisTransaksi($koneksi, $id_notaris) {
 		$sql = "SELECT jenis_transaksi, COUNT(*) AS jumlah
 				FROM laporan_entitas

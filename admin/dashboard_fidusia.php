@@ -13,6 +13,8 @@ $bulanIni = date('n');
 $dataChart = getChartLaporanTahunan($koneksi, $tahunIni, $kedudukan);
 $jumlahTahunIni = array_sum($dataChart);
 $topJenis = getTopJenisTransaksiAdmin($koneksi, $kedudukan);
+$topNotaris = getTopNotarisAktif($koneksi, $kedudukan);
+$notarisKurangAktif = getNotarisKurangAktif($koneksi, $kedudukan);
 ?>
 
 <style>
@@ -75,6 +77,18 @@ $topJenis = getTopJenisTransaksiAdmin($koneksi, $kedudukan);
             flex: 1 1 100%;
         }
     }
+
+    .table-responsive {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+
+    table th, table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
 </style>
 
 
@@ -145,6 +159,52 @@ $topJenis = getTopJenisTransaksiAdmin($koneksi, $kedudukan);
                     <a href="daftar_laporan_entitas?jenis_transaksi=<?= urlencode($row['jenis_transaksi']) ?>">Lihat Detail</a>
                 </div>
             <?php endforeach; ?>
+        </div>
+        <h4 style="margin-top: 50px;"><b>Top 10 Notaris Paling Aktif di Wilayah <?php echo getWilayah($koneksi, $kedudukan); ?></b></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead style="background-color: #0B1D51; color: white;">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Notaris</th>
+                        <th>Telepon</th>
+                        <th>Jumlah Laporan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($topNotaris as $i => $row): ?>
+                        <tr>
+                            <td><?= $i + 1 ?></td>
+                            <td><?= htmlspecialchars($row['nama']) ?></td>
+                            <td><?= htmlspecialchars($row['telepon']) ?></td>
+                            <td><strong><?= $row['jumlah_laporan'] ?></strong></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <h4 style="margin-top: 50px;"><b>Top 10 Notaris Kurang Aktif di Wilayah <?php echo getWilayah($koneksi, $kedudukan); ?></b></h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead style="background-color: #7b1010; color: white;">
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Notaris</th>
+                        <th>Telepon</th>
+                        <th>Jumlah Laporan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($notarisKurangAktif as $i => $row): ?>
+                        <tr>
+                            <td><?= $i + 1 ?></td>
+                            <td><?= htmlspecialchars($row['nama']) ?></td>
+                            <td><?= htmlspecialchars($row['telepon']) ?></td>
+                            <td><strong><?= $row['jumlah_laporan'] ?></strong></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
 
     </div>
