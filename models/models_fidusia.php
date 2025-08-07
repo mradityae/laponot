@@ -133,7 +133,42 @@
 
 		return $output;
 	}
-	
+
+	function getTopJenisTransaksiSuper(PDO $koneksi) {
+		$sql = "SELECT jenis_transaksi, COUNT(*) AS jumlah
+				FROM laporan_entitas
+				GROUP BY jenis_transaksi
+				ORDER BY jumlah DESC
+				LIMIT 5";
+		$stmt = $koneksi->prepare($sql);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function getJumlahLaporanSemua(PDO $koneksi): int {
+		$stmt = $koneksi->query("SELECT COUNT(*) FROM laporan_entitas");
+		return (int)$stmt->fetchColumn();
+	}
+
+	function getChartLaporanTahunanSuper(PDO $koneksi, int $tahun): array {
+		try {
+			$params = [':tahun_awal' => "$tahun-01-01", ':tahun_akhir' => "$tahun-12-31"];
+			$sql = "SELECT MONTH(tanggal) AS bulan, COUNT(*) AS jml
+					FROM laporan_entitas
+					WHERE tanggal BETWEEN :tahun_awal AND :tahun_akhir
+					GROUP BY bulan ORDER BY bulan";
+			$stmt = $koneksi->prepare($sql);
+			$stmt->execute($params);
+			$results = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+			$data = array_fill(1, 12, 0);
+			foreach ($results as $bulan => $jumlah) {
+				$data[(int)$bulan] = (int)$jumlah;
+			}
+			return $data;
+		} catch (PDOException $e) {
+			return array_fill(1, 12, 0);
+		}
+	}
 	
 	function getChartLaporanTahunan(PDO $koneksi, int $tahun, $kedudukan = null, $id_notaris = null): array {
 		try {

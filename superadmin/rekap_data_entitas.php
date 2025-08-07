@@ -4,8 +4,8 @@ include "../config/koneksi.php";
 include "../models/models.php";
 
 // Ambil data filter
-$tgl_a = $_GET['tgl_a'] ?? '';
-$tgl_b = $_GET['tgl_b'] ?? '';
+$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-01-01';
+$tgl_b = $_GET['tgl_b'] ?? date('Y-m-d');
 $id_kedudukan = $_GET['id_kedudukan'] ?? '';
 $filter_ready = $tgl_a && $tgl_b;
 
@@ -45,11 +45,11 @@ function getMonthColumns($tgl_a, $tgl_b) {
         <div class="modal-body">
           <div class="form-group">
             <label>Dari Tanggal</label>
-            <input type="date" name="tgl_a" class="form-control" value="<?= $tgl_a ?>" required>
+            <input type="date" name="tgl_a" class="form-control" value="<?= $tgl_a ?>">
           </div>
           <div class="form-group">
             <label>Sampai Tanggal</label>
-            <input type="date" name="tgl_b" class="form-control" value="<?= $tgl_b ?>" required>
+            <input type="date" name="tgl_b" class="form-control" value="<?= $tgl_b ?>">
           </div>
           <div class="form-group">
             <label>Kedudukan</label><br>
@@ -88,6 +88,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
                 n.id_notaris, 
                 n.nama AS nama_notaris,
                 k.nama_kedudukan,
+                k.id_kedudukan,
                 $bulan_sql,
                 COUNT(l.id_laporan) AS total,
                 COUNT(l.id_laporan) AS keterangan
@@ -163,7 +164,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
                     <?php endforeach; ?>
                     <td><?= $row['total'] ?></td>
                     <td>
-                        <a href="daftar_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_kedudukan=<?= $id_kedudukan ?>&id_notaris=<?= $row['id_notaris'] ?>" 
+                        <a href="daftar_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_kedudukan=<?= $row['id_kedudukan']; ?>&id_notaris=<?= $row['id_notaris'] ?>" 
                           class="btn btn-info btn-sm">
                         <i class="fa fa-search"></i> Lihat
                         </a>

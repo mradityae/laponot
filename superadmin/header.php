@@ -43,6 +43,7 @@
     <link href="<?=$url;?>assets/css/jquery.dataTables.min.css" rel="stylesheet" />
 
      <link href="<?=$url;?>assets/css/card.css" rel="stylesheet" />
+    <script src="<?=$url;?>assets/echart/echarts.js"></script>
     
     <!-- GOOGLE FONTS-->
     <link href="<?=$url;?>assets/css/fonts.googleapis.css" rel="stylesheet"  /> <!--type='text/css'-->
@@ -156,7 +157,7 @@
                                     <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Rekap Laporan Fidusia</a>
                                 </li>
                                 <li>
-                                    <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Daftar Laporan Fidusia</a>
+                                    <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia Per Wilayah</a>
                                 </li>
                             </ul>
                     </li>
