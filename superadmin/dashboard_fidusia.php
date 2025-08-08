@@ -129,7 +129,7 @@ $topJenis = getTopJenisTransaksiSuper($koneksi);
             <!-- Card Jumlah Total -->
             <div class="card-transaksi">
                 <h3>Total Laporan Fidusia</h3>
-                <p><?= jmlLaporanSuperUser($koneksi, $id, "All"); ?> Laporan</p>
+                <p><?= jmlLaporanSuperUser($koneksi, "All"); ?> Laporan</p>
                 <a href="daftar_laporan_entitas">Lihat Semua</a>
             </div>
 

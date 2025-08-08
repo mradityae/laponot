@@ -126,7 +126,7 @@
                         </div>
                     </li>                   
                     <li>
-                        <a href="index"><i class="fa fa-dashboard "></i>Dashboard <span class="fa arrow"></span></a></a>
+                        <a href="index"><i class="fa fa-dashboard "></i>Dashboard Laporan Notaris <span class="fa arrow"></span></a></a>
                             <ul class="nav nav-second-level ">
                                 <li>
                                     <a href="index"><i class="fa fa-bar-chart"></i>Grafik</a>
@@ -135,6 +135,9 @@
                                     <a href="index_waktu"><i class="fa fa-calendar"></i>Waktu</a>
                                 </li>
                             </ul>
+                    </li>
+                    <li>
+                        <a href="dashboard_fidusia">Dashboard Fidusia</a>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-users"></i>Pengguna<span class="fa arrow"></span></a>
