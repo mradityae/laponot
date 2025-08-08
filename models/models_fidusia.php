@@ -105,8 +105,6 @@
     		$ambil->BindParam(":status",$status,PDO::PARAM_STR);
     	}
 
-        $ambil->BindParam(":id_notaris",$id_notaris,PDO::PARAM_STR);
-
 		$ambil->execute();
 		$row=$ambil->fetch();
 		$koneksi = null;

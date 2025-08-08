@@ -137,7 +137,7 @@
                             </ul>
                     </li>
                     <li>
-                        <a href="dashboard_fidusia">Dashboard Fidusia</a>
+                        <a href="dashboard_fidusia"><i class="fa fa-dashboard "></i>Dashboard Fidusia</a>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-users"></i>Pengguna<span class="fa arrow"></span></a>
