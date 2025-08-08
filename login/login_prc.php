@@ -62,7 +62,7 @@ if(!isset($_GET['prc']))
 				}
 				else if($_SESSION['user_role'] == 0)
 				{
-					header('Location:../superadmin/index');
+					header('Location:../superadmin/dashboard_fidusia');
 				}
 				else
 				{
