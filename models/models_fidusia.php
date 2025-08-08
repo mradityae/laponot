@@ -94,6 +94,25 @@
 		return $row['jml'];
 	}
 
+	function jmlLaporanSuperUser($koneksi, $status){
+		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    	if ($status == "All") {
+    		$ambil=$koneksi->prepare("SELECT count(id_laporan) as 'jml' FROM laporan_entitas");
+    	}
+    	else{
+    		$ambil=$koneksi->prepare("SELECT count(id_laporan) as 'jml' FROM laporan_entitas WHERE status=:status");
+    		$ambil->BindParam(":status",$status,PDO::PARAM_STR);
+    	}
+
+        $ambil->BindParam(":id_notaris",$id_notaris,PDO::PARAM_STR);
+
+		$ambil->execute();
+		$row=$ambil->fetch();
+		$koneksi = null;
+		return $row['jml'];
+	}
+
 	function jmlLaporan($koneksi, $id_notaris, $status){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
