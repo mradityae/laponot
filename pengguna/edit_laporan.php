@@ -32,10 +32,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nilai_jaminan = $_POST['nilai_jaminan'];
     $keterangan = $_POST['keterangan'];
 
+    // === Perhitungan batas waktu input ===
+    $tanggal_input = new DateTime(); // hari ini
+    $tanggal_akta  = new DateTime($tanggal);
+
+    // Deadline = tanggal 15 bulan berikutnya dari tanggal akta
+    $batas_input = (clone $tanggal_akta)->modify('+1 month')->setDate(
+        (clone $tanggal_akta)->modify('+1 month')->format('Y'),
+        (clone $tanggal_akta)->modify('+1 month')->format('m'),
+        15
+    );
+
+    $status_pelanggaran = 0;
+    $keterangan_pelanggaran = null;
+
+    if ($tanggal_input > $batas_input) {
+        $status_pelanggaran = 1;
+        $diff_days = $batas_input->diff($tanggal_input)->days;
+        $keterangan_pelanggaran = sprintf(
+            "Laporan melebihi batas waktu input. Periode laporan: %s, Maksimal: %s, Diinput: %s, Terlambat: %d hari.",
+            $tanggal_akta->format('d-m-Y'),
+            $batas_input->format('d-m-Y'),
+            $tanggal_input->format('d-m-Y'),
+            $diff_days
+        );
+    }
+
+    // === Update data ===
     $update = $koneksi->prepare("UPDATE laporan_entitas 
         SET tanggal = :tanggal, pemberi = :pemberi, penerima = :penerima, nomor = :nomor, tipe = :tipe, 
             no_sertifikat = :no_sertifikat, judul_akta = :judul_akta, jenis_transaksi = :jenis_transaksi, 
-            nilai_penjaminan = :nilai_jaminan, keterangan = :keterangan 
+            nilai_penjaminan = :nilai_jaminan, keterangan = :keterangan,
+            status_pelanggaran = :status_pelanggaran,
+            keterangan_pelanggaran = :keterangan_pelanggaran
         WHERE id_laporan = :id_laporan");
 
     $update->bindParam(':tanggal', $tanggal);
@@ -48,11 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update->bindParam(':jenis_transaksi', $jenis_transaksi);
     $update->bindParam(':nilai_jaminan', $nilai_jaminan);
     $update->bindParam(':keterangan', $keterangan);
+    $update->bindParam(':status_pelanggaran', $status_pelanggaran);
+    $update->bindParam(':keterangan_pelanggaran', $keterangan_pelanggaran);
     $update->bindParam(':id_laporan', $id_laporan);
     $update->execute();
 
     echo "<script>alert('Data berhasil diperbarui'); window.location.href='daftar_laporan_entitas';</script>";
 }
+
 ?>
 
 <div id="page-wrapper">

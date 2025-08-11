@@ -86,6 +86,9 @@ $topJenis = getTopJenisTransaksi($koneksi, $id);
                 <h1 align="center"><b>DASHBOARD APLIKASI LAPORAN FIDUSIA<b></h1>
             </div>
         </div>
+        <div class="row">
+            <?php echo notifFidusia($koneksi, $id, date('Y-m-d H:i:s'));?>
+        </div>
 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

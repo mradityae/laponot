@@ -12,7 +12,7 @@ date_default_timezone_set('Asia/Jakarta');
             <select class="form-control form-control-lg" id="jenis_laporan" onchange="tampilkanForm()" style="height: 50px;">
                 <option value="">-- Pilih Jenis Laporan --</option>
                 <option value="bulanan" selected>Laporan Bulanan Notaris</option>
-                <option value="fidusia">Laporan Fidusia / Jaminan</option>
+                <option value="fidusia">Laporan Fidusia</option>
             </select>
         </div>
 

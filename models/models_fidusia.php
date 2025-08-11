@@ -12,6 +12,7 @@
 			FROM notaris n
 			LEFT JOIN laporan_entitas le ON n.id_notaris = le.id_notaris
 			WHERE n.id_kedudukan = :id_kedudukan
+			and level='2'
 			GROUP BY n.id_notaris
 			ORDER BY jumlah_laporan ASC
 			LIMIT 10
@@ -21,6 +22,49 @@
 		$stmt->bindParam(":id_kedudukan", $id_kedudukan);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	function notifFidusia($koneksi, $id_notaris) {
+		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		// Bulan yang dicek = bulan lalu
+		$bulanLalu = date('n', strtotime('-1 month'));
+		$tahunLalu = date('Y', strtotime('-1 month'));
+
+		// Query laporan bulan lalu
+		$ambil = $koneksi->prepare("
+			SELECT * 
+			FROM laporan_entitas 
+			WHERE id_notaris = :id_notaris 
+			AND MONTH(tanggal) = :bulan 
+			AND YEAR(tanggal) = :tahun
+		");
+		$ambil->bindParam(":id_notaris", $id_notaris, PDO::PARAM_STR);
+		$ambil->bindParam(":bulan", $bulanLalu, PDO::PARAM_INT);
+		$ambil->bindParam(":tahun", $tahunLalu, PDO::PARAM_INT);
+		$ambil->execute();
+		
+		$count = $ambil->rowCount();
+		$output = "";
+
+		// Deadline: tanggal 15 bulan ini
+		$deadline = date('Y-m-15');
+
+		$today = date('Y-m-d');
+
+		if ($count == 0) {
+			if ($today > $deadline) {
+				$output = '<div class="alert alert-danger" role="alert">
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . strtoupper(date('F Y', strtotime('-1 month'))) . ' DAN SUDAH MELEWATI BATAS WAKTU (Deadline: ' . date('d F Y', strtotime($deadline)) . ')
+				</div>';
+			} else {
+				$output = '<div class="alert alert-warning" role="alert">
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . strtoupper(date('F Y', strtotime('-1 month'))) . '. Deadline: ' . date('d F Y', strtotime($deadline)) . '
+				</div>';
+			}
+		}
+
+		return $output;
 	}
 
 	function getTopNotarisAktif($koneksi, $id_kedudukan)
@@ -238,10 +282,10 @@
 		$tanggal_input = new DateTime(); // hari ini
 		$tanggal_akta = new DateTime($tanggal);
 
-		// Batas input adalah tanggal 5 bulan setelah tanggal akta
+		// Batas input adalah tanggal 15, bulan setelah tanggal akta
 		$batas_input = (clone $tanggal_akta)->modify('first day of next month')->setDate(
 			$tanggal_akta->format('Y'),
-			$tanggal_akta->format('m') + 0,
+			$tanggal_akta->format('m') + 1,
 			15
 		);
 
