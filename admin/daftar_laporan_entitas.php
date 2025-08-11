@@ -49,7 +49,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                     <select name="id_notaris" class="form-control">
                         <option value="">Semua</option>
                         <?php
-                        $stmt = $koneksi->prepare("SELECT id_notaris, nama FROM notaris WHERE id_kedudukan = :kedudukan");
+                        $stmt = $koneksi->prepare("SELECT id_notaris, nama FROM notaris WHERE id_kedudukan = :kedudukan and level='2'");
                         $stmt->execute([':kedudukan' => $kedudukan]);
                         while ($notaris = $stmt->fetch()) {
                             $selected = ($id_notaris == $notaris['id_notaris']) ? 'selected' : '';
@@ -107,6 +107,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                         <tr>
                             <th>No</th>
                             <th>Tanggal Akta</th>
+                            <th>Nama Notaris</th>
                             <th>Pemberi Fidusia</th>
                             <th>Penerima Fidusia</th>
                             <th>Nomor Akta</th>
@@ -162,6 +163,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             echo "<tr>";
                             echo "<td>" . $no . "</td>";
                             echo "<td>" . date('d-F-Y', strtotime($row['tanggal'])) . "</td>";
+                            echo "<td>" . $row['nama'] . "</td>";
                             echo "<td>" . $row['pemberi'] . "</td>";
                             echo "<td>" . $row['penerima'] . "</td>";
                             echo "<td>" . $row['nomor'] . "</td>";

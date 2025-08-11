@@ -15,6 +15,17 @@ $jumlahTahunIni = array_sum($dataChart);
 $topJenis = getTopJenisTransaksiAdmin($koneksi, $kedudukan);
 $topNotaris = getTopNotarisAktif($koneksi, $kedudukan);
 $notarisKurangAktif = getNotarisKurangAktif($koneksi, $kedudukan);
+
+$stmt = $koneksi->prepare("SELECT COUNT(*) AS jumlah FROM laporan_entitas AS le
+                        JOIN notaris AS n ON le.id_notaris = n.id_notaris
+                        JOIN kedudukan AS k ON n.id_kedudukan = k.id_kedudukan
+                        WHERE k.id_kedudukan = :id_kedudukan 
+                        AND le.status_pelanggaran = '1'");
+
+$stmt->execute([':id_kedudukan' => $kedudukan]);
+$hasil = $stmt->fetch(PDO::FETCH_ASSOC);
+$jumlah_tidak_upload = $hasil['jumlah'];
+
 ?>
 
 <style>
@@ -159,6 +170,11 @@ $notarisKurangAktif = getNotarisKurangAktif($koneksi, $kedudukan);
                     <a href="daftar_laporan_entitas?jenis_transaksi=<?= urlencode($row['jenis_transaksi']) ?>">Lihat Detail</a>
                 </div>
             <?php endforeach; ?>
+            <div class="card-transaksi">
+                <h3>Jumlah Laporan Fidusia yang terlambat Unggah</h3>
+                <p><?= $jumlah_tidak_upload; ?> Laporan</p>
+                <a href="keterlambatan_fidusia">Lihat Detail</a>
+            </div>
         </div>
         <h4 style="margin-top: 50px;"><b>Top 10 Notaris Paling Aktif di Wilayah <?php echo getWilayah($koneksi, $kedudukan); ?></b></h4>
         <div class="table-responsive">
