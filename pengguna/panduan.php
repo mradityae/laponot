@@ -116,6 +116,56 @@ date_default_timezone_Set('Asia/Jakarta');
                 </div>
             </div>
 
+            <!-- Panduan Laporan Fidusia -->
+            <div class="c">
+                <input type="checkbox" id="faq-panduan-laporan">
+                <h3><label for="faq-panduan-laporan">Panduan Pelaporan Fidusia</label></h3>
+                <div class="p">
+
+                    <!-- Halaman Utama -->
+                    <div class="c" style="margin: 1em;">
+                        <input type="checkbox" id="faq-halaman-utama">
+                        <h3 style="background: #4682B4CC;"><label for="faq-halaman-utama">Dashboard Aplikasi</label></h3>
+                        <div class="p">
+                            <p align="justify">1. Halaman Dashboard pada Aplikasi Laporan Notaris akan menampilkan informasi seputar laporan dari notaris yang bersangkutan. Pada sebelah kiri merupakan menu navigasi untuk mengakses beberapa fungsionalitas dari aplikasi. Pada bagian tengah merupakan informasi dari laporan notaris yang terdiri dari Jumlah Laporan dan Status Laporan ( Belum Terverifikasi, Terverifikasi dan Ditolak)
+                                <center><img src="../assets/img/panduan/panduan_8.jpg" class="img-responsive" width="700" height="400"></center>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Mengunggah Laporan Bulanan -->
+                    <div class="c" style="margin: 1em;">
+                        <input type="checkbox" id="faq-unggah">
+                        <h3 style="background: #4682B4CC;"><label for="faq-unggah">Mengunggah Laporan Bulanan</label></h3>
+                        <div class="p">
+                            <p align="justify">1. Untuk mengunggah laporan, pada menu di sebelah kiri, klik Unggah Laporan.
+                                <center><img src="../assets/img/panduan/panduan_9.jpg" class="img-responsive" width="700" height="400"></center>
+                            </p>
+                            <p align="justify">2. Selanjutnya pada halaman Unggah Laporan Bulanan Notaris, isikan seluruh data yang diperlukan pada form yang telah disediakan dan unggah file laporan dalam format file .pdf. Jika sudah dilengkapi klik tombol Simpan.
+                                <center><img src="../assets/img/panduan/panduan_10.jpg" class="img-responsive" width="700" height="400"></center>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Melihat Daftar Laporan -->
+                    <div class="c" style="margin: 1em;">
+                        <input type="checkbox" id="faq-daftar">
+                        <h3 style="background: #4682B4CC;"><label for="faq-daftar">Melihat Daftar Laporan</label></h3>
+                        <div class="p">
+                            <p align="justify">
+                                1. Untuk dapat melihat daftar laporan yang telah diunggah, pada menu navigasi di sebelah kiri, klik Menu Daftar Laporan.
+                                <center><img src="../assets/img/panduan/panduan_11.jpg" class="img-responsive" width="700" height="400"></center>
+                            </p>
+                            <p align="justify">
+                                2. Akan ditampilkan halaman Daftar Laporan. Pada halaman ini Anda dapat melihat laporan-laporan yang telah diunggah beserta informasi status hasil verifikasi dari admin.
+                                 <center><img src="../assets/img/panduan/panduan_12.jpg" class="img-responsive" width="700" height="400"></center>
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             <!-- Panduan Laporan Bulanan Notaris -->
             <div class="c">
                 <input type="checkbox" id="faq-panduan-laporan">
