@@ -14,7 +14,7 @@ $jumlahTahunIni = array_sum($dataChart);
 // Ambil top jenis transaksi
 $topJenis = getTopJenisTransaksiSuper($koneksi);
 
-// Ambil data telat upload per kedudukan
+// Ambil data terlambat upload per kedudukan
 $sqlKedudukan = "SELECT 
                     k.nama_kedudukan, COUNT(*) AS total 
                  FROM laporan_entitas AS le
@@ -30,12 +30,22 @@ $stmtKedudukan->execute([
     'bulan' => $bulanSekarang,
     'tahun' => $tahunSekarang
 ]);
-
 $dataKedudukan = $stmtKedudukan->fetchAll(PDO::FETCH_ASSOC);
+
+$sqlKedudukanAll = "SELECT 
+                    k.nama_kedudukan, COUNT(*) AS total 
+                 FROM laporan_entitas AS le
+                 JOIN notaris AS n ON le.id_notaris = n.id_notaris
+                 JOIN kedudukan AS k ON n.id_kedudukan = k.id_kedudukan
+                 GROUP BY k.nama_kedudukan
+                 ORDER BY total DESC";
+$stmtKedudukanAll = $koneksi->prepare($sqlKedudukanAll);
+$stmtKedudukanAll->execute();
+$dataKedudukanAll = $stmtKedudukanAll->fetchAll(PDO::FETCH_ASSOC);
 
 $kedudukanLabels = [];
 $kedudukanTotals = [];
-foreach ($dataKedudukan as $row) {
+foreach ($dataKedudukanAll as $row) {
     $kedudukanLabels[] = $row['nama_kedudukan'];
     $kedudukanTotals[] = (int)$row['total'];
 }
@@ -176,11 +186,11 @@ foreach ($dataKedudukan as $row) {
             <?php endforeach; ?>
         </div>
 
-                <!-- Tabel Kedudukan Telat Upload -->
+                <!-- Tabel Kedudukan terlambat Upload -->
         <div class="row" style="margin-top: 50px;">
             <div class="col-lg-12">
                 <center>
-                    <h4><b>Data Kedudukan yang Telat Upload - 
+                    <h4><b>Data Kedudukan yang terlambat Upload - 
                         <?= date('F', mktime(0, 0, 0, $bulanSekarang, 1)); ?> <?= $tahunSekarang; ?>
                     </b></h4>
                 </center>
@@ -190,7 +200,7 @@ foreach ($dataKedudukan as $row) {
                             <tr>
                                 <th>No</th>
                                 <th>Kedudukan</th>
-                                <th>Total Telat Upload</th>
+                                <th>Total terlambat Upload</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,7 +214,7 @@ foreach ($dataKedudukan as $row) {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="3" class="text-center">Tidak ada data telat upload bulan ini</td>
+                                    <td colspan="3" class="text-center">Tidak ada data terlambat upload bulan ini</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
