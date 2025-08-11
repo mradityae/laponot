@@ -24,45 +24,57 @@
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	function notifFidusia($koneksi, $id_notaris) {
-		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		
-		// Bulan yang dicek = bulan lalu
-		$bulanLalu = date('n', strtotime('-1 month'));
-		$tahunLalu = date('Y', strtotime('-1 month'));
-
-		// Query laporan bulan lalu
-		$ambil = $koneksi->prepare("
-			SELECT * 
-			FROM laporan_entitas 
+	function cekBulan($koneksi, $id_notaris, $bulan, $tahun, $deadlineDay, $today) {
+		$stmt = $koneksi->prepare("
+			SELECT * FROM laporan_entitas 
 			WHERE id_notaris = :id_notaris 
 			AND MONTH(tanggal) = :bulan 
 			AND YEAR(tanggal) = :tahun
 		");
-		$ambil->bindParam(":id_notaris", $id_notaris, PDO::PARAM_STR);
-		$ambil->bindParam(":bulan", $bulanLalu, PDO::PARAM_INT);
-		$ambil->bindParam(":tahun", $tahunLalu, PDO::PARAM_INT);
-		$ambil->execute();
-		
-		$count = $ambil->rowCount();
-		$output = "";
+		$stmt->bindParam(":id_notaris", $id_notaris, PDO::PARAM_STR);
+		$stmt->bindParam(":bulan", $bulan, PDO::PARAM_INT);
+		$stmt->bindParam(":tahun", $tahun, PDO::PARAM_INT);
+		$stmt->execute();
 
-		// Deadline: tanggal 15 bulan ini
-		$deadline = date('Y-m-15');
+		$count = $stmt->rowCount();
 
-		$today = date('Y-m-d');
+		$deadline = date('Y-m-' . $deadlineDay, strtotime("$tahun-$bulan-01"));
+		$bulanNama = strtoupper(date('F Y', strtotime("$tahun-$bulan-01")));
 
 		if ($count == 0) {
 			if ($today > $deadline) {
-				$output = '<div class="alert alert-danger" role="alert">
-					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . strtoupper(date('F Y', strtotime('-1 month'))) . ' DAN SUDAH MELEWATI BATAS WAKTU (Deadline: ' . date('d F Y', strtotime($deadline)) . ')
+				return '<div class="alert alert-danger" role="alert">
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . ' DAN SUDAH MELEWATI BATAS WAKTU (Deadline: ' . date('d F Y', strtotime($deadline)) . ')
 				</div>';
 			} else {
-				$output = '<div class="alert alert-warning" role="alert">
-					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . strtoupper(date('F Y', strtotime('-1 month'))) . '. Deadline: ' . date('d F Y', strtotime($deadline)) . '
+				return '<div class="alert alert-warning" role="alert">
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . '. Deadline: ' . date('d F Y', strtotime($deadline)) . '
 				</div>';
 			}
 		}
+		return "";
+	}
+
+	function notifFidusia($koneksi, $id_notaris) {
+		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$output = "";
+		$today = date('Y-m-d');
+		$deadlineDay = 15;
+
+		// Bulan lalu
+		$bulanLalu = date('n', strtotime('-1 month'));
+		$tahunLalu = date('Y', strtotime('-1 month'));
+
+		// Bulan ini
+		$bulanIni = date('n');
+		$tahunIni = date('Y');
+
+		// Cek bulan lalu
+		$output .= cekBulan($koneksi, $id_notaris, $bulanLalu, $tahunLalu, $deadlineDay, $today);
+
+		// Cek bulan ini
+		$output .= cekBulan($koneksi, $id_notaris, $bulanIni, $tahunIni, $deadlineDay, $today);
 
 		return $output;
 	}
