@@ -75,13 +75,13 @@ if (isset($_POST['generate_password'])) {
         // file_put_contents("generated_passwords_{$kedudukan}.txt", "ID: $id | $email | Password: $plainPassword\n", FILE_APPEND);
     }
 
-    echo "<script>alert('✅ Password berhasil digenerate dan dikirim ke email notaris.'); window.location.href='daftar_generate_password.php';</script>";
+    echo "<script>alert('✅ Password berhasil digenerate dan dikirim ke email notaris.'); window.location.href='daftar_notaris_migrasi.php';</script>";
 }
 ?>
 
 <div id="page-wrapper">
     <div id="page-inner">
-        <h2 class="page-head-line">Daftar Notaris Aktif - Wilayah Terpilih</h2>
+        <h2 class="page-head-line">Daftar Notaris Migrasi - Wilayah Terpilih</h2>
 
         <!-- Filter Wilayah -->
         <form method="GET" class="form-inline mb-4">

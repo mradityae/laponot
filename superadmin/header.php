@@ -149,7 +149,7 @@
                                 <a href="tambah_pengguna_super"><i class="fa fa-plus-square-o "></i>Tambah</a>
                             </li>
                             <li>
-                                <a href="daftar_generate_password"><i class="fa fa-file-text-o"></i>Generate Password</a>
+                                <a href="daftar_notaris_migrasi"><i class="fa fa-file-text-o"></i>Data Notaris Hasil Migrasi</a>
                             </li>
                         </ul>
                     </li>
