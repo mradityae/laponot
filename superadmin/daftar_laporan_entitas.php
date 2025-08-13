@@ -110,13 +110,14 @@ if (!empty($id_kedudukan)) {
                   <th>Pemberi</th>
                   <th>Penerima</th>
                   <th>Jenis Transaksi</th>
+                  <th>Nilai Penjaminan</th>
                   <th>Tanggal</th>
                 </tr>
               </thead>
               <tbody>
               <?php
                 try {
-                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi
+                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi, l.nilai_penjaminan
                   FROM laporan_entitas l
                   JOIN notaris n ON l.id_notaris = n.id_notaris
                   WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b
@@ -151,6 +152,7 @@ if (!empty($id_kedudukan)) {
                     echo "<td>" . htmlspecialchars($row['pemberi']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['penerima']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['jenis_transaksi']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['nilai_penjaminan']) . "</td>";
                     echo "<td>" . date('d-m-Y', strtotime($row['tanggal'])) . "</td>";
                     echo "</tr>";
                     $no++;
