@@ -2,6 +2,27 @@
     include_once '../log_activity.php';
     date_default_timezone_set('Asia/Jakarta');
 
+	function getCurrentInput($koneksi, $id_kedudukan)
+	{
+		$query = "
+			SELECT UPPER(n.nama) as nama, le.nomor, le.tanggal, le.pemberi, le.penerima, 
+       		le.no_sertifikat, le.jenis_transaksi, le.created_at  
+			FROM laporan_entitas le 
+			JOIN notaris n ON le.id_notaris = n.id_notaris
+			JOIN kedudukan k ON n.id_kedudukan = k.id_kedudukan
+			WHERE k.id_kedudukan = :id_kedudukan
+			ORDER BY le.created_at DESC;
+		";
+
+		$stmt = $koneksi->prepare($query);
+		$stmt->bindParam(":id_kedudukan", $id_kedudukan, PDO::PARAM_INT);
+		$stmt->execute();
+
+		// Gantikan get_result dengan fetchAll
+		$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
 	function getNotarisKurangAktif($koneksi, $id_kedudukan)
 	{
 		$query = "
