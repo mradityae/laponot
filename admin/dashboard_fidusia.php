@@ -169,45 +169,30 @@ $jumlah_tidak_upload = $hasil['jumlah'];
                     <a href="daftar_laporan_entitas?jenis_transaksi=<?= urlencode($row['jenis_transaksi']) ?>">Lihat Detail</a>
                 </div>
             <?php endforeach; ?>
-            <div class="card-transaksi">
+            <!-- <div class="card-transaksi">
                 <h3>Jumlah Laporan Fidusia yang terlambat Unggah</h3>
                 <p><?= $jumlah_tidak_upload; ?> Laporan</p>
                 <a href="keterlambatan_fidusia">Lihat Detail</a>
-            </div>
+            </div> -->
         </div>
         <h4 style="margin-top: 50px;"><b>Notaris yang baru saja menyampaikan laporan fidusia berkala di wilayah : <?php echo getWilayah($koneksi, $kedudukan); ?></b></h4>
         <div class="table-responsive">
-            <table id="rekapTable" class="table table-bordered table-striped">
-                <thead style="background-color: #0B1D51; color: white;">
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Notaris</th>
-                        <th>Nomor Akta</th>
-                        <th>Tanggal Akta</th>
-                        <th>Pemberi Fidusia</th>
-                        <th>Penerima Fidusia</th>
-                        <th>Nomor Sertifikat</th>
-                        <th>Jenis Transaksi</th>
-                        <th>Tanggal Penginputan</th>
-                    </tr>
+            <table id="rekapTable-serverside" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Notaris</th>
+                    <th>Nomor Akta</th>
+                    <th>Tanggal Akta</th>
+                    <th>Pemberi Fidusia</th>
+                    <th>Penerima Fidusia</th>
+                    <th>Nomor Sertifikat</th>
+                    <th>Jenis Transaksi</th>
+                    <th>Tanggal Penginputan</th>
+                </tr>
                 </thead>
-                <tbody>
-                    <?php foreach ($barusajaInput as $i => $row): ?>
-                        <tr>
-                            <td><?= $i + 1 ?></td>
-                            <td><?= htmlspecialchars($row['nama']) ?></td>
-                            <td><?= htmlspecialchars($row['nomor']) ?></td>
-                            <td><?= htmlspecialchars($row['tanggal']) ?></td>
-                            <td><?= htmlspecialchars($row['pemberi']) ?></td>
-                            <td><?= htmlspecialchars($row['penerima']) ?></td>
-                            <td><?= htmlspecialchars($row['no_sertifikat']) ?></td>
-                            <td><?= htmlspecialchars($row['jenis_transaksi']) ?></td>
-                            <td><?= htmlspecialchars($row['created_at']) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
             </table>
-        </div>
+            </div>
     </div>
 </div>
 <?php include "footer.php"; ?>

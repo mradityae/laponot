@@ -45,6 +45,24 @@
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	function namaBulanIndo($bulanAngka) {
+		$namaBulan = [
+			1 => 'Januari',
+			2 => 'Februari',
+			3 => 'Maret',
+			4 => 'April',
+			5 => 'Mei',
+			6 => 'Juni',
+			7 => 'Juli',
+			8 => 'Agustus',
+			9 => 'September',
+			10 => 'Oktober',
+			11 => 'November',
+			12 => 'Desember'
+		];
+		return $namaBulan[intval($bulanAngka)];
+	}
+
 	function cekBulan($koneksi, $id_notaris, $bulan, $tahun, $deadlineDay, $today) {
 		$stmt = $koneksi->prepare("
 			SELECT * FROM laporan_entitas 
@@ -59,23 +77,30 @@
 
 		$count = $stmt->rowCount();
 
-		$deadline = date('Y-m-' . $deadlineDay, strtotime("$tahun-$bulan-01"));
-		$bulanNama = strtoupper(date('F Y', strtotime("$tahun-$bulan-01")));
+		// Deadline = tanggal 15 bulan berikutnya
+		$deadline = date('Y-m-' . $deadlineDay, strtotime("+1 month", strtotime("$tahun-$bulan-01")));
+		$bulanNama = strtoupper(namaBulanIndo($bulan) . " " . $tahun);
 
 		if ($count == 0) {
 			if ($today > $deadline) {
 				return '<div class="alert alert-danger" role="alert">
-					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . ' DAN SUDAH MELEWATI BATAS WAKTU (Deadline: ' . date('d F Y', strtotime($deadline)) . ')
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . 
+					' DAN SUDAH MELEWATI BATAS WAKTU (Deadline: ' . date('d ', strtotime($deadline)) . 
+					strtoupper(namaBulanIndo(date('n', strtotime($deadline)))) . 
+					" " . date('Y', strtotime($deadline)) . ')
 				</div>';
 			} else {
 				return '<div class="alert alert-warning" role="alert">
-					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . '. Deadline: ' . date('d F Y', strtotime($deadline)) . '
+					ANDA BELUM MENGUNGGAH LAPORAN FIDUSIA UNTUK BULAN ' . $bulanNama . 
+					'. Deadline: ' . date('d ', strtotime($deadline)) . 
+					strtoupper(namaBulanIndo(date('n', strtotime($deadline)))) . 
+					" " . date('Y', strtotime($deadline)) . '
 				</div>';
 			}
 		}
 		return "";
 	}
-
+	
 	function notifFidusia($koneksi, $id_notaris) {
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -83,17 +108,16 @@
 		$today = date('Y-m-d');
 		$deadlineDay = 15;
 
-		// Bulan lalu
-		$bulanLalu = date('n', strtotime('-1 month'));
-		$tahunLalu = date('Y', strtotime('-1 month'));
-
 		// Bulan ini
 		$bulanIni = date('n');
 		$tahunIni = date('Y');
 
-		// Cek bulan lalu
-		$output .= cekBulan($koneksi, $id_notaris, $bulanLalu, $tahunLalu, $deadlineDay, $today);
+		// Bulan lalu
+		$bulanLalu = date('n', strtotime('-1 month'));
+		$tahunLalu = date('Y', strtotime('-1 month'));
 
+		// Cek bulan lalu
+		// $output .= cekBulan($koneksi, $id_notaris, $bulanLalu, $tahunLalu, $deadlineDay, $today);
 		// Cek bulan ini
 		$output .= cekBulan($koneksi, $id_notaris, $bulanIni, $tahunIni, $deadlineDay, $today);
 
