@@ -90,6 +90,36 @@
         }
       }
     });
+
+   var table = $('#daftarFidusia').DataTable({
+      processing: true,
+      serverSide: true,
+      deferRender: true,
+      pageLength: 10,
+      lengthMenu: [5,10,25,50,100],
+      order: [[6,'desc']], // Tanggal index ke-6
+      ajax: {
+          url: '<?=$url;?>act/daftar_laporan_fidusia.php',
+          type: 'POST',
+          data: function(d){
+              d.tgl_a = $('input[name="tgl_a"]').val();
+              d.tgl_b = $('input[name="tgl_b"]').val();
+              d.id_kedudukan = $('select[name="id_kedudukan"]').val();
+              d.id_notaris = $('select[name="id_notaris"]').val();
+              d.jenis_transaksi = $('select[name="jenis_transaksi"]').val();
+          }
+      },
+      columnDefs: [
+          { targets: 0, orderable: false, searchable: false }
+      ]
+  });
+
+  // reload DataTable saat submit filter
+  $('#filterForm').on('submit', function(e){
+      e.preventDefault();
+      table.ajax.reload();
+  });
+
     </script>
     <script type="text/javascript">
       function jam() {
