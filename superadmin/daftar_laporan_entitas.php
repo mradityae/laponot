@@ -5,24 +5,18 @@ include "../models/models.php";
 include_once("../log_activity.php");
 
 // Ambil data filter
-$tgl_a = $_GET['tgl_a'] ?? '';
-$tgl_b = $_GET['tgl_b'] ?? '';
+$tgl_a = $_GET['tgl_a'] ?? '2025-01-01'; // format YYYY-MM-DD
+$tgl_b = $_GET['tgl_b'] ?? date('Y-m-d'); // tanggal sekarang
 $id_kedudukan = $_GET['id_kedudukan'] ?? '';
 $id_notaris = $_GET['id_notaris'] ?? '';
 $jenis_transaksi = $_GET['jenis_transaksi'] ?? '';
-$filter_ready = $tgl_a && $tgl_b && $id_kedudukan;
+$filter_ready = $tgl_a && $tgl_b;
 
 // Ambil daftar kedudukan
-$daftar_kedudukan = $koneksi->query("SELECT id_kedudukan, nama_kedudukan FROM kedudukan ORDER BY nama_kedudukan ASC");
+$daftar_kedudukan = $koneksi->query("SELECT id_kedudukan, nama_kedudukan FROM kedudukan ORDER BY nama_kedudukan ASC")->fetchAll();
 
-// Ambil daftar notaris berdasarkan kedudukan jika sudah dipilih
-$daftar_notaris = [];
-if (!empty($id_kedudukan)) {
-    $stmt_notaris = $koneksi->prepare("SELECT id_notaris, nama FROM notaris WHERE id_kedudukan = :id_kedudukan and level='2' and aktif='1' ORDER BY nama ASC");
-    $stmt_notaris->bindParam(":id_kedudukan", $id_kedudukan);
-    $stmt_notaris->execute();
-    $daftar_notaris = $stmt_notaris->fetchAll();
-}
+// Ambil daftar notaris (selalu semua)
+$daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM notaris WHERE level='2' AND aktif='1' ORDER BY nama ASC")->fetchAll();
 ?>
 
 <div id="page-wrapper">
@@ -44,41 +38,47 @@ if (!empty($id_kedudukan)) {
             <label>Sampai Tanggal</label>
             <input type="date" name="tgl_b" class="form-control" value="<?= $tgl_b ?>" required>
           </div>
+
           <div class="form-group">
             <label>Kedudukan</label>
-            <select name="id_kedudukan" class="form-control" onchange="this.form.submit()" required>
+            <select name="id_kedudukan" class="form-control" onchange="this.form.submit()">
               <option value="">-- Semua Kedudukan --</option>
-              <?php while ($k = $daftar_kedudukan->fetch()) : ?>
+              <?php foreach ($daftar_kedudukan as $k) : ?>
                 <option value="<?= $k['id_kedudukan'] ?>" <?= ($id_kedudukan == $k['id_kedudukan']) ? 'selected' : '' ?>>
                   <?= htmlspecialchars($k['nama_kedudukan']) ?>
                 </option>
-              <?php endwhile; ?>
+              <?php endforeach; ?>
             </select>
           </div>
 
-          <?php if (!empty($id_kedudukan)): ?>
           <div class="form-group">
             <label>Nama Notaris</label>
             <select name="id_notaris" class="form-control">
               <option value="">-- Semua Notaris --</option>
               <?php foreach ($daftar_notaris as $n) : ?>
+                <?php
+                  // jika kedudukan dipilih, tampilkan notaris sesuai kedudukan, jika kosong tampil semua
+                  if (!empty($id_kedudukan) && $n['id_kedudukan'] != $id_kedudukan) continue;
+                ?>
                 <option value="<?= $n['id_notaris'] ?>" <?= ($id_notaris == $n['id_notaris']) ? 'selected' : '' ?>>
                   <?= htmlspecialchars($n['nama']) ?>
                 </option>
               <?php endforeach; ?>
             </select>
           </div>
+
           <div class="form-group">
             <label>Jenis Transaksi</label>
             <select name="jenis_transaksi" class="form-control">
               <option value="">-- Semua Jenis Transaksi --</option>
-              <option value="Pendaftaran" <?= ($_GET['jenis_transaksi'] ?? '') == 'Pendaftaran' ? 'selected' : '' ?>>Pendaftaran</option>
-              <option value="Perubahan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Perubahan' ? 'selected' : '' ?>>Perubahan</option>
-              <option value="Penghapusan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Penghapusan' ? 'selected' : '' ?>>Penghapusan</option>
-              <option value="Pembatalan" <?= ($_GET['jenis_transaksi'] ?? '') == 'Pembatalan' ? 'selected' : '' ?>>Pembatalan</option>
+              <?php 
+              $jenis_opsi = ['Pendaftaran', 'Perubahan', 'Penghapusan', 'Pembatalan'];
+              foreach($jenis_opsi as $jt):
+              ?>
+                <option value="<?= $jt ?>" <?= ($jenis_transaksi == $jt) ? 'selected' : '' ?>><?= $jt ?></option>
+              <?php endforeach; ?>
             </select>
           </div>
-          <?php endif; ?>
         </div>
 
         <div class="modal-footer">
@@ -118,15 +118,18 @@ if (!empty($id_kedudukan)) {
               <?php
                 try {
                   $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi, l.nilai_penjaminan
-                  FROM laporan_entitas l
-                  JOIN notaris n ON l.id_notaris = n.id_notaris
-                  WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b
-                  AND n.id_kedudukan = :id_kedudukan";
+                          FROM laporan_entitas l
+                          JOIN notaris n ON l.id_notaris = n.id_notaris
+                          WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b";
+
+                  if (!empty($id_kedudukan)) {
+                      $sql .= " AND n.id_kedudukan = :id_kedudukan";
+                  }
 
                   if (!empty($id_notaris)) {
                       $sql .= " AND n.id_notaris = :id_notaris";
                   }
-                  
+
                   if (!empty($jenis_transaksi)) {
                       $sql .= " AND l.jenis_transaksi = :jenis_transaksi";
                   }
@@ -135,13 +138,9 @@ if (!empty($id_kedudukan)) {
                   $stmt = $koneksi->prepare($sql);
                   $stmt->bindParam(":tgl_a", $tgl_a);
                   $stmt->bindParam(":tgl_b", $tgl_b);
-                  $stmt->bindParam(":id_kedudukan", $id_kedudukan);
-                  if (!empty($id_notaris)) {
-                      $stmt->bindParam(":id_notaris", $id_notaris);
-                  }
-                  if (!empty($jenis_transaksi)) {
-                      $stmt->bindParam(":jenis_transaksi", $jenis_transaksi);
-                  }
+                  if (!empty($id_kedudukan)) $stmt->bindParam(":id_kedudukan", $id_kedudukan);
+                  if (!empty($id_notaris)) $stmt->bindParam(":id_notaris", $id_notaris);
+                  if (!empty($jenis_transaksi)) $stmt->bindParam(":jenis_transaksi", $jenis_transaksi);
                   $stmt->execute();
 
                   $no = 1;
@@ -157,8 +156,7 @@ if (!empty($id_kedudukan)) {
                     echo "</tr>";
                     $no++;
                   }
-                }
-                catch(PDOException $e){
+                } catch(PDOException $e){
                   write_log("Error saat mengambil laporan ".$e->getMessage());
                 }
               ?>

@@ -91,13 +91,15 @@ function getMonthColumns($tgl_a, $tgl_b) {
                 k.id_kedudukan,
                 $bulan_sql,
                 COUNT(l.id_laporan) AS total,
+                sum(npf.nominal_penjaminan) as 'nominal',
                 COUNT(l.id_laporan) AS keterangan
               FROM notaris n
               LEFT JOIN kedudukan k ON n.id_kedudukan = k.id_kedudukan
               LEFT JOIN laporan_entitas l 
                 ON l.id_notaris = n.id_notaris 
                 AND l.tanggal BETWEEN :tgl_a AND :tgl_b
-              WHERE n.level = 2";
+              LEFT JOIN nilai_penjaminan_fidusia npf on npf.nilai_penjaminan = l.nilai_penjaminan
+              WHERE n.level = 2 and n.aktif='1'";
 
             if (!empty($id_kedudukan)) {
                 $sql .= " AND n.id_kedudukan = :id_kedudukan";
@@ -105,7 +107,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
 
             $sql .= "
               GROUP BY n.id_notaris, n.nama, k.nama_kedudukan
-              ORDER BY n.nama ASC";
+              ORDER BY total DESC";
 
             $stmt = $koneksi->prepare($sql);
             $stmt->bindParam(':tgl_a', $tgl_a);
@@ -149,6 +151,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
                     <th><?= $b['label'] ?></th>
                   <?php endforeach; ?>
                   <th>Total</th>
+                  <th>Total Nominal</th>
                   <th>Detail</th>
                 </tr>
               </thead>
@@ -163,6 +166,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
                       <td><?= $row[$b['label']] ?? 0 ?></td>
                     <?php endforeach; ?>
                     <td><?= $row['total'] ?></td>
+                    <td><?= 'Rp ' . number_format($row['nominal'], 0, ',', '.') ?></td>
                     <td>
                         <a href="daftar_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_kedudukan=<?= $row['id_kedudukan']; ?>&id_notaris=<?= $row['id_notaris'] ?>" 
                           class="btn btn-info btn-sm">
