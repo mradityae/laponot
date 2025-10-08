@@ -43,6 +43,7 @@
     <link href="<?=$url;?>assets/css/jquery.dataTables.min.css" rel="stylesheet" />
 
      <link href="<?=$url;?>assets/css/card.css" rel="stylesheet" />
+    <script src="<?=$url;?>assets/echart/echarts.js"></script>
     
     <!-- GOOGLE FONTS-->
     <link href="<?=$url;?>assets/css/fonts.googleapis.css" rel="stylesheet"  /> <!--type='text/css'-->
@@ -125,7 +126,7 @@
                         </div>
                     </li>                   
                     <li>
-                        <a href="index"><i class="fa fa-dashboard "></i>Dashboard <span class="fa arrow"></span></a></a>
+                        <a href="index"><i class="fa fa-dashboard "></i>Dashboard Laporan Notaris <span class="fa arrow"></span></a></a>
                             <ul class="nav nav-second-level ">
                                 <li>
                                     <a href="index"><i class="fa fa-bar-chart"></i>Grafik</a>
@@ -136,6 +137,9 @@
                             </ul>
                     </li>
                     <li>
+                        <a href="dashboard_fidusia"><i class="fa fa-dashboard "></i>Dashboard Fidusia</a>
+                    </li>
+                    <li>
                         <a href=""><i class="fa fa-users"></i>Pengguna<span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level ">
                             <li>
@@ -144,7 +148,21 @@
                             <li>
                                 <a href="tambah_pengguna_super"><i class="fa fa-plus-square-o "></i>Tambah</a>
                             </li>
+                            <li>
+                                <a href="daftar_notaris_migrasi"><i class="fa fa-file-text-o"></i>Data Notaris Hasil Migrasi</a>
+                            </li>
                         </ul>
+                    </li>
+                    <li>
+                        <a href="index"><i class="fa fa-file-text-o"></i>Fidusia <span class="fa arrow"></span></a></a>
+                            <ul class="nav nav-second-level ">
+                                <li>
+                                    <a href="rekap_data_entitas"><i class="fa fa-file-text-o"></i>Rekap Laporan Fidusia</a>
+                                </li>
+                                <li>
+                                    <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia Per Wilayah</a>
+                                </li>
+                            </ul>
                     </li>
                     <li>
                         <a  href="hasil_survey"><i class="fa fa-bar-chart "></i>Survey</a>
