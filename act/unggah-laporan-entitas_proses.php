@@ -25,6 +25,32 @@
 
 			clearstatcache();
 
+			if (isset($_POST['laporan_nihil'])) {
+				$id_notaris = $_POST['id'];
+				$tipe = "fidusia";
+				$status = "Terverifikasi";
+
+				$sql = "INSERT INTO laporan_entitas 
+						(id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, keterangan, created_at)
+						VALUES
+						(:id_notaris, :tipe, 'NIHIL', NOW(), 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'Tidak Relevan', :status, 'NIHIL', NOW())";
+
+				$stmt = $koneksi->prepare($sql);
+				$stmt->execute([
+					':id_notaris' => $id_notaris,
+					':tipe' => $tipe,
+					':status' => $status
+				]);
+
+				write_log("Notaris ID $id_notaris mengunggah laporan fidusia NIHIL - BERHASIL.");
+
+				echo "<script>alert('Laporan NIHIL berhasil dikirim');</script>";
+				$link = $url."pengguna/daftar_laporan_entitas";
+				header("refresh:0.1; url=$link");
+				exit;
+			}
+
+
 			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan)) {
 				write_log("Notaris ID $id_notaris mengunggah laporan '$tipe' dengan nomor $nomor pada $tanggal - BERHASIL.");
 				

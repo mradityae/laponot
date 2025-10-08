@@ -111,8 +111,8 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             <th>Pemberi Fidusia</th>
                             <th>Penerima Fidusia</th>
                             <th>Nomor Akta</th>
-                            <th>Tipe</th>
                             <th>No Sertifikat</th>
+                            <th>Nilai Penjaminan</th>
                             <th>Jenis transaksi</th>
                         </tr>
                         </thead>
@@ -167,8 +167,8 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             echo "<td>" . $row['pemberi'] . "</td>";
                             echo "<td>" . $row['penerima'] . "</td>";
                             echo "<td>" . $row['nomor'] . "</td>";
-                            echo "<td>" . $row['tipe'] . "</td>";
                             echo "<td>" . $row['no_sertifikat'] . "</td>";
+                            echo "<td>" . $row['nilai_penjaminan'] . "</td>";
                             echo "<td><span class='label label-" . ($warna[$row['jenis_transaksi']] ?? 'default') . "'>" . $row['jenis_transaksi'] . "</span></td>";
                             echo "</tr>";
                             $no++;

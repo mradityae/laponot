@@ -8,8 +8,8 @@ include_once("../log_activity.php");
 $id_kedudukan = $_SESSION['kedudukan'];
 
 // Ambil data filter tanggal
-$tgl_a = $_GET['tgl_a'] ?? '';
-$tgl_b = $_GET['tgl_b'] ?? '';
+$tgl_a = $_GET['tgl_a'] ?? date('Y-m-01', strtotime('-1 month'));
+$tgl_b = $_GET['tgl_b'] ?? date('Y-m-d');
 $filter_ready = $tgl_a && $tgl_b;
 
 // Fungsi kolom bulan dinamis
@@ -79,16 +79,18 @@ function getMonthColumns($tgl_a, $tgl_b) {
                 k.nama_kedudukan,
                 $bulan_sql,
                 COUNT(l.id_laporan) AS total,
+                sum(npf.nominal_penjaminan) as 'nominal',
                 COUNT(l.id_laporan) AS keterangan
               FROM notaris n
               LEFT JOIN kedudukan k ON n.id_kedudukan = k.id_kedudukan
               LEFT JOIN laporan_entitas l 
                 ON l.id_notaris = n.id_notaris 
                 AND l.tanggal BETWEEN :tgl_a AND :tgl_b
+              LEFT JOIN nilai_penjaminan_fidusia npf on npf.nilai_penjaminan = l.nilai_penjaminan
               WHERE n.level = 2
                 AND n.id_kedudukan = :id_kedudukan
               GROUP BY n.id_notaris, n.nama, k.nama_kedudukan
-              ORDER BY n.nama ASC";
+              ORDER BY total desc";
 
             $stmt = $koneksi->prepare($sql);
             $stmt->bindParam(':tgl_a', $tgl_a);
@@ -96,7 +98,12 @@ function getMonthColumns($tgl_a, $tgl_b) {
             $stmt->bindParam(':id_kedudukan', $id_kedudukan);
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+            $total_nominal = 0;
+            $total_laporan = 0;
+            foreach ($data as $row) {
+                $total_nominal += $row['nominal'];
+                $total_laporan += $row['total'];
+            }
             write_log("Berhasil mengambil rekap laporan per notaris dari $tgl_a sampai $tgl_b untuk kedudukan ID $id_kedudukan");
         } catch (PDOException $e) {
             write_log("ERROR saat ambil rekap laporan notaris: " . $e->getMessage());
@@ -128,7 +135,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
                     <th><?= $b['label'] ?></th>
                   <?php endforeach; ?>
                   <th>Total</th>
-                  <th>Keterangan</th>
+                  <th>Total Nominal</th>
                   <th>Detail</th>
                 </tr>
               </thead>
@@ -143,15 +150,23 @@ function getMonthColumns($tgl_a, $tgl_b) {
                       <td><?= $row[$b['label']] ?? 0 ?></td>
                     <?php endforeach; ?>
                     <td><?= $row['total'] ?></td>
-                    <td><?= $row['keterangan'] ?></td>
+                    <td><?= 'Rp ' . number_format($row['nominal'], 0, ',', '.') ?></td>
                     <td>
-                      <a href="rekap_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_notaris=<?= $row['id_notaris'] ?? '' ?>" class="btn btn-info btn-sm">
+                      <a href="daftar_laporan_entitas?tanggal_awal=<?= $tgl_a ?>&tanggal_akhir=<?= $tgl_b ?>&id_notaris=<?= $row['id_notaris'] ?? '' ?>" class="btn btn-info btn-sm">
                         <i class="fa fa-search"></i> Lihat
                       </a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
+              <tfoot>
+              <tr>
+                <th colspan="<?= 3 + count($bulan_cols) ?>">Total Keseluruhan</th>
+                <th><?= $total_laporan ?></th>
+                <th><?= 'Rp ' . number_format($total_nominal, 0, ',', '.') ?></th>
+                <th></th>
+              </tr>
+            </tfoot>
             </table>
           </div>
         </div>
