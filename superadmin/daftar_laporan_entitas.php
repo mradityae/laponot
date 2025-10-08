@@ -5,7 +5,7 @@ include "../models/models.php";
 include_once("../log_activity.php");
 
 // Ambil data filter
-$tgl_a = $_GET['tgl_a'] ?? '2025-01-01'; // format YYYY-MM-DD
+$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-01-01'; // format YYYY-MM-DD
 $tgl_b = $_GET['tgl_b'] ?? date('Y-m-d'); // tanggal sekarang
 $id_kedudukan = $_GET['id_kedudukan'] ?? '';
 $id_notaris = $_GET['id_notaris'] ?? '';
@@ -107,20 +107,23 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
                 <tr>
                   <th>No</th>
                   <th>Nama Notaris</th>
+                  <th>Kedudukan Notaris</th>
                   <th>Pemberi</th>
                   <th>Penerima</th>
                   <th>Jenis Transaksi</th>
                   <th>Nilai Penjaminan</th>
                   <th>Nomor Sertifikat</th>
-                  <th>Tanggal</th>
+                  <th>Tanggal Akta</th>
+                  <th>Tanggal Input</th>
                 </tr>
               </thead>
               <tbody>
               <?php
                 try {
-                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi, l.nilai_penjaminan, l.no_sertifikat
+                  $sql = "SELECT n.nama, l.pemberi, l.penerima, l.tanggal, l.status, l.jenis_transaksi, l.nilai_penjaminan, l.no_sertifikat, kd.nama_kedudukan, l.created_at
                           FROM laporan_entitas l
                           JOIN notaris n ON l.id_notaris = n.id_notaris
+                          JOIN kedudukan kd on n.id_kedudukan = kd.id_kedudukan
                           WHERE DATE(l.tanggal) BETWEEN :tgl_a AND :tgl_b";
 
                   if (!empty($id_kedudukan)) {
@@ -149,12 +152,14 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
                     echo "<tr>";
                     echo "<td>{$no}</td>";
                     echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['nama_kedudukan']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['pemberi']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['penerima']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['jenis_transaksi']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['nilai_penjaminan']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['no_sertifikat']) . "</td>";
                     echo "<td>" . date('d-m-Y', strtotime($row['tanggal'])) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['created_at']) . "</td>";
                     echo "</tr>";
                     $no++;
                   }

@@ -33,7 +33,7 @@
 				$sql = "INSERT INTO laporan_entitas 
 						(id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, keterangan, created_at)
 						VALUES
-						(:id_notaris, :tipe, 'NIHIL', NOW(), 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'Tidak Relevan', :status, 'NIHIL', NOW())";
+						(:id_notaris, :tipe, 'NIHIL', CURDATE(), 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'Tidak Relevan', :status, 'NIHIL', NOW())";
 
 				$stmt = $koneksi->prepare($sql);
 				$stmt->execute([
@@ -44,12 +44,12 @@
 
 				write_log("Notaris ID $id_notaris mengunggah laporan fidusia NIHIL - BERHASIL.");
 
-				echo "<script>alert('Laporan NIHIL berhasil dikirim');</script>";
-				$link = $url."pengguna/daftar_laporan_entitas";
-				header("refresh:0.1; url=$link");
+				echo "<script>
+					alert('Laporan NIHIL berhasil dikirim');
+					window.location.href = '$url/pengguna/daftar_laporan_entitas';
+				</script>";
 				exit;
 			}
-
 
 			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan)) {
 				write_log("Notaris ID $id_notaris mengunggah laporan '$tipe' dengan nomor $nomor pada $tanggal - BERHASIL.");
