@@ -67,6 +67,45 @@
       "responsive": true,
       "scrollCollapse": true      
     });
+    
+    $('#rekapTable').DataTable({
+      scrollX: true,
+      scrollY: 400,
+      scrollCollapse: true,
+      paging: true,
+      searching: true,
+      ordering: true,
+      responsive: true,
+      language: {
+        search: "Cari:",
+        lengthMenu: "Tampilkan _MENU_ data",
+        info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+        zeroRecords: "Tidak ada data ditemukan",
+        paginate: {
+          first: "Awal",
+          last: "Akhir",
+          next: "Berikutnya",
+          previous: "Sebelumnya"
+        }
+      }
+    });
+
+    $('#rekapTable-serverside').DataTable({
+      processing: true,
+      serverSide: true,
+      deferRender: true,
+      pageLength: 10,
+      lengthMenu: [5,10,25,50,100],
+      order: [[8,'desc']], 
+      ajax: {
+        url: '<?=$url;?>act/notaris_input_terbaru.php?id_kedudukan=<?= (int)$kedudukan ?>',
+        type: 'POST'
+      },
+      columnDefs: [
+        { targets: 0, orderable: false, searchable: false }
+      ],
+    });
+
     </script>
     <script type="text/javascript">
       function jam() {

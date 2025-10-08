@@ -1,0 +1,136 @@
+note
+
+table data_notaris , ditambahkan kolom : aktif, tanggal_lahir_, tanggal_pensiun_, id_kedudukan
+table notaris, ditambahkan kolom : is_migration, tanggal_lahir, tanggal_pensiun
+
+--alter aktif nya diupdate dulu
+
+SELECT MAX(id_notaris) AS last_id FROM notaris;
+ALTER TABLE notaris AUTO_INCREMENT = 2495;
+
+-- update status notaris
+
+UPDATE data_notaris
+SET aktif = CASE
+    WHEN status = 'Notaris' THEN 1
+    WHEN status = 'Notaris Belum Aktif' THEN 0
+    ELSE 2
+END;
+
+SELECT 
+  STR_TO_DATE(
+    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+      LOWER(tanggal_lahir),
+      'januari', 'january'),
+      'februari','february'),
+      'maret','march'),
+      'april','april'),
+      'mei','may'),
+      'juni','june'),
+      'juli','july'),
+      'agustus','august'),
+      'september','september'),
+      'oktober','october'),
+      'november','november'),
+      'desember','december'),
+    '%d %M %Y'
+  ) AS tanggal_fix
+FROM data_notaris;
+
+select 
+STR_TO_DATE(tanggal_pensiun, '%d %M %Y')
+from data_notaris
+
+UPDATE data_notaris
+SET tanggal_lahir_ = STR_TO_DATE(
+  REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(
+    LOWER(tanggal_lahir),
+    'januari', 'january'),
+    'februari','february'),
+    'maret','march'),
+    'april','april'),
+    'mei','may'),
+    'juni','june'),
+    'juli','july'),
+    'agustus','august'),
+    'september','september'),
+    'oktober','october'),
+    'november','november'),
+    'desember','december'),
+  '%d %M %Y'
+);
+
+UPDATE data_notaris
+SET tanggal_pensiun_ = STR_TO_DATE(tanggal_pensiun, '%d %M %Y');
+
+UPDATE data_notaris
+SET jenis_kelamin = CASE
+    WHEN jenis_kelamin = 'Pria' THEN 'Laki - Laki'
+    WHEN jenis_kelamin = 'Wanita' THEN 'Perempuan'
+    ELSE jenis_kelamin
+END;
+
+
+-- lower id kedudukan 
+SELECT 
+    dn.nama,
+    dn.kedudukan,
+    k.id_kedudukan,
+    k.nama_kedudukan
+FROM data_notaris dn
+JOIN kedudukan k 
+  ON TRIM(LOWER(REPLACE(dn.kedudukan, '  ', ' '))) = TRIM(LOWER(k.nama_kedudukan))
+WHERE dn.id_kedudukan IS NULL;
+
+
+-- update 
+
+UPDATE data_notaris dn
+JOIN kedudukan k 
+  ON TRIM(LOWER(REPLACE(dn.kedudukan, '  ', ' '))) = TRIM(LOWER(k.nama_kedudukan))
+SET dn.id_kedudukan = k.id_kedudukan
+WHERE dn.id_kedudukan IS NULL;
+
+--start migration
+
+INSERT INTO notaris (
+    id_kedudukan,
+    email,
+    password,
+    nama,
+    jenis_kelamin,
+    alamat,
+    telepon,
+    sk,
+    tanggal_sk,
+    level,
+    aktif,
+    tanggal_lahir,
+    tanggal_pensiun,
+    createDate,
+    is_migration
+)
+SELECT 
+    id_kedudukan,
+    email,
+    MD5('Password123') AS password,
+    nama,
+    jenis_kelamin,
+    alamat,
+    telepon,
+    sk,
+    NULL AS tanggal_sk,
+    2 AS level,
+    aktif,
+    tanggal_lahir_,
+    tanggal_pensiun_,
+    NOW(),
+    1
+FROM data_notaris dn
+WHERE aktif IN (0, 1)
+  AND email NOT IN (
+      SELECT email FROM notaris
+  )
+  AND email NOT IN ('-', '(belum diset)')
+  AND email IS NOT NULL
+  AND TRIM(email) != '';
