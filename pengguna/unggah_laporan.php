@@ -65,17 +65,18 @@ date_default_timezone_set('Asia/Jakarta');
             </form>
         </div>
 
-        <!-- 🔹 Checkbox Laporan Nihil -->
-        <div class="form-group mb-3">
-            <input type="checkbox" id="laporan_nihil" name="laporan_nihil" value="1" onclick="toggleNihil()">
-            <label for="laporan_nihil" style="color:red;font-weight:bold;"> Centang jika tidak ada laporan (Laporan NIHIL)</label>
-        </div>
 
         <!-- FORM FIDUSIA -->
         <div id="form_fidusia" style="display:none;">
             <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
                 <input type="hidden" name="tipe" value="fidusia" />
+
+                <!-- 🔹 Checkbox Laporan Nihil -->
+                <div class="form-group mb-3">
+                    <input type="checkbox" id="laporan_nihil" name="laporan_nihil" value="1" onclick="toggleNihil()">
+                    <label for="laporan_nihil" style="color:red;font-weight:bold;"> Centang jika tidak ada laporan (Laporan NIHIL)</label>
+                </div>
 
                 <!-- 🔹 Field normal (akan disembunyikan jika nihil) -->
                 <div id="form_fidusia_fields">
@@ -129,8 +130,8 @@ date_default_timezone_set('Asia/Jakarta');
                                     <option value="">-- Pilih --</option>
                                     <option value="<=50 juta">s.d. 50 juta</option>
                                     <option value="50-100 juta">50 juta – 100 juta</option>
-                                    <option value="100-200 juta">100 juta – 200 juta</option>
-                                    <option value="200-500 juta">200 juta – 500 juta</option>
+                                    <option value="100-250 juta">100 juta – 250 juta</option>
+                                    <option value="250-500 juta">250 juta – 500 juta</option>
                                     <option value="500 juta – 1 M">500 juta – 1 Miliar</option>
                                     <option value="1 – 100 M">1 Miliar – 100 Miliar</option>
                                     <option value="100 – 500 M">100 M – 500 Miliar</option>
