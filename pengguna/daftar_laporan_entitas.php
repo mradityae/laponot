@@ -107,7 +107,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             $params[":tanggal_akhir"] = $tanggal_akhir;
                         }
 
-                        $query .= " ORDER BY tanggal DESC";
+                        $query .= " ORDER BY created_at DESC";
                         $ambil = $koneksi->prepare($query);
                         foreach ($params as $key => $val) {
                             $ambil->bindValue($key, $val);

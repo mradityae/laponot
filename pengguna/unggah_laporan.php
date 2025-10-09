@@ -119,6 +119,11 @@ date_default_timezone_set('Asia/Jakarta');
                                 <input type="text" name="penerima" class="form-control" required />
                             </div>
 
+                            <div class="form-group" id='no_sertifikat_lama' style="display:none;">
+                                <label>No Sertifikat Lama</label>
+                                <input type="text" name="no_sertifikat_lama" class="form-control" />
+                            </div>
+
                             <div class="form-group">
                                 <label>No Sertifikat</label>
                                 <input type="text" name="no_sertifikat" class="form-control" />
@@ -189,7 +194,10 @@ function toggleNihil() {
 function toggleKeterangan() {
     const jenis = document.getElementById('jenis_transaksi').value;
     const box = document.getElementById('keterangan_box');
-    box.style.display = (jenis === 'Perubahan') ? 'block' : 'none';
+    const no_sertifikat_lama = document.getElementById('no_sertifikat_lama');
+    
+    box.style.display = (jenis === 'Perubahan' || jenis === 'Perbaikan') ? 'block' : 'none';
+    no_sertifikat_lama.style.display = (jenis === 'Perubahan') ? 'block' : 'none';
 }
 
 function validateForm() {

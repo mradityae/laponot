@@ -22,6 +22,7 @@
 			$jenis_transaksi = $_POST['jenis_transaksi'];
 			$nilai_jaminan   = $_POST['nilai_jaminan'];
 			$keterangan 	 = $_POST['keterangan'];
+			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null; 
 
 			clearstatcache();
 
@@ -51,7 +52,7 @@
 				exit;
 			}
 
-			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan)) {
+			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan, $no_sertifikat_lama)) {
 				write_log("Notaris ID $id_notaris mengunggah laporan '$tipe' dengan nomor $nomor pada $tanggal - BERHASIL.");
 				
 				echo "<script>alert('Laporan Berhasil Dikirim')</script>";
