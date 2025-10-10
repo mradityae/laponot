@@ -90,6 +90,22 @@
         }
       }
     });
+
+    $('#rekapTable-serverside').DataTable({
+      processing: true,
+      serverSide: true,
+      deferRender: true,
+      pageLength: 10,
+      lengthMenu: [5,10,25,50,100],
+      order: [[8,'desc']], 
+      ajax: {
+        url: '<?=$url;?>act/notaris_input_terbaru_super.php?id_kedudukan=<?= (int)$kedudukan ?>',
+        type: 'POST'
+      },
+      columnDefs: [
+        { targets: 0, orderable: false, searchable: false }
+      ],
+    });
     </script>
     <script type="text/javascript">
       function jam() {

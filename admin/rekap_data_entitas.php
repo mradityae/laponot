@@ -8,7 +8,7 @@ include_once("../log_activity.php");
 $id_kedudukan = $_SESSION['kedudukan'];
 
 // Ambil data filter tanggal
-$tgl_a = $_GET['tgl_a'] ?? date('Y-m-01', strtotime('-1 month'));
+$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-01-01';
 $tgl_b = $_GET['tgl_b'] ?? date('Y-m-d');
 $filter_ready = $tgl_a && $tgl_b;
 

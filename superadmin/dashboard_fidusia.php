@@ -236,8 +236,28 @@ foreach ($dataKedudukanAll as $row) {
             <?php endforeach; ?>
         </div>
 
-                <!-- Tabel Kedudukan terlambat Upload -->
-        <div class="row" style="margin-top: 50px;">
+        <h4 style="margin-top: 50px;"><b>Notaris yang baru saja menyampaikan laporan fidusia berkala</b></h4>
+        <div class="table-responsive">
+            <table id="rekapTable-serverside" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Notaris</th>
+                    <th>Kedudukan</th>
+                    <th>Nomor Akta</th>
+                    <th>Tanggal Akta</th>
+                    <th>Pemberi Fidusia</th>
+                    <th>Penerima Fidusia</th>
+                    <th>Nomor Sertifikat</th>
+                    <th>Jenis Transaksi</th>
+                    <th>Tanggal Penginputan</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- Tabel Kedudukan terlambat Upload -->
+        <!-- <div class="row" style="margin-top: 50px;">
             <div class="col-lg-12">
                 <center>
                     <h4><b>Data Kedudukan yang terlambat Upload - 
@@ -271,8 +291,7 @@ foreach ($dataKedudukanAll as $row) {
                     </table>
                 </div>
             </div>
-        </div>
-
+        </div> -->
     </div>
 </div>
 <?php include "footer.php"; ?>
