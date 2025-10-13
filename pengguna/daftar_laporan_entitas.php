@@ -117,7 +117,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                         $warna = [
                             'Pendaftaran' => 'success',
                             'Perubahan' => 'info',
-                            'Pembatalan' => 'warning',
+                            'Perbaikan' => 'warning',
                             'Penghapusan' => 'danger'
                         ];
 

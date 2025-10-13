@@ -18,7 +18,7 @@ $jenis_transaksi = $_GET["jenis_transaksi"] ?? '';
 if (!$id) die("ID Notaris tidak ditemukan!");
 
 // Validasi jenis transaksi
-$valid_jenis = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+$valid_jenis = ['Pendaftaran', 'Perubahan', 'Perbaikan', 'Penghapusan'];
 if (!in_array($jenis_transaksi, $valid_jenis)) {
     $jenis_transaksi = '';
 }

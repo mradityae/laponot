@@ -10,7 +10,7 @@ $status = isset($_GET['status']) ? $_GET['status'] : "Semua";
 $jenis_transaksi = isset($_GET['jenis_transaksi']) ? $_GET['jenis_transaksi'] : "";
 $tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : "";
 $tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : "";
-$valid_jenis = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+$valid_jenis = ['Pendaftaran', 'Perubahan', 'Perbaikan', 'Penghapusan'];
 $id_notaris = isset($_GET['id_notaris']) ? $_GET['id_notaris'] : "";
 
 if (!in_array($jenis_transaksi, $valid_jenis)) {
@@ -154,7 +154,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                         $warna = [
                             'Pendaftaran' => 'success',
                             'Perubahan' => 'info',
-                            'Pembatalan' => 'warning',
+                            'Perbaikan' => 'warning',
                             'Penghapusan' => 'danger'
                         ];
 

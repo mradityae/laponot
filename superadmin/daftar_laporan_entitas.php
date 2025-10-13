@@ -72,7 +72,7 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
             <select name="jenis_transaksi" class="form-control">
               <option value="">-- Semua Jenis Transaksi --</option>
               <?php 
-              $jenis_opsi = ['Pendaftaran', 'Perubahan', 'Penghapusan', 'Pembatalan'];
+              $jenis_opsi = ['Pendaftaran', 'Perubahan', 'Penghapusan', 'Perbaikan'];
               foreach($jenis_opsi as $jt):
               ?>
                 <option value="<?= $jt ?>" <?= ($jenis_transaksi == $jt) ? 'selected' : '' ?>><?= $jt ?></option>

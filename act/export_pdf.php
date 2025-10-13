@@ -10,7 +10,7 @@ $tanggal_awal = $_GET['tanggal_awal'] ?? '';
 $tanggal_akhir = $_GET['tanggal_akhir'] ?? '';
 $jenis_transaksi = $_GET['jenis_transaksi'] ?? '';
 
-$valid_jenis = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+$valid_jenis = ['Pendaftaran', 'Perubahan', 'Perbaikan', 'Penghapusan'];
 if (!in_array($jenis_transaksi, $valid_jenis)) {
     $jenis_transaksi = '';
 }

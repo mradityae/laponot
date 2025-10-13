@@ -27,7 +27,7 @@ function get_label_class($jenis) {
   switch ($jenis) {
     case 'Pendaftaran': return 'success';
     case 'Perubahan': return 'info';
-    case 'Pembatalan': return 'warning';
+    case 'Perbaikan': return 'warning';
     case 'Penghapusan': return 'danger';
     default: return 'default';
   }
@@ -79,7 +79,7 @@ function get_label_class($jenis) {
                 <select name="jenis_transaksi" class="form-control">
                   <option value="">-- Semua Jenis --</option>
                   <?php
-                    $jenis_list = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+                    $jenis_list = ['Pendaftaran', 'Perubahan', 'Perbaikan', 'Penghapusan'];
                     foreach ($jenis_list as $j) {
                       $selected = ($jenis_transaksi === $j) ? 'selected' : '';
                       echo "<option value=\"$j\" $selected>$j</option>";
