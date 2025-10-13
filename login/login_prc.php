@@ -54,15 +54,15 @@ if(!isset($_GET['prc']))
 			        $koneksi = null;
 
 				if ($_SESSION['user_role'] == 1) {
-					header('Location:../admin/dashboard_fidusia');
+					header('Location:../admin/index');
 				}
 				else if($_SESSION['user_role'] == 2)
 				{
-					header('Location:../pengguna/dashboard_fidusia');
+					header('Location:../pengguna/index');
 				}
 				else if($_SESSION['user_role'] == 0)
 				{
-					header('Location:../superadmin/dashboard_fidusia');
+					header('Location:../superadmin/index');
 				}
 				else
 				{
