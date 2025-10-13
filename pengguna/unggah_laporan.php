@@ -15,16 +15,16 @@ date_default_timezone_set('Asia/Jakarta');
                 <option value="fidusia">Laporan Fidusia</option>
             </select>
         </div>
-        <!-- FORM BULANAN -->
+
+        <!-- ================= FORM BULANAN ================= -->
         <div id="form_bulanan" style="display:none;">
             <form action="<?=$url;?>act/unggah-laporan_proses.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="id" value="<?php echo $_SESSION['kode_user'] ?>" readonly/>
+                <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" readonly/>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Periode Laporan</label>
                             <input type="date" name="tanggal_laporan" class="form-control" required/>
-                            <small class="form-text text-muted text-danger">Untuk mengisi periode laporan, jika menggunakan browser Google Chrome, klik icon kalender pada bagian pojok kanan tempat mengisi periode laporan lalu pilih bulan dan tanggal dari kalender yang muncul. Jika menggunakan browser Firefox, klik pada tempat mengisi periode, lalu pilih tanggal dan bulan dari kalender yang muncul.</small>
                         </div>
 
                         <div class="form-group">
@@ -58,28 +58,28 @@ date_default_timezone_set('Asia/Jakarta');
 
                 <div class="form-group mt-3">
                     <input type="checkbox" id="terms_bulanan" onclick="document.getElementById('submit_bulanan').disabled = !this.checked;">
-                    <label style="color:red;">Pastikan data Anda benar dan dapat dipertanggungjawabkan sesuai dengan perundang - undangan yang berlaku</label>
+                    <label style="color:red;">Pastikan data Anda benar dan dapat dipertanggungjawabkan.</label>
                 </div>
 
                 <input type="submit" name="submit" id="submit_bulanan" class="btn btn-success" value="Simpan" disabled>
             </form>
         </div>
 
-
-        <!-- FORM FIDUSIA -->
+        <!-- ================= FORM FIDUSIA ================= -->
         <div id="form_fidusia" style="display:none;">
-            <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
-                <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
-                <input type="hidden" name="tipe" value="fidusia" />
 
-                <!-- 🔹 Checkbox Laporan Nihil -->
-                <div class="form-group mb-3">
-                    <input type="checkbox" id="laporan_nihil" name="laporan_nihil" value="1" onclick="toggleNihil()">
-                    <label for="laporan_nihil" style="color:red;font-weight:bold;"> Centang jika tidak ada laporan (Laporan NIHIL)</label>
-                </div>
+            <!-- 🔹 Tombol pilih mode -->
+            <div class="text-center mb-4">
+                <button class="btn btn-primary" onclick="showFidusiaForm('normal')">Isi Laporan Fidusia</button>
+                <button class="btn btn-warning" onclick="showFidusiaForm('nihil')">Kirim Laporan Nihil</button>
+            </div>
 
-                <!-- 🔹 Field normal (akan disembunyikan jika nihil) -->
-                <div id="form_fidusia_fields">
+            <!-- ================= FORM NORMAL ================= -->
+            <div id="fidusia_normal">
+                <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
+                    <input type="hidden" name="tipe" value="fidusia" />
+
                     <div class="form-group">
                         <label>Jenis Transaksi</label>
                         <select style="width: 100%;" name="jenis_transaksi" class="form-control form-control-lg" id="jenis_transaksi" required onchange="toggleKeterangan()">
@@ -90,6 +90,7 @@ date_default_timezone_set('Asia/Jakarta');
                             <option value="Penghapusan">Penghapusan</option>
                         </select>
                     </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -152,68 +153,45 @@ date_default_timezone_set('Asia/Jakarta');
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group mt-3">
-                    <input type="checkbox" onclick="document.getElementById('submit_fidusia').disabled = !this.checked;">
-                    <label style="color:red;">Saya bertanggung jawab atas keabsahan data ini</label>
-                </div>
+                    <div class="form-group mt-3">
+                        <input type="checkbox" onclick="document.getElementById('submit_fidusia_normal').disabled = !this.checked;">
+                        <label style="color:red;">Saya bertanggung jawab atas keabsahan data ini</label>
+                    </div>
 
-                <input type="submit" id="submit_fidusia" name="submit" value="Simpan" class="btn btn-success" disabled>
-            </form>
+                    <input type="submit" id="submit_fidusia_normal" name="submit" value="Simpan" class="btn btn-success" disabled>
+                </form>
+            </div>
+
+            <!-- ================= FORM NIHIL ================= -->
+            <div id="fidusia_nihil" style="display:none;">
+                <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php" method="POST" onsubmit="return confirm('Kirim laporan NIHIL untuk bulan ini?')">
+                    <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
+                    <input type="hidden" name="tipe" value="fidusia" />
+                    <input type="hidden" name="laporan_nihil" value="1" />
+
+                    <div class="alert alert-warning text-center">
+                        <strong>Anda akan mengirim Laporan Fidusia NIHIL.</strong><br>
+                        Tidak ada data akta yang diunggah untuk periode ini.
+                    </div>
+
+                    <div class="form-group mt-3 text-center">
+                        <input type="checkbox" id="confirm_nihil" onclick="document.getElementById('submit_fidusia_nihil').disabled = !this.checked;">
+                        <label style="color:red;">Saya menyatakan tidak ada laporan fidusia untuk bulan ini.</label>
+                    </div>
+
+                    <div class="text-center">
+                        <input type="submit" id="submit_fidusia_nihil" name="submit" value="Kirim Laporan Nihil" class="btn btn-warning" disabled>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-
-function toggleNihil() {
-    const isNihil = document.getElementById('laporan_nihil').checked;
-    const formFields = document.getElementById('form_fidusia_fields');
-    formFields.style.display = isNihil ? 'none' : 'block';
-
-    // Ambil semua input, select, textarea di dalam form
-    const fields = formFields.querySelectorAll('input, select, textarea');
-
-    fields.forEach(el => {
-        if (isNihil) {
-            // Hapus atribut required agar tidak divalidasi
-            el.removeAttribute('required');
-        } else {
-            // Tambahkan kembali required hanya untuk field yang memang wajib
-            if (
-                ['judul_akta', 'nomor', 'tanggal', 'jenis_transaksi', 'pemberi', 'penerima', 'nilai_jaminan'].includes(el.name)
-            ) {
-                el.setAttribute('required', true);
-            }
-        }
-    });
-}
-
-
-function toggleKeterangan() {
-    const jenis = document.getElementById('jenis_transaksi').value;
-    const box = document.getElementById('keterangan_box');
-    const no_sertifikat_lama = document.getElementById('no_sertifikat_lama');
-    
-    box.style.display = (jenis === 'Perubahan' || jenis === 'Perbaikan') ? 'block' : 'none';
-    no_sertifikat_lama.style.display = (jenis === 'Perubahan') ? 'block' : 'none';
-}
-
-function validateForm() {
-    const isNihil = document.getElementById('laporan_nihil').checked;
-    if (isNihil) {
-        return confirm("Anda yakin ingin mengirim Laporan NIHIL untuk bulan ini?");
-    }
-    return true;
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    tampilkanForm(); // Otomatis panggil fungsi saat halaman selesai dimuat
-});
-
 function tampilkanForm() {
-    var pilihan = document.getElementById('jenis_laporan').value;
+    const pilihan = document.getElementById('jenis_laporan').value;
     document.getElementById('form_bulanan').style.display = 'none';
     document.getElementById('form_fidusia').style.display = 'none';
 
@@ -223,6 +201,21 @@ function tampilkanForm() {
         document.getElementById('form_fidusia').style.display = 'block';
     }
 }
+
+function showFidusiaForm(mode) {
+    document.getElementById('fidusia_normal').style.display = (mode === 'normal') ? 'block' : 'none';
+    document.getElementById('fidusia_nihil').style.display  = (mode === 'nihil') ? 'block' : 'none';
+}
+
+function toggleKeterangan() {
+    const jenis = document.getElementById('jenis_transaksi').value;
+    const box = document.getElementById('keterangan_box');
+    const no_sertifikat_lama = document.getElementById('no_sertifikat_lama');
+    box.style.display = (jenis === 'Perubahan' || jenis === 'Perbaikan') ? 'block' : 'none';
+    no_sertifikat_lama.style.display = (jenis === 'Perubahan') ? 'block' : 'none';
+}
+
+document.addEventListener("DOMContentLoaded", tampilkanForm);
 </script>
 
 <?php include "footer.php"; ?>

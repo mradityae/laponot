@@ -11,17 +11,17 @@
 
 		try
 		{
-			$id_notaris     = $_POST['id'];
-			$tipe           = $_POST['tipe'];
-			$nomor          = $_POST['nomor'];
-			$tanggal        = $_POST['tanggal'];
-			$pemberi        = $_POST['pemberi'];
-			$penerima       = $_POST['penerima'];
-			$no_sertifikat  = $_POST['no_sertifikat'];
-			$judul_akta      = $_POST['judul_akta'];
-			$jenis_transaksi = $_POST['jenis_transaksi'];
-			$nilai_jaminan   = $_POST['nilai_jaminan'];
-			$keterangan 	 = $_POST['keterangan'];
+			$id_notaris     = $_POST['id'] ?? null;
+			$tipe           = $_POST['tipe'] ?? null;
+			$nomor          = $_POST['nomor'] ?? null;
+			$tanggal        = $_POST['tanggal'] ?? null;
+			$pemberi        = $_POST['pemberi'] ?? null;
+			$penerima       = $_POST['penerima'] ?? null;
+			$no_sertifikat  = $_POST['no_sertifikat'] ?? null;
+			$judul_akta      = $_POST['judul_akta'] ?? null;
+			$jenis_transaksi = $_POST['jenis_transaksi'] ?? null;
+			$nilai_jaminan   = $_POST['nilai_jaminan'] ?? null;
+			$keterangan 	 = $_POST['keterangan'] ?? null;
 			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null; 
 
 			clearstatcache();

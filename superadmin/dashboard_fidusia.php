@@ -38,7 +38,7 @@ $sqlKedudukanAll = "SELECT
                  FROM laporan_entitas AS le
                  JOIN notaris AS n ON le.id_notaris = n.id_notaris
                  JOIN kedudukan AS k ON n.id_kedudukan = k.id_kedudukan
-                 GROUP BY k.nama_kedudukan
+                 GROUP BY k.id_kedudukan, k.nama_kedudukan
                  ORDER BY total DESC";
 $stmtKedudukanAll = $koneksi->prepare($sqlKedudukanAll);
 $stmtKedudukanAll->execute();
