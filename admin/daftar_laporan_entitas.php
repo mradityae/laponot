@@ -28,9 +28,8 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
         </div>
 
         <!-- FILTER FORM -->
-        <form method="GET" class="form" style="margin-bottom: 30px;">
+        <form id="filterForm" method="GET" class="form" style="margin-bottom: 30px;" onsubmit="return handleFilterSubmit();">
             <div class="row">
-
                 <div class="col-md-3">
                     <label for="jenis_transaksi">Jenis Transaksi</label>
                     <select name="jenis_transaksi" class="form-control">
@@ -207,6 +206,21 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
         });
 
         window.location.href = baseUrl + target + "?" + params.toString();
+    }
+
+    function handleFilterSubmit() {
+        const baseUrl = "<?= basename(__FILE__) ?>";
+        const form = document.getElementById('filterForm');
+        const params = new URLSearchParams();
+
+        Array.from(form.elements).forEach(el => {
+            if (el.name && el.value.trim() !== '') {
+                params.append(el.name, el.value.trim());
+            }
+        });
+
+        window.location.href = baseUrl + (params.toString() ? '?' + params.toString() : '');
+        return false; 
     }
 </script>
 
