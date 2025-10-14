@@ -192,7 +192,7 @@ $jumlah_tidak_upload = $hasil['jumlah'];
                 </tr>
                 </thead>
             </table>
-            </div>
+        </div>
     </div>
 </div>
 <?php include "footer.php"; ?>

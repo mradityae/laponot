@@ -33,11 +33,12 @@ $stmtKedudukan->execute([
 $dataKedudukan = $stmtKedudukan->fetchAll(PDO::FETCH_ASSOC);
 
 $sqlKedudukanAll = "SELECT 
+                    k.id_kedudukan,
                     k.nama_kedudukan, COUNT(*) AS total 
                  FROM laporan_entitas AS le
                  JOIN notaris AS n ON le.id_notaris = n.id_notaris
                  JOIN kedudukan AS k ON n.id_kedudukan = k.id_kedudukan
-                 GROUP BY k.nama_kedudukan
+                 GROUP BY k.id_kedudukan, k.nama_kedudukan
                  ORDER BY total DESC";
 $stmtKedudukanAll = $koneksi->prepare($sqlKedudukanAll);
 $stmtKedudukanAll->execute();
@@ -116,57 +117,106 @@ foreach ($dataKedudukanAll as $row) {
 
         <!-- Grafik Laporan Bulanan -->
         <div class="row">
-            <div class="col-lg-12">
-                <center>
-                    <h4><b>Jumlah Laporan Tahun <?= $tahunIni; ?> : <?= $jumlahTahunIni; ?> Laporan</b></h4>
-                    <h4><b>Jumlah Laporan Setiap Bulannya Pada Tahun <?= $tahunIni; ?></b></h4>
-                </center><br>
-                <div id="firtsChart" style="width: 100%;height:470px;"></div>
-                <script type="text/javascript">
-                  var firtsChart = echarts.init(document.getElementById('firtsChart'));
-                  window.onresize = function() { firtsChart.resize(); };
+        <div class="col-lg-12">
+            <center>
+            <h4><b>Jumlah Laporan Tahun <?= $tahunIni; ?> : <?= $jumlahTahunIni; ?> Laporan</b></h4>
+            <h4><b>Jumlah Laporan Setiap Bulannya Pada Tahun <?= $tahunIni; ?></b></h4>
+            </center><br>
+            <div id="firtsChart" style="width: 100%;height:470px;"></div>
+            <script type="text/javascript">
+            var firtsChart = echarts.init(document.getElementById('firtsChart'));
+            window.onresize = function() { firtsChart.resize(); };
 
-                  var option = {
-                    tooltip: {},
-                    legend: { data: ['JUMLAH LAPORAN PER BULAN'] },
-                    xAxis: { data: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] },
-                    yAxis: {},
-                    series: [{
-                        name: 'JUMLAH LAPORAN PER BULAN',
-                        type: 'bar',
-                        barWidth: '50%',
-                        itemStyle: {color: '#0B1D51'},
-                        data: <?= json_encode(array_values($dataChart)); ?>
-                    }]
-                  };
-                  firtsChart.setOption(option);
-                </script>
-            </div>
+            var bulanLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            var tahunSekarang = <?= json_encode($tahunIni); ?>;
+
+            var option = {
+                tooltip: { trigger: 'axis' },
+                legend: { data: ['JUMLAH LAPORAN PER BULAN'] },
+                xAxis: { data: bulanLabels },
+                yAxis: {},
+                series: [{
+                name: 'JUMLAH LAPORAN PER BULAN',
+                type: 'bar',
+                barWidth: '50%',
+                itemStyle: { color: '#0B1D51' },
+                data: <?= json_encode(array_values($dataChart)); ?>
+                }]
+            };
+
+            firtsChart.setOption(option);
+
+            // Fungsi untuk dapatkan akhir bulan
+            function getLastDayOfMonth(year, month) {
+                return new Date(year, month, 0).getDate(); // bulan 1-12
+            }
+
+            // Event klik bar chart
+            firtsChart.on('click', function (params) {
+                var bulanIndex = params.dataIndex + 1; // index mulai 0, jadi tambah 1
+                var bulan = bulanIndex.toString().padStart(2, '0'); // ubah ke format 2 digit
+                var tahun = tahunSekarang;
+
+                // Tentukan tgl awal dan akhir bulan
+                var tglA = tahun + '-' + bulan + '-01';
+                var tglB = tahun + '-' + bulan + '-' + getLastDayOfMonth(tahun, bulan);
+
+                // Redirect
+                var url = 'daftar_laporan_entitas?tgl_a=' + tglA + '&tgl_b=' + tglB;
+                window.location.href = url;
+            });
+            </script>
         </div>
+        </div>
+
 
         <!-- Grafik Per Kedudukan -->
         <div class="row" style="margin-top: 50px;">
-            <div class="col-lg-12">
-                <center><h4><b>Jumlah Laporan per Kedudukan</b></h4></center>
-                <div id="kedudukanChart" style="width: 100%;height:470px;"></div>
-                <script type="text/javascript">
-                  var kedudukanChart = echarts.init(document.getElementById('kedudukanChart'));
-                  window.onresize = function() { kedudukanChart.resize(); };
+        <div class="col-lg-12">
+            <center><h4><b>Jumlah Laporan per Kedudukan</b></h4></center>
+            <div id="kedudukanChart" style="width: 100%;height:470px;"></div>
+            <script type="text/javascript">
+            var kedudukanChart = echarts.init(document.getElementById('kedudukanChart'));
+            window.onresize = function() { kedudukanChart.resize(); };
 
-                  var optionKedudukan = {
-                    tooltip: { trigger: 'axis' },
-                    xAxis: { type: 'category', data: <?= json_encode($kedudukanLabels); ?> },
-                    yAxis: { type: 'value' },
-                    series: [{
-                        data: <?= json_encode($kedudukanTotals); ?>,
-                        type: 'bar',
-                        itemStyle: { color: '#1a73e8' }
-                    }]
-                  };
-                  kedudukanChart.setOption(optionKedudukan);
-                </script>
-            </div>
+            // Data dari PHP
+            var kedudukanLabels = <?= json_encode(array_column($dataKedudukanAll, 'nama_kedudukan')); ?>;
+            var kedudukanTotals = <?= json_encode(array_column($dataKedudukanAll, 'total')); ?>;
+            var kedudukanIDs    = <?= json_encode(array_column($dataKedudukanAll, 'id_kedudukan')); ?>;
+
+            // Buat chart
+            var optionKedudukan = {
+                tooltip: { trigger: 'axis' },
+                xAxis: { type: 'category', data: kedudukanLabels },
+                yAxis: { type: 'value' },
+                series: [{
+                data: kedudukanTotals,
+                type: 'bar',
+                itemStyle: { color: '#1a73e8' }
+                }]
+            };
+            kedudukanChart.setOption(optionKedudukan);
+
+            // Event klik chart -> redirect
+            kedudukanChart.on('click', function (params) {
+                var index = params.dataIndex; // posisi bar yang diklik
+                var idKedudukan = kedudukanIDs[index];
+
+                // Tanggal awal & akhir otomatis
+                var tglA = '<?= date("Y") ?>-01-01';
+                var tglB = '<?= date("Y-m-d") ?>';
+
+                // Redirect ke halaman daftar
+                var url = 'daftar_laporan_entitas?tgl_a=' + tglA +
+                        '&tgl_b=' + tglB +
+                        '&id_kedudukan=' + idKedudukan;
+
+                window.location.href = url;
+            });
+            </script>
         </div>
+        </div>
+
         
         <!-- Ringkasan -->
         <h4 style="margin-top: 40px;"><b>Ringkasan Laporan Anda</b></h4>
@@ -186,8 +236,28 @@ foreach ($dataKedudukanAll as $row) {
             <?php endforeach; ?>
         </div>
 
-                <!-- Tabel Kedudukan terlambat Upload -->
-        <div class="row" style="margin-top: 50px;">
+        <h4 style="margin-top: 50px;"><b>Notaris yang baru saja menyampaikan laporan fidusia berkala</b></h4>
+        <div class="table-responsive">
+            <table id="rekapTable-serverside" class="table table-bordered table-striped" style="width:100%">
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Notaris</th>
+                    <th>Kedudukan</th>
+                    <th>Nomor Akta</th>
+                    <th>Tanggal Akta</th>
+                    <th>Pemberi Fidusia</th>
+                    <th>Penerima Fidusia</th>
+                    <th>Nomor Sertifikat</th>
+                    <th>Jenis Transaksi</th>
+                    <th>Tanggal Penginputan</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+
+        <!-- Tabel Kedudukan terlambat Upload -->
+        <!-- <div class="row" style="margin-top: 50px;">
             <div class="col-lg-12">
                 <center>
                     <h4><b>Data Kedudukan yang terlambat Upload - 
@@ -221,8 +291,7 @@ foreach ($dataKedudukanAll as $row) {
                     </table>
                 </div>
             </div>
-        </div>
-
+        </div> -->
     </div>
 </div>
 <?php include "footer.php"; ?>

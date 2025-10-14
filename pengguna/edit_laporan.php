@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option value="">-- Pilih Jenis Transaksi --</option>
                             <option value="Pendaftaran" <?= ($data['jenis_transaksi'] == 'Pendaftaran') ? 'selected' : '' ?>>Pendaftaran</option>
                             <option value="Perubahan" <?= ($data['jenis_transaksi'] == 'Perubahan') ? 'selected' : '' ?>>Perubahan</option>
-                            <option value="Pembatalan" <?= ($data['jenis_transaksi'] == 'Pembatalan') ? 'selected' : '' ?>>Pembatalan</option>
+                            <option value="Perbaikan" <?= ($data['jenis_transaksi'] == 'Perbaikan') ? 'selected' : '' ?>>Perbaikan</option>
                             <option value="Penghapusan" <?= ($data['jenis_transaksi'] == 'Penghapusan') ? 'selected' : '' ?>>Penghapusan</option>
                         </select>
                     </div>

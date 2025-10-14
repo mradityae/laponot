@@ -332,7 +332,7 @@
 		}
 	}
 
-	function unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan) {
+	function unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan, $no_sertifikat_lama = NULL) {
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		// Cek pelanggaran berdasarkan tanggal input vs tanggal akta
@@ -368,9 +368,9 @@
 		$status = "Terverifikasi";
 
 		$ambil = $koneksi->prepare("INSERT INTO laporan_entitas 
-        (id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, status_pelanggaran, keterangan_pelanggaran, keterangan) 
+        (id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, status_pelanggaran, keterangan_pelanggaran, keterangan, no_sertifikat_ref) 
         VALUES 
-        (:id_notaris, :tipe, :nomor, :tanggal, :pemberi, :penerima, :no_sertifikat, :judul_akta, :jenis_transaksi, :nilai_jaminan, :status, :status_pelanggaran, :keterangan_pelanggaran, :keterangan)");
+        (:id_notaris, :tipe, :nomor, :tanggal, :pemberi, :penerima, :no_sertifikat, :judul_akta, :jenis_transaksi, :nilai_jaminan, :status, :status_pelanggaran, :keterangan_pelanggaran, :keterangan, :no_sertifikat_lama)");
 
 		$ambil->bindParam(":id_notaris", $id_notaris);
 		$ambil->bindParam(":tipe", $tipe);
@@ -386,8 +386,7 @@
 		$ambil->bindParam(":status_pelanggaran", $status_pelanggaran);
 		$ambil->bindParam(":keterangan_pelanggaran", $keterangan_pelanggaran);
 		$ambil->bindParam(":keterangan", $keterangan);
-
-
+		$ambil->bindParam(":no_sertifikat_lama" , $no_sertifikat_lama);
 		$ambil->execute();
 
 		$lastInsertId = $koneksi->lastInsertId();

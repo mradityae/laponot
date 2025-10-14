@@ -11,21 +11,48 @@
 
 		try
 		{
-			$id_notaris     = $_POST['id'];
-			$tipe           = $_POST['tipe'];
-			$nomor          = $_POST['nomor'];
-			$tanggal        = $_POST['tanggal'];
-			$pemberi        = $_POST['pemberi'];
-			$penerima       = $_POST['penerima'];
-			$no_sertifikat  = $_POST['no_sertifikat'];
-			$judul_akta      = $_POST['judul_akta'];
-			$jenis_transaksi = $_POST['jenis_transaksi'];
-			$nilai_jaminan   = $_POST['nilai_jaminan'];
-			$keterangan 	 = $_POST['keterangan'];
+			$id_notaris     = $_POST['id'] ?? null;
+			$tipe           = $_POST['tipe'] ?? null;
+			$nomor          = $_POST['nomor'] ?? null;
+			$tanggal        = $_POST['tanggal'] ?? null;
+			$pemberi        = $_POST['pemberi'] ?? null;
+			$penerima       = $_POST['penerima'] ?? null;
+			$no_sertifikat  = $_POST['no_sertifikat'] ?? null;
+			$judul_akta      = $_POST['judul_akta'] ?? null;
+			$jenis_transaksi = $_POST['jenis_transaksi'] ?? null;
+			$nilai_jaminan   = $_POST['nilai_jaminan'] ?? null;
+			$keterangan 	 = $_POST['keterangan'] ?? null;
+			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null; 
 
 			clearstatcache();
 
-			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan)) {
+			if (isset($_POST['laporan_nihil'])) {
+				$id_notaris = $_POST['id'];
+				$tipe = "fidusia";
+				$status = "Terverifikasi";
+
+				$sql = "INSERT INTO laporan_entitas 
+						(id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, keterangan, created_at)
+						VALUES
+						(:id_notaris, :tipe, 'NIHIL', CURDATE(), 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'Tidak Relevan', :status, 'NIHIL', NOW())";
+
+				$stmt = $koneksi->prepare($sql);
+				$stmt->execute([
+					':id_notaris' => $id_notaris,
+					':tipe' => $tipe,
+					':status' => $status
+				]);
+
+				write_log("Notaris ID $id_notaris mengunggah laporan fidusia NIHIL - BERHASIL.");
+
+				echo "<script>
+					alert('Laporan NIHIL berhasil dikirim');
+					window.location.href = '$url/pengguna/daftar_laporan_entitas';
+				</script>";
+				exit;
+			}
+
+			if (unggahLaporanEntitas($koneksi, $id_notaris, $tipe, $nomor, $tanggal, $pemberi, $penerima, $no_sertifikat, $judul_akta, $jenis_transaksi, $nilai_jaminan, $keterangan, $no_sertifikat_lama)) {
 				write_log("Notaris ID $id_notaris mengunggah laporan '$tipe' dengan nomor $nomor pada $tanggal - BERHASIL.");
 				
 				echo "<script>alert('Laporan Berhasil Dikirim')</script>";

@@ -2,9 +2,10 @@
 include "header.php";
 include "../config/koneksi.php";
 include "../models/models.php";
+include_once '../log_activity.php';
 
 // Ambil data filter
-$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-01-01';
+$tgl_a = $_GET['tgl_a'] ?? date('Y-m-01', strtotime('-1 month'));
 $tgl_b = $_GET['tgl_b'] ?? date('Y-m-d');
 $id_kedudukan = $_GET['id_kedudukan'] ?? '';
 $filter_ready = $tgl_a && $tgl_b;
@@ -53,7 +54,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
           </div>
           <div class="form-group">
             <label>Kedudukan</label><br>
-            <select name="id_kedudukan" class="form-control" required>
+            <select name="id_kedudukan" class="form-control">
               <br>
               <option value="">-- Semua Kedudukan --</option>
               <?php while ($n = $daftar_kedudukan->fetch()) : ?>
@@ -91,13 +92,15 @@ function getMonthColumns($tgl_a, $tgl_b) {
                 k.id_kedudukan,
                 $bulan_sql,
                 COUNT(l.id_laporan) AS total,
+                sum(npf.nominal_penjaminan) as 'nominal',
                 COUNT(l.id_laporan) AS keterangan
               FROM notaris n
               LEFT JOIN kedudukan k ON n.id_kedudukan = k.id_kedudukan
               LEFT JOIN laporan_entitas l 
                 ON l.id_notaris = n.id_notaris 
                 AND l.tanggal BETWEEN :tgl_a AND :tgl_b
-              WHERE n.level = 2";
+              LEFT JOIN nilai_penjaminan_fidusia npf on npf.nilai_penjaminan = l.nilai_penjaminan
+              WHERE n.level = 2 and n.aktif='1'";
 
             if (!empty($id_kedudukan)) {
                 $sql .= " AND n.id_kedudukan = :id_kedudukan";
@@ -105,7 +108,7 @@ function getMonthColumns($tgl_a, $tgl_b) {
 
             $sql .= "
               GROUP BY n.id_notaris, n.nama, k.nama_kedudukan
-              ORDER BY n.nama ASC";
+              ORDER BY total DESC";
 
             $stmt = $koneksi->prepare($sql);
             $stmt->bindParam(':tgl_a', $tgl_a);
@@ -115,6 +118,12 @@ function getMonthColumns($tgl_a, $tgl_b) {
             }
             $stmt->execute();
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $total_nominal = 0;
+            $total_laporan = 0;
+            foreach ($data as $row) {
+                $total_nominal += $row['nominal'];
+                $total_laporan += $row['total'];
+            }
 
         } catch (PDOException $e) {
             // Tulis ke log (pastikan fungsi write_log() tersedia)
@@ -149,29 +158,39 @@ function getMonthColumns($tgl_a, $tgl_b) {
                     <th><?= $b['label'] ?></th>
                   <?php endforeach; ?>
                   <th>Total</th>
+                  <th>Total Nominal</th>
                   <th>Detail</th>
                 </tr>
               </thead>
               <tbody>
-                <?php $no = 1; ?>
-                <?php foreach ($data as $row): ?>
-                  <tr>
-                    <td><?= $no++ ?></td>
-                    <td><?= htmlspecialchars($row['nama_notaris']) ?></td>
-                    <td><?= htmlspecialchars($row['nama_kedudukan']) ?></td>
-                    <?php foreach ($bulan_cols as $b): ?>
-                      <td><?= $row[$b['label']] ?? 0 ?></td>
-                    <?php endforeach; ?>
-                    <td><?= $row['total'] ?></td>
-                    <td>
-                        <a href="daftar_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_kedudukan=<?= $row['id_kedudukan']; ?>&id_notaris=<?= $row['id_notaris'] ?>" 
-                          class="btn btn-info btn-sm">
-                        <i class="fa fa-search"></i> Lihat
-                        </a>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-              </tbody>
+              <?php $no = 1; ?>
+              <?php foreach ($data as $row): ?>
+                <tr>
+                  <td><?= $no++ ?></td>
+                  <td><?= htmlspecialchars($row['nama_notaris']) ?></td>
+                  <td><?= htmlspecialchars($row['nama_kedudukan']) ?></td>
+                  <?php foreach ($bulan_cols as $b): ?>
+                    <td><?= $row[$b['label']] ?? 0 ?></td>
+                  <?php endforeach; ?>
+                  <td><?= $row['total'] ?></td>
+                  <td><?= 'Rp ' . number_format($row['nominal'], 0, ',', '.') ?></td>
+                  <td>
+                    <a href="daftar_laporan_entitas?tgl_a=<?= $tgl_a ?>&tgl_b=<?= $tgl_b ?>&id_kedudukan=<?= $row['id_kedudukan']; ?>&id_notaris=<?= $row['id_notaris'] ?>" 
+                      class="btn btn-info btn-sm">
+                    <i class="fa fa-search"></i> Lihat
+                    </a>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th colspan="<?= 3 + count($bulan_cols) ?>">Total Keseluruhan</th>
+                <th><?= $total_laporan ?></th>
+                <th><?= 'Rp ' . number_format($total_nominal, 0, ',', '.') ?></th>
+                <th></th>
+              </tr>
+            </tfoot>
             </table>
           </div>
         </div>

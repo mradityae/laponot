@@ -10,7 +10,7 @@ $jenis_transaksi = isset($_GET['jenis_transaksi']) ? $_GET['jenis_transaksi'] : 
 $tanggal_awal = isset($_GET['tanggal_awal']) ? $_GET['tanggal_awal'] : "";
 $tanggal_akhir = isset($_GET['tanggal_akhir']) ? $_GET['tanggal_akhir'] : "";
 
-$valid_jenis = ['Pendaftaran', 'Perubahan', 'Pembatalan', 'Penghapusan'];
+$valid_jenis = ['Pendaftaran', 'Perubahan', 'Perbaikan', 'Penghapusan'];
 if (!in_array($jenis_transaksi, $valid_jenis)) {
     $jenis_transaksi = "";
 }
@@ -79,8 +79,8 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             <th>Pemberi Fidusia</th>
                             <th>Penerima Fidusia</th>
                             <th>Nomor Akta</th>
-                            <th>Tipe</th>
                             <th>No Sertifikat</th>
+                            <th>Tanggal Input</th>
                             <th>Jenis transaksi</th>
                             <th>Edit</th>
                             <th>Hapus</th>
@@ -107,7 +107,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             $params[":tanggal_akhir"] = $tanggal_akhir;
                         }
 
-                        $query .= " ORDER BY tanggal DESC";
+                        $query .= " ORDER BY created_at DESC";
                         $ambil = $koneksi->prepare($query);
                         foreach ($params as $key => $val) {
                             $ambil->bindValue($key, $val);
@@ -117,7 +117,7 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                         $warna = [
                             'Pendaftaran' => 'success',
                             'Perubahan' => 'info',
-                            'Pembatalan' => 'warning',
+                            'Perbaikan' => 'warning',
                             'Penghapusan' => 'danger'
                         ];
 
@@ -129,8 +129,8 @@ if (!in_array($jenis_transaksi, $valid_jenis)) {
                             echo "<td>" . $row['pemberi'] . "</td>";
                             echo "<td>" . $row['penerima'] . "</td>";
                             echo "<td>" . $row['nomor'] . "</td>";
-                            echo "<td>" . $row['tipe'] . "</td>";
                             echo "<td>" . $row['no_sertifikat'] . "</td>";
+                            echo "<td>" . $row['created_at'] . "</td>";
                             echo "<td><span class='label label-" . ($warna[$row['jenis_transaksi']] ?? 'default') . "'>" . $row['jenis_transaksi'] . "</span></td>";
                             echo "<td align='center'>
                                     <a href='edit_laporan.php?id=" . $row['id_laporan'] . "' title='Edit'>

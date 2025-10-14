@@ -131,7 +131,7 @@ date_default_timezone_Set('Asia/Jakarta');
                         <input type="checkbox" id="faq-halaman-fidusia">
                         <h3 style="background: #4682B4CC;"><label for="faq-halaman-fidusia">Dashboard Pelaporan Fidusia</label></h3>
                         <div class="p">
-                            <p align="justify">Halaman Dashboard Pelaporan Fidusia menyajikan informasi terkait laporan fidusia secara rutin. Di sisi kiri terdapat menu navigasi yang memudahkan akses ke berbagai fitur aplikasi. Sementara di bagian tengah ditampilkan data utama Pelaporan Fidusia, meliputi jumlah laporan bulanan serta ringkasan laporan seperti total laporan dan kategori laporan, yaitu Perubahan, Pendaftaran, Penghapusan, dan Pembatalan.
+                            <p align="justify">Halaman Dashboard Pelaporan Fidusia menyajikan informasi terkait laporan fidusia secara rutin. Di sisi kiri terdapat menu navigasi yang memudahkan akses ke berbagai fitur aplikasi. Sementara di bagian tengah ditampilkan data utama Pelaporan Fidusia, meliputi jumlah laporan bulanan serta ringkasan laporan seperti total laporan dan kategori laporan, yaitu Perubahan, Pendaftaran, Penghapusan, dan Perbaikan.
                                 <center><img src="../assets/img/panduan/panduan_15.png" class="img-responsive" width="700" height="400"></center>
                             </p>
                         </div>
