@@ -138,7 +138,7 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
                       $sql .= " AND l.jenis_transaksi = :jenis_transaksi";
                   }
 
-                  $sql .= " ORDER BY l.tanggal ASC";
+                  $sql .= " ORDER BY l.created_at DESC";
                   $stmt = $koneksi->prepare($sql);
                   $stmt->bindParam(":tgl_a", $tgl_a);
                   $stmt->bindParam(":tgl_b", $tgl_b);
