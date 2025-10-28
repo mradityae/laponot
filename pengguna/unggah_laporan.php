@@ -130,7 +130,7 @@ date_default_timezone_set('Asia/Jakarta');
 
                                 <div class="form-group">
                                     <label>No Sertifikat</label>
-                                    <input type="text" name="no_sertifikat" class="form-control" />
+                                    <input type="text" name="no_sertifikat" class="form-control" required/>
                                 </div>
 
                                 <div class="form-group">
