@@ -7,7 +7,7 @@
     $start       = (int)($_POST['start'] ?? 0);
     $length      = (int)($_POST['length'] ?? 10);
     $searchValue = $_POST['search']['value'] ?? '';
-    $orderColIdx = (int)($_POST['order'][0]['column'] ?? 8);
+    $orderColIdx = (int)($_POST['order'][0]['column'] ?? 7);
     $orderDir    = strtolower($_POST['order'][0]['dir'] ?? 'desc');
     $orderDir    = $orderDir === 'asc' ? 'asc' : 'desc';
 
@@ -17,9 +17,9 @@
         3 => 'le.tanggal',
         4 => 'le.pemberi',
         5 => 'le.penerima',
-        6 => 'le.no_sertifikat',
-        7 => 'le.jenis_transaksi',
-        8 => 'le.created_at'
+        // 6 => 'le.no_sertifikat',
+        6 => 'le.jenis_transaksi',
+        7 => 'le.created_at'
     ];
     $orderBy = $columns[$orderColIdx] ?? 'le.created_at';
 
@@ -78,7 +78,7 @@
             htmlspecialchars($r['tanggal']),
             htmlspecialchars($r['pemberi']),
             htmlspecialchars($r['penerima']),
-            htmlspecialchars($r['no_sertifikat']),
+            // htmlspecialchars($r['no_sertifikat']),
             htmlspecialchars($r['jenis_transaksi']),
             htmlspecialchars($r['created_at'])
         ];

@@ -186,7 +186,7 @@ $jumlah_tidak_upload = $hasil['jumlah'];
                     <th>Tanggal Akta</th>
                     <th>Pemberi Fidusia</th>
                     <th>Penerima Fidusia</th>
-                    <th>Nomor Sertifikat</th>
+                    <!-- <th>Nomor Sertifikat</th> -->
                     <th>Jenis Transaksi</th>
                     <th>Tanggal Penginputan</th>
                 </tr>
