@@ -162,10 +162,13 @@
                                 <li>
                                     <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia Per Wilayah</a>
                                 </li>
+                                <li>
+                                    <a href="notaris_belum_lapor"><i class="fa fa-bar-chart "></i>Notaris Belum Lapor Fidusia</a>
+                                </li>
                             </ul>
                     </li>
                     <li>
-                        <a  href="hasil_survey"><i class="fa fa-bar-chart "></i>Survey</a>
+                        <a href="hasil_survey"><i class="fa fa-bar-chart "></i>Survey</a>
                     </li>
                     <li>
                         <a href="#"  onclick='konfirmasiKeluar()'><i class="fa fa-sign-out"></i>Keluar</a>
