@@ -28,7 +28,7 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
     </div>
 
     <div class="panel panel-default">
-      <form method="get" action="">
+      <form method="get" action="" onsubmit="cleanEmptyFields(this)">
         <div class="modal-body">
           <div class="form-group">
             <label>Dari Tanggal</label>
@@ -175,5 +175,14 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
     <?php endif; ?>
   </div>
 </div>
+
+<script>
+  function cleanEmptyFields(form) {
+    const inputs = form.querySelectorAll('input, select');
+    inputs.forEach(input => {
+      if (!input.value) input.name = ''; // hapus name biar nggak dikirim
+    });
+}
+</script>
 
 <?php include "footer.php"; ?>

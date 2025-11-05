@@ -148,9 +148,9 @@
                             <li>
                                 <a href="tambah_pengguna_super"><i class="fa fa-plus-square-o "></i>Tambah</a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="daftar_notaris_migrasi"><i class="fa fa-file-text-o"></i>Data Notaris Hasil Migrasi</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <li>
@@ -162,9 +162,9 @@
                                 <li>
                                     <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia Per Wilayah</a>
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <a href="notaris_belum_lapor"><i class="fa fa-bar-chart "></i>Notaris Belum Lapor Fidusia</a>
-                                </li>
+                                </li> -->
                             </ul>
                     </li>
                     <li>
