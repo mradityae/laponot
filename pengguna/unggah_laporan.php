@@ -152,7 +152,7 @@ date_default_timezone_set('Asia/Jakarta');
 
                                 <div class="form-group" id="keterangan_box" style="display:none;">
                                     <label>Keterangan Perubahan / Perbaikan</label>
-                                    <textarea name="keterangan" id="input_keterangan" class="form-control" rows="2"></textarea>
+                                    <textarea name="ket" id="input_keterangan" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
                         </div>

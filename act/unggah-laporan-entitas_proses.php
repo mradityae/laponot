@@ -21,7 +21,7 @@
 			$judul_akta      = $_POST['judul_akta'] ?? null;
 			$jenis_transaksi = $_POST['jenis_transaksi'] ?? null;
 			$nilai_jaminan   = $_POST['nilai_jaminan'] ?? null;
-			$keterangan 	 = $_POST['keterangan'] ?? null;
+			$keterangan 	 = $_POST['ket'] ?? null;
 			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null; 
 
 			clearstatcache();
