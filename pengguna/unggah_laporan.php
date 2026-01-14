@@ -168,26 +168,66 @@ date_default_timezone_set('Asia/Jakarta');
 
                 <!-- ================= FORM NIHIL ================= -->
                 <div class="tab-pane fade" id="fidusia_nihil">
-                    <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php" method="POST" onsubmit="return confirm('Kirim laporan NIHIL untuk bulan ini?')">
+
+                    <form action="<?=$url;?>act/unggah-laporan-entitas_proses.php"
+                        method="POST"
+                        onsubmit="return confirm('Kirim laporan NIHIL untuk periode ini?')">
+
+                        <!-- HIDDEN PARAM -->
                         <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
                         <input type="hidden" name="tipe" value="fidusia" />
                         <input type="hidden" name="laporan_nihil" value="1" />
 
-                        <div class="alert alert-warning text-center" style="background-color:#FFF3CD;border:1px solid #FFEEBA;color:#664D03;">
+                        <!-- INFO -->
+                        <div class="alert alert-warning text-center"
+                            style="background-color:#FFF3CD;border:1px solid #FFEEBA;color:#664D03;">
                             <strong>Anda akan mengirim Laporan Fidusia NIHIL.</strong><br>
                             Tidak ada data akta yang diunggah untuk periode ini.
                         </div>
 
-                        <div class="form-group mt-3 text-center">
-                            <input type="checkbox" id="confirm_nihil" onclick="document.getElementById('submit_fidusia_nihil').disabled = !this.checked;">
-                            <label style="color:red;">Saya menyatakan tidak ada laporan fidusia untuk bulan ini.</label>
+                        <!-- PERIODE NIHIL -->
+                        <div class="form-group mt-3">
+                            <label class="font-weight-bold">
+                                Periode Laporan <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="month"
+                                name="tanggal_nihil"
+                                class="form-control"
+                                value="<?=date('Y-m')?>"
+                                required>
+
+                            <small class="form-text text-muted">
+                                Pilih bulan dan tahun laporan fidusia nihil.
+                            </small>
                         </div>
 
-                        <div class="text-center">
-                            <input type="submit" id="submit_fidusia_nihil" name="submit" value="Kirim Laporan Nihil" class="btn btn-warning" disabled>
+                        <!-- PERNYATAAN -->
+                        <div class="form-group mt-3 text-center">
+                            <input type="checkbox"
+                                id="confirm_nihil"
+                                onclick="document.getElementById('submit_fidusia_nihil').disabled = !this.checked;">
+
+                            <label for="confirm_nihil" style="color:red;">
+                                Saya menyatakan tidak ada laporan fidusia untuk periode tersebut.
+                            </label>
                         </div>
+
+                        <!-- SUBMIT -->
+                        <div class="text-center mt-3">
+                            <input type="submit"
+                                id="submit_fidusia_nihil"
+                                name="submit"
+                                value="Kirim Laporan Nihil"
+                                class="btn btn-warning"
+                                disabled>
+                        </div>
+
                     </form>
+
                 </div>
+
+
             </div>
         </div>
     </div>

@@ -459,6 +459,31 @@
 		return $row['jml'];
 	}
 
+	function cekUpdated($koneksi, $id_notaris, $tanggal, $id_laporan){
+		$stmt = $koneksi->prepare("
+			SELECT 1 
+			FROM laporan 
+			WHERE id_notaris = :id_notaris
+			AND MONTH(tanggal) = :bulan
+			AND YEAR(tanggal) = :tahun
+			AND id_laporan != :id_laporan
+			LIMIT 1
+		");
+
+		$bulan = (int)date('n', strtotime($tanggal));
+		$tahun = (int)date('Y', strtotime($tanggal));
+
+		$stmt->execute([
+			':id_notaris'  => $id_notaris,
+			':bulan'       => $bulan,
+			':tahun'       => $tahun,
+			':id_laporan'  => $id_laporan
+		]);
+
+		return $stmt->rowCount() === 0;
+	}
+
+
 	function cekUploaded($koneksi, $id_notaris, $tanggal){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $ambil=$koneksi->prepare("SELECT * FROM laporan WHERE id_notaris=:id_notaris and month(tanggal)=:tanggal and year(tanggal)=:tahun");
@@ -527,6 +552,40 @@
 			$koneksi = null;
 			return false;
 		}
+	}
+
+	function editLaporanBulanan(
+		$koneksi,
+		$id_laporan,
+		$tanggal,
+		$jml_buku_daftar,
+		$jml_tangan_dibukukan,
+		$jml_tangan_disahkan,
+		$jml_buku_protes,
+		$file_upload
+	){
+		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$stmt = $koneksi->prepare("
+			UPDATE laporan SET
+				tanggal = :tanggal,
+				jml_buku_daftar = :a,
+				jml_tangan_dibukukan = :b,
+				jml_tangan_disahkan = :c,
+				jml_buku_protes = :d,
+				file_upload = :f
+			WHERE id_laporan = :id
+		");
+
+		return $stmt->execute([
+			':tanggal' => $tanggal,
+			':a'       => $jml_buku_daftar,
+			':b'       => $jml_tangan_dibukukan,
+			':c'       => $jml_tangan_disahkan,
+			':d'       => $jml_buku_protes,
+			':f'       => $file_upload,
+			':id'      => $id_laporan
+		]);
 	}
 
 	function kirimUlangLaporan($koneksi, $id_laporan, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes, $file_upload){
