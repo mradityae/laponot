@@ -98,7 +98,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 else
 {
 	echo "WRONG ACCESS";
-        $link = "https://kabayanpasti.kemenkumham.go.id";
+        $link = "https://kabayanpasti.kemenkum.go.id";
         header("refresh:0.1; $link");	
 }
 

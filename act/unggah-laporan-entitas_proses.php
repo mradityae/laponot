@@ -21,32 +21,47 @@
 			$judul_akta      = $_POST['judul_akta'] ?? null;
 			$jenis_transaksi = $_POST['jenis_transaksi'] ?? null;
 			$nilai_jaminan   = $_POST['nilai_jaminan'] ?? null;
-			$keterangan 	 = $_POST['keterangan'] ?? null;
-			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null; 
+			$keterangan 	 = $_POST['ket'] ?? null;
+			$no_sertifikat_lama = $_POST['no_sertifikat_lama'] ?? null;
+			$tanggal_nihil = $_POST['tanggal_nihil'] ?? null; 
 
 			clearstatcache();
 
 			if (isset($_POST['laporan_nihil'])) {
+
+				if (empty($tanggal_nihil)) {
+					echo "<script>alert('Periode laporan NIHIL wajib diisi');history.back();</script>";
+					exit;
+				}
+
+				// jadikan tanggal = tanggal pertama di bulan tsb
+				$tanggal_fix = $tanggal_nihil . "-01";
+
 				$id_notaris = $_POST['id'];
 				$tipe = "fidusia";
 				$status = "Terverifikasi";
 
 				$sql = "INSERT INTO laporan_entitas 
-						(id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat, judul_akta, jenis_transaksi, nilai_penjaminan, status, keterangan, created_at)
+						(id_notaris, tipe, nomor, tanggal, pemberi, penerima, no_sertifikat,
+						judul_akta, jenis_transaksi, nilai_penjaminan, status, keterangan, created_at)
 						VALUES
-						(:id_notaris, :tipe, 'NIHIL', CURDATE(), 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'NIHIL', 'Tidak Relevan', :status, 'NIHIL', NOW())";
+						(:id_notaris, :tipe, 'NIHIL', :tanggal,
+						'NIHIL', 'NIHIL', 'NIHIL',
+						'NIHIL', 'NIHIL', 'Tidak Relevan',
+						:status, 'NIHIL', NOW())";
 
 				$stmt = $koneksi->prepare($sql);
 				$stmt->execute([
 					':id_notaris' => $id_notaris,
-					':tipe' => $tipe,
-					':status' => $status
+					':tipe'       => $tipe,
+					':tanggal'    => $tanggal_fix,
+					':status'     => $status
 				]);
 
-				write_log("Notaris ID $id_notaris mengunggah laporan fidusia NIHIL - BERHASIL.");
+				write_log("Notaris ID $id_notaris mengunggah laporan fidusia NIHIL periode $tanggal_nihil - BERHASIL.");
 
 				echo "<script>
-					alert('Laporan NIHIL berhasil dikirim');
+					alert('Laporan NIHIL periode $tanggal_nihil berhasil dikirim');
 					window.location.href = '$url/pengguna/daftar_laporan_entitas';
 				</script>";
 				exit;

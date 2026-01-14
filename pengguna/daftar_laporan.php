@@ -35,6 +35,7 @@ $id = $_SESSION["kode_user"];
                                 <th>Jumlah Akta Surat Di Bawah Tangan Yang Dibukukan</th>
                                 <th>Jumlah Akta Surat Di Bawah Tangan Yang Disahkan</th>
                                 <th>Jumlah Akta Protes</th>
+                                <th>Jenis Laporan</th>
                                 <th>File Laporan</th>
                                 <th>Status</th>
                                 <th>Keterangan</th>
@@ -65,6 +66,7 @@ $id = $_SESSION["kode_user"];
                                     echo "<td>".$row['jml_tangan_dibukukan'];
                                     echo "<td>".$row['jml_tangan_disahkan'];
                                     echo "<td>".$row['jml_buku_protes'];
+                                    echo "<td>".(empty($row['jenis_laporan']) ? "-" : $row['jenis_laporan']);
                                     echo "<td> <a href=".$row['file_upload']." target='_blank'>Lihat File Laporan</a>";
                                     echo "<td>".$row['status'];
                                     
@@ -83,6 +85,13 @@ $id = $_SESSION["kode_user"];
                                         echo "<td align='center'>
                                             <a href='kirim_ulang.php?idLaporan=".$row['id_laporan']."'><img src='../assets/img/edit.png' border='0' height='20' width='20'></img>
                                             </a>
+                                            </td>";
+                                    }
+                                    else if ($row['status'] == 'Laporan Terkirim'){
+                                        echo "<td align='center'>
+                                                <a href='edit_laporan_bulanan.php?idLaporan=".$row['id_laporan']."'>
+                                                    <img src='../assets/img/edit.png' height='20' width='20'>
+                                                </a>
                                             </td>";
                                     }
                                     else
