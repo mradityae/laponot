@@ -162,6 +162,9 @@
                                 <li>
                                     <a href="daftar_laporan_entitas"><i class="fa fa-file-text-o"></i>Laporan Fidusia Per Wilayah</a>
                                 </li>
+                                <li>
+                                    <a href="rekap_status_fidusia"><i class="fa fa-file-text-o"></i>Status Laporan Fidusia</a>
+                                </li>
                                 <!-- <li>
                                     <a href="notaris_belum_lapor"><i class="fa fa-bar-chart "></i>Notaris Belum Lapor Fidusia</a>
                                 </li> -->
