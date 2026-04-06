@@ -43,8 +43,17 @@
 
                 <div class="form-group">
                     <label>Periode Laporan</label>
-                    <input type="date" name="tanggal_laporan" class="form-control"
-                        value="<?= $displayDate; ?>">
+                    <?php 
+                        // Ambil data tanggal dari DB (misal 2026-03-01) 
+                        // Lalu potong hanya ambil Tahun dan Bulannya saja (2026-03)
+                        $formattedMonth = date('Y-m', strtotime($displayDate)); 
+                    ?>
+                    <input type="month" 
+                        name="tanggal_laporan" 
+                        class="form-control" 
+                        value="<?= $formattedMonth; ?>" 
+                        required>
+                    <small class="text-muted">Format: Bulan dan Tahun</small>
                 </div>
 
                 <div class="form-group">

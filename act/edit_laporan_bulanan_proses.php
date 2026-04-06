@@ -29,7 +29,8 @@ try {
     // =======================
     $id_laporan           = $_POST['id_laporan'];
     $id_notaris           = $_POST['id_notaris'];
-    $tanggal              = $_POST['tanggal_laporan'];
+    $tanggal_input          = $_POST['tanggal_laporan'];
+    $tanggal                = $tanggal_input . "-01";
     $jml_buku_daftar      = $_POST['jml_buku_daftar'];
     $jml_tangan_dibukukan = $_POST['jml_tangan_dibukukan'];
     $jml_tangan_disahkan  = $_POST['jml_tangan_disahkan'];
