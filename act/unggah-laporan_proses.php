@@ -10,7 +10,8 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 	try
 	{
 		$id_notaris 			= $_POST['id'];
-		$tanggal				= $_POST['tanggal_laporan'];
+		$tanggal_input          = $_POST['tanggal_laporan'];
+		$tanggal                = $tanggal_input . "-01";
 		$jml_buku_daftar 		= $_POST['jml_buku_daftar'];
 		$jml_tangan_dibukukan 	= $_POST['jml_tangan_dibukukan'];
 		$jml_tangan_disahkan 	= $_POST['jml_tangan_disahkan'];

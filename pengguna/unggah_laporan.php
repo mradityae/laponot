@@ -24,7 +24,8 @@ date_default_timezone_set('Asia/Jakarta');
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Periode Laporan</label>
-                            <input type="date" name="tanggal_laporan" class="form-control" required/>
+                            <input type="month" name="tanggal_laporan" class="form-control" value="<?=date('Y-m', strtotime('-1 month'))?>" required/>
+                            <small class="text-muted">Pilih Bulan dan Tahun Laporan</small>
                         </div>
 
                         <div class="form-group">
