@@ -332,24 +332,33 @@
 
 	function notifUpload($koneksi, $id_notaris, $tanggal){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$dateObj = new DateTime($tanggal_sekarang);
+		$dateObj->modify('-1 month'); 
+		
+		$bulanLalu = $dateObj->format('n'); 
+		$tahunLalu = $dateObj->format('Y');
+
+		$currentDate = new DateTime($tanggal_sekarang);
+		$deadline = "10 " . strtoupper($currentDate->format('F Y'));
         $ambil=$koneksi->prepare("SELECT * FROM laporan WHERE id_notaris=:id_notaris and month(tanggal)=:tanggal and year(tanggal)=:tahun");
 
-        $bulanInt = date('n', strtotime($tanggal));
-        $tahunInt = date('Y', strtotime($tanggal));
         $ambil->BindParam(":id_notaris",$id_notaris,PDO::PARAM_STR);
-        $ambil->BindParam(":tanggal",$bulanInt,PDO::PARAM_STR);
-        $ambil->BindParam(":tahun",$tahunInt,PDO::PARAM_STR);
+		$ambil->BindParam(":tanggal", $bulanLalu, PDO::PARAM_INT);
+	    $ambil->BindParam(":tahun", $tahunLalu, PDO::PARAM_INT);
 		$ambil->execute();
 		$count = $ambil->rowCount();
 		if($count == 0)
 		{
 			$koneksi = null;
-			$output = '<div class="alert alert-danger" role="alert">ANDA BELUM MENGUNGGAH LAPORAN BULAN INI</div>';
+			// $output = '<div class="alert alert-danger" role="alert">ANDA BELUM MENGUNGGAH LAPORAN BULAN INI</div>';
+			$output = '<div class="alert alert-danger" role="alert">ANDA BELUM MENGUNGGAH LAPORAN BULANAN</div>';			
 		}
 		else
 		{
 			$koneksi = null;
-			 $output = '<div class="alert alert-warning" role="alert">ANDA SUDAH MENGUNGGAH LAPORAN BULAN INI</div>';
+			// $output = '<div class="alert alert-warning" role="alert">ANDA SUDAH MENGUNGGAH LAPORAN BULAN INI</div>';
+			$output = '<div class="alert alert-warning" role="alert">ANDA SUDAH MENGUNGGAH LAPORAN BULANAN</div>';
 		}
 
 		return $output;
