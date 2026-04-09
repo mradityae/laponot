@@ -74,7 +74,7 @@ if(isset($_POST['submit'])){
 
 						if(!$mail->send())
 						{
-							echo "<script>alert('Registarsi Berhasil. Silahkan untuk login atau masuk ke aplikasi menggunakan email dan password yang telah didaftarkan.')</script>";
+							echo "<script>alert('Registrasi Berhasil. Silahkan untuk login atau masuk ke aplikasi menggunakan email dan password yang telah didaftarkan.')</script>";
 
 							$link = $url;
 							header("refresh:0; url=$link");
@@ -83,7 +83,7 @@ if(isset($_POST['submit'])){
 						}
 						else
 						{
-						    echo "<script>alert('Registarsi Berhasil. Silahkan untuk login atau masuk ke aplikasi menggunakan email dan password yang telah didaftarkan.')</script>";
+						    echo "<script>alert('Registrasi Berhasil. Silahkan untuk login atau masuk ke aplikasi menggunakan email dan password yang telah didaftarkan.')</script>";
 							$link = $url;
 							header("refresh:0; url=$link");
 							/*echo 'Message has been sent';*/

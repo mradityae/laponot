@@ -95,14 +95,17 @@ date_default_timezone_Set('Asia/Jakarta');
                     <p align="justify">3. Perlu diperhatikan dalam pengisian form registrasi, pada bagian Email, pastikan email Anda aktif. Email tersebut akan digunakan untuk proses aktivasi akun setelah proses registrasi selesai. Pastikan pula dalam pengisian password sesuai dengan ketentuan dan pengisian captcha yang sesuai dengan yang ditampilkan. Jika seluruh data telah terisi, klik Simpan untuk menyelesaikan proses registrasi.
                         <center><img src="../assets/img/panduan/panduan_3.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
-                    <p align="justify">4. Akan muncul notifikasi bahwa Registrasi akun telah berhasil. Sebelum menggunakan aplikasi dengan akun yang telah terdaftar, Anda diharuskan terlebih dahulu melakukan aktivasi akun. Link aktivasi akan dikirimkan ke email yang Anda Masukkan pada saat registrasi akun. Klik Ok untuk menutup notifikasi. Proses registrasi telah selesai.
+                    <p align="justify">4. Akan muncul notifikasi bahwa registrasi akun telah berhasil. Setelah registrasi selesai, akun dapat langsung digunakan. Klik OK untuk menutup notifikasi.
+                        <center><img src="../assets/img/panduan/panduan_4_modify.jpg" class="img-responsive" width="700" height="400"></center>
+                    </p>
+                    <!-- <p align="justify">4. Akan muncul notifikasi bahwa Registrasi akun telah berhasil. Sebelum menggunakan aplikasi dengan akun yang telah terdaftar, Anda diharuskan terlebih dahulu melakukan aktivasi akun. Link aktivasi akan dikirimkan ke email yang Anda Masukkan pada saat registrasi akun. Klik Ok untuk menutup notifikasi. Proses registrasi telah selesai.
                         <center><img src="../assets/img/panduan/panduan_4.jpg" class="img-responsive" width="700" height="400"></center>
-                    </p>                   
+                    </p>                    -->
                 </div>
             </div>
 
             <!-- Aktivasi Akun -->
-            <div class="c">
+            <!-- <div class="c">
                 <input type="checkbox" id="faq-7">
                 <h3><label for="faq-7">Aktivasi Akun</label></h3>
                 <div class="p">
@@ -118,7 +121,7 @@ date_default_timezone_Set('Asia/Jakarta');
                     <center><img src="../assets/img/panduan/panduan_7.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>              
                 </div>
-            </div>
+            </div> -->
 
             <!-- Panduan Laporan Fidusia -->
             <div class="d">
