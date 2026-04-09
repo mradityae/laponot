@@ -134,6 +134,9 @@
                                 <li>
                                     <a href="index_waktu"><i class="fa fa-calendar"></i>Waktu</a>
                                 </li>
+                                <li>
+                                    <a href="rekap_laporan_bulanan"><i class="fa fa-calendar"></i>Rekap Laporan Bulanan</a>
+                                </li>
                             </ul>
                     </li>
                     <li>
