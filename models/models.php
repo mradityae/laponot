@@ -330,40 +330,56 @@
 		return $output;
 	}
 
-	function notifUpload($koneksi, $id_notaris, $tanggal){
+	function notifUpload($koneksi, $id_notaris, $tanggal) {
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$dateObj = new DateTime($tanggal_sekarang);
+		$bulanIndo = [
+			1 => "JANUARI", 2 => "FEBRUARI", 3 => "MARET", 4 => "APRIL", 
+			5 => "MEI", 6 => "JUNI", 7 => "JULI", 8 => "AGUSTUS", 
+			9 => "SEPTEMBER", 10 => "OKTOBER", 11 => "NOVEMBER", 12 => "DESEMBER"
+		];
+
+		$dateObj = new DateTime($tanggal);
 		$dateObj->modify('-1 month'); 
 		
-		$bulanLalu = $dateObj->format('n'); 
+		$bulanLalu = (int)$dateObj->format('n');
 		$tahunLalu = $dateObj->format('Y');
+		$namaBulanLalu = $bulanIndo[$bulanLalu];
 
-		$currentDate = new DateTime($tanggal_sekarang);
-		$deadline = "10 " . strtoupper($currentDate->format('F Y'));
-        $ambil=$koneksi->prepare("SELECT * FROM laporan WHERE id_notaris=:id_notaris and month(tanggal)=:tanggal and year(tanggal)=:tahun");
+		$currentDate = new DateTime($tanggal);
+		$bulanSekarang = (int)$currentDate->format('n');
+		$tahunSekarang = $currentDate->format('Y');
+		$deadline = "10 " . $bulanIndo[$bulanSekarang] . " " . $tahunSekarang;
 
-        $ambil->BindParam(":id_notaris",$id_notaris,PDO::PARAM_STR);
-		$ambil->BindParam(":tanggal", $bulanLalu, PDO::PARAM_INT);
-	    $ambil->BindParam(":tahun", $tahunLalu, PDO::PARAM_INT);
+		$ambil=$koneksi->prepare("SELECT * FROM laporan WHERE id_notaris=:id_notaris and month(tanggal)=:tanggal and year(tanggal)=:tahun");
+
+		$ambil->bindParam(":id_notaris", $id_notaris, PDO::PARAM_STR);
+		$ambil->bindParam(":tanggal", $bulanLalu, PDO::PARAM_INT);
+		$ambil->bindParam(":tahun", $tahunLalu, PDO::PARAM_INT);
 		$ambil->execute();
 		$count = $ambil->rowCount();
-		if($count == 0)
-		{
+
+		if ($count == 0) {
 			$koneksi = null;
 			// $output = '<div class="alert alert-danger" role="alert">ANDA BELUM MENGUNGGAH LAPORAN BULAN INI</div>';
-			$output = '<div class="alert alert-danger" role="alert">ANDA BELUM MENGUNGGAH LAPORAN BULANAN</div>';			
-		}
-		else
-		{
+			$output = '
+			<div class="alert alert-danger" role="alert" style="border-left: 5px solid #dc3545;">
+				<i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 
+				<strong>PERINGATAN!</strong> ANDA BELUM MENGUNGGAH LAPORAN PADA BULAN SEBELUMNYA (<b>' . $namaBulanLalu . '</b>).<br> 
+				DEADLINE unggah adalah tanggal 15 setiap bulannya (<b>Deadline ' . $deadline . '</b>).
+			</div>';
+		} else {
 			$koneksi = null;
 			// $output = '<div class="alert alert-warning" role="alert">ANDA SUDAH MENGUNGGAH LAPORAN BULAN INI</div>';
-			$output = '<div class="alert alert-warning" role="alert">ANDA SUDAH MENGUNGGAH LAPORAN BULANAN</div>';
+			$output = '
+			<div class="alert alert-success" role="alert" style="border-left: 5px solid #28a745;">
+				<i class="fa fa-check-circle" aria-hidden="true"></i> 
+				ANDA SUDAH MENGUNGGAH LAPORAN BULAN <b>' . $namaBulanLalu . '</b>. TERIMA KASIH.
+			</div>';
 		}
 
 		return $output;
 	}
-
 
 	function jmlLaporanSuperAdmin($koneksi, $status){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
