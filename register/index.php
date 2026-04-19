@@ -130,8 +130,16 @@
                             <div class="row">
                                 <form action="<?=$url;?>act/tambah-notaris_proses.php" method="POST">
                                     <div class="col-md-12">
-                                        <label>Nama</label>
+                                        <label>Nama (Tanpa Gelar)</label>
                                         <input type="text" name="nama" class="form-control" required/>
+                                        <br>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>NIK</label>
+                                        <input type="text" name="nik" class="form-control" maxlength="16"
+                                            pattern="[0-9]{16}" 
+                                            onkeypress="return isNumberKey(event)"
+                                            placeholder="Masukkan NIK (16 digit)" required/>
                                         <br>
                                     </div>
                                      <div class="col-md-12">

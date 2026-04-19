@@ -21,13 +21,17 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$email          	= RemoveSpecialChar($_POST['email']);
 		$password       	= RemoveSpecialChar($_POST['password']);
 		$passwordulang  	= RemoveSpecialChar($_POST['passwordulang']);
-		
+		$nik  				= RemoveSpecialChar($_POST['nik']);
+		$alasan 			= RemoveSpecialChar($_POST['alasan']) ?? null;
+		if(RemoveSpecialChar($_POST['aktif']) == 1){
+			$alasan = null;
+		}
 
 		//CEK APAKAN PASSWORD DAN MASUKKAN KEMBALI PASSWORD KOSONG
 		if (($password == null || $password == "") || ($passwordulang == null || $passwordulang == "")) 
 		{	//CEK APAKAH EMAIL BARU KOSONG
 			
-			if (ubahNotaris($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif)) 
+			if (ubahNotaris($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif, $nik, $alasan)) 
 			{	//KONDISI BERHASIL MENGUBAH DATA
 				echo "<script>alert('Data Notaris Berhasil Diubah')</script>";
 				$link = $url."admin/daftar_notaris";
@@ -50,7 +54,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 			}
 			else
 			{	
-				if (ubahNotarisPassword($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif,$password)) 
+				if (ubahNotarisPassword($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif,$password, $nik, $alasan)) 
 				{	//BERHASIL
 					echo "<script>alert('Data Notaris Berhasil Diubah')</script>";
 					$link = $url."admin/daftar_notaris";

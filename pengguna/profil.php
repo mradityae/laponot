@@ -45,16 +45,26 @@ include "header.php";
 			                      <input type="hidden" name="id_notaris" value="<?php echo $d['id_notaris']?>"></input>
 
 			                      <div class="form-group">
-			                          <div class="col-xs-6" style="margin-bottom: 20">
-			                              <label for="nama"><h4>Nama</h4></label>
-			                              <input type="text" name="nama" class="form-control" value="<?php echo $d['nama']?>" required/>
-			                          </div>
+									<div class="col-xs-6" style="margin-bottom: 20">
+										<label for="nama"><h4>Nama</h4></label>
+										<input type="text" name="nama" class="form-control" value="<?php echo $d['nama']?>" required/>
+									</div>
 
-			                          <div class="col-xs-6" style="margin-bottom: 20">
-			                            <label for="email"><h4>Email</h4></label>
-			                              <input type="text" name="email" class="form-control" value="<?php echo $d['email']?>" readonly/>
-			                          </div>
-			                      </div>
+									<div class="col-xs-6" style="margin-bottom: 20">
+										<label for="nik"><h4>NIK</h4></label>
+										<input type="text" name="nik" class="form-control" 
+											value="<?php echo $d['nik']?>" 
+											maxlength="16"
+											pattern="[0-9]{16}"
+											onkeypress="return isNumberKey(event)" 
+											required/>
+									</div>
+
+									<div class="col-xs-6" style="margin-bottom: 20">
+										<label for="email"><h4>Email</h4></label>
+										<input type="text" name="email" class="form-control" value="<?php echo $d['email']?>" readonly/>
+									</div>
+								</div>
 
 			                      <div class="form-group">
 			                          

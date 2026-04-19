@@ -23,6 +23,7 @@ if(isset($_POST['submit'])){
 		$password       	= RemoveSpecialChar($_POST['password']);
 		$passwordulang  	= RemoveSpecialChar($_POST['passwordulang']);
 		$captcha        	= RemoveSpecialChar($_POST['captcha']);
+		$nik  	        	= RemoveSpecialChar($_POST['nik']);
 
 		$fullDirBaru 		= $url.'act/photo/user.png';
 
@@ -40,7 +41,7 @@ if(isset($_POST['submit'])){
 			else
 			{
 				//TAMBAH DATA KE DATABASE
-				if (tambahNotaris($koneksi, $nama, $jenis_kelamin, $kedudukan, $skPengangkatan, $tglSkPengangkatan, $baPelantikan, $tglBaPelantikan ,$alamat, $telepon, $email, $password,2,1, $fullDirBaru))
+				if (tambahNotaris($koneksi, $nama, $jenis_kelamin, $kedudukan, $skPengangkatan, $tglSkPengangkatan, $baPelantikan, $tglBaPelantikan ,$alamat, $telepon, $email, $password,2,1, $fullDirBaru, $nik))
 				{
 					//tambah ke tabel tocode buat link invitation
 					$secretCode = addToCode($koneksi, $email);
