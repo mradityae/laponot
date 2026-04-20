@@ -28,7 +28,7 @@ include("../config/koneksi.php");
 								$ambil->execute();
 								$count = $ambil->rowCount();
 								$d = $ambil->fetch(PDO::FETCH_ASSOC);
-								$displayDate = date('F_Y', strtotime($d['tanggal']));
+								$displayDate = date('Y-m', strtotime($d['tanggal']));
 								?>
 								<form action="<?=$url;?>act/kirim-ulang_proses.php" method="POST" enctype="multipart/form-data">
 									
@@ -37,7 +37,7 @@ include("../config/koneksi.php");
 
 									<div class="col-md-12">
 		                                <label>Periode Laporan</label>
-		                                <input type="text" name="tanggal_laporan" class="form-control" readonly="true" value="<?php echo $displayDate?>" required/>
+		                                <input type="month" name="tanggal_laporan" class="form-control" readonly="true" value="<?php echo $displayDate?>" required/>
 		                                <br>
 		                            </div>
 

@@ -25,6 +25,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$ukuran = $_FILES['file']['size'];
 		$fileTemp = $_FILES['file']['tmp_name'];
 		$direktory = 'upload/'.$id_notaris;
+		$tanggal_laporan = date('F_Y', strtotime($tanggal_laporan));
 		$dirSaveFile = $direktory.'/'.'Laporan-'.$tanggal_laporan.'.'.$ekstensi;
 		$fullDirBaru = $url.'act/'.$dirSaveFile; 
 
