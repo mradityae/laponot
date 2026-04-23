@@ -119,6 +119,81 @@
     </div>
 	<!-- /HK Wrapper -->
 
+    <div class="modal fade" id="modalFAQ" tabindex="-1" role="dialog" aria-labelledby="modalFAQLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
+            <div class="modal-header bg-primary text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <h4 class="modal-title text-white font-weight-bold" id="modalFAQLabel">
+                    <i class="feather-icon mr-10"><i data-feather="info"></i></i> 
+                    Informasi Penting Pelaporan Notaris
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="card border-0 mb-2 shadow-sm" style="border-radius: 10px;">
+                <div class="card-header bg-white border-0" id="headingThree">
+                    <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 collapsed d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#collapseThree" style="font-size: 1.2rem;">
+                        <span><i class="feather-icon mr-10 text-primary"><i data-feather="play-circle"></i></i> Tutorial Penggunaan Aplikasi</span>
+                        <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
+                    </button>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionFAQ">
+                    <div class="card-body pt-0 text-dark text-center" style="font-size: 1.1rem;">
+                        <p class="mb-3">Masih bingung cara menggunakan aplikasi?</p>
+                        <a target="_blank" href="<?=$url;?>register/panduan" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
+                            Lihat Panduan Pelaporan
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-body bg-light p-4">
+                <div class="accordion shadow-sm" id="accordionFAQ">
+                    
+                    <div class="card border-0 mb-2 shadow-sm" style="border-radius: 10px;">
+                        <div class="card-header bg-white border-0" id="headingOne">
+                            <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" style="font-size: 1.2rem;">
+                                <span><i class="feather-icon mr-10 text-primary"><i data-feather="calendar"></i></i> Ketentuan Periode Laporan</span>
+                                <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
+                            </button>
+                        </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionFAQ">
+                            <div class="card-body pt-0 text-dark" style="font-size: 1.1rem; line-height: 1.6;">
+                                <p>Punten Bapak/Ibu Notaris, mohon diperhatikan bahwa <strong>Periode Laporan</strong> yang dipilih pada aplikasi adalah <strong>bulan kegiatan/isi laporan</strong>, bukan bulan saat penginputan.</p>
+                                <div class="bg-white p-3 rounded mt-2 border-left border-primary shadow-sm" style="border-left-width: 6px !important;">
+                                    <em class="text-primary">Contoh: Laporan untuk kegiatan bulan <strong>Maret</strong> tetap memilih periode <strong>Maret</strong>, meskipun diinput pada bulan April.</em>
+                                </div>
+                                <p class="mt-3 text-danger font-weight-bold" style="font-size: 1.15rem;">
+                                    <i data-feather="alert-circle"></i> Batas maksimal penyampaian laporan adalah tanggal 15 setiap bulannya.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 mb-2 shadow-sm" style="border-radius: 10px;">
+                        <div class="card-header bg-white border-0" id="headingTwo">
+                            <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 collapsed d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#collapseTwo" style="font-size: 1.2rem;">
+                                <span><i class="feather-icon mr-10 text-primary"><i data-feather="file-text"></i></i> Lampiran Laporan Fidusia</span>
+                                <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
+                            </button>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionFAQ">
+                            <div class="card-body pt-0 text-dark" style="font-size: 1.1rem;">
+                                <p>Bapak/Ibu Notaris tetap berkewajiban untuk <strong>melampirkan laporan fidusia</strong> ke dalam berkas laporan bulanan secara lengkap guna pemenuhan tertib administrasi pelaporan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 bg-light justify-content-center pb-30">
+                <button type="button" class="btn btn-primary btn-lg px-5 shadow-lg" data-dismiss="modal" style="border-radius: 8px; min-width: 200px;">SAYA MENGERTI</button>
+            </div>
+        </div>
+    </div>
+</div>
+
     <!-- jQuery -->
     <script type="text/javascript">
         function showPassword(){
@@ -153,5 +228,11 @@
     <!-- Init JavaScript -->
     <script src="login/dist/js/init.js"></script>
     <script src="login/dist/js/login-data.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Memunculkan modal dengan ID modalFAQ secara otomatis
+            $('#modalFAQ').modal('show');
+        });
+</script>
 </body>
 </html>

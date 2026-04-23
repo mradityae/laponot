@@ -94,6 +94,7 @@ if(isset($_POST['submit']))
       FROM laporan as l
       join notaris on notaris.id_notaris = l.id_notaris
       WHERE notaris.id_kedudukan=:id_kedudukan and month(l.tanggal) BETWEEN month(:tgl_awal) and month(:tgl_akhir)
+      AND YEAR(l.tanggal) BETWEEN YEAR(:tgl_awal) and YEAR(:tgl_akhir)
       order by l.tanggal asc");
   }
   else{
@@ -101,6 +102,7 @@ if(isset($_POST['submit']))
       FROM laporan as l
       join notaris on notaris.id_notaris = l.id_notaris
       WHERE notaris.id_kedudukan=:id_kedudukan and l.status =:status and month(l.tanggal) BETWEEN month(:tgl_awal) and month(:tgl_akhir)
+      AND YEAR(l.tanggal) BETWEEN YEAR(:tgl_awal) and YEAR(:tgl_akhir)
       order by l.tanggal asc");
 
     $ambil->BindParam(":status",$status,PDO::PARAM_STR);

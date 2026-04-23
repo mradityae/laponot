@@ -101,7 +101,7 @@
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                 </button>
-                <!-- <a class="navbar-brand" href="index.php">KANWIL KEMENKUMHAM JABAR</a> -->
+                <!-- <a class="navbar-brand" href="index.php">KANWIL Kemenkum JABAR</a> -->
             </div>
 
             <div class="header-right">
@@ -118,7 +118,7 @@
                     <li>
                         <div class="user-img-div">
                             <center>
-                            <img src="../assets/img/logo_kumham.png" style="border-radius: 100%;" class="img-thumbnail"/>
+                            <img src="../assets/img/logo_KEMENKUM.png" style="border-radius: 100%;" class="img-thumbnail"/>
                             </center>
                             <div class="inner-text" style="margin-top: -15px;">
                                 <center>   
@@ -151,7 +151,7 @@
     <div id="page-inner">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="page-head-line" align="center">PANDUAN PENGGUNA <br> APLIKASI LAPORAN NOTARIS KANWIL KUMHAM JABAR</h2>
+                <h2 class="page-head-line" align="center">PANDUAN PENGGUNA <br> APLIKASI LAPORAN NOTARIS KANWIL KEMENKUM JABAR</h2>
             </div>
         </div>
         <body style="background-color: #E2E2E2;">   
@@ -161,7 +161,7 @@
                 <input type="checkbox" id="faq-6">
                 <h3><label for="faq-6">Mendaftarkan Akun</label></h3>
                 <div class="p">
-                    <p>1. Untuk mendaftarkan akun pada aplikasi Laporan Notaris Kanwil Kemenkumham Jabar, pada halaman masuk aplikasi <a href="https://kabayanpasti.kemenkumham.go.id/laponot/">Laporan Notaris</a> klik Daftar.
+                    <p>1. Untuk mendaftarkan akun pada aplikasi Laporan Notaris Kanwil Kemenkum Jabar, pada halaman masuk aplikasi <a href="https://kabayanpasti.Kemenkum.go.id/laponot/">Laporan Notaris</a> klik Daftar.
                         <center><img src="../assets/img/panduan/panduan_1.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
 
@@ -169,8 +169,11 @@
                     <center><img src="../assets/img/panduan/panduan_2.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
 
-                    <p align="justify">3. Perlu diperhatikan dalam pengisian form registrasi, pada bagian Email, pastikan email Anda aktif. Email tersebut akan digunakan untuk proses aktivasi akun setelah proses registrasi selesai. Pastikan pula dalam pengisian password sesuai dengan ketentuan dan pengisian captcha yang sesuai dengan yang ditampilkan. Jika seluruh data telah terisi, klik Simpan untuk menyelesaikan proses registrasi.
-                        <center><img src="../assets/img/panduan/panduan_3.jpg" class="img-responsive" width="700" height="400"></center>
+                    <p align="justify">
+                        3. Perlu diperhatikan dalam pengisian form registrasi, pastikan dalam pengisian <b>password</b> sesuai dengan ketentuan yang mencakup kombinasi <b>huruf kecil, huruf kapital, angka</b>, serta <b>tidak mengandung spasi ataupun emoji</b>. Pastikan pula pengisian captcha sesuai dengan yang ditampilkan pada layar. Jika seluruh data telah terisi dengan benar, klik <b>Simpan</b> untuk menyelesaikan proses registrasi.
+                        <center>
+                            <img src="../assets/img/panduan/panduan_3.jpg" class="img-responsive" width="700" height="400" style="margin-top: 20px; border-radius: 8px; shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        </center>
                     </p>
 
                     <p align="justify">4. Akan muncul notifikasi bahwa registrasi akun telah berhasil. Setelah registrasi selesai, akun dapat langsung digunakan. Klik OK untuk menutup notifikasi.
@@ -187,10 +190,10 @@
                 <input type="checkbox" id="faq-7">
                 <h3><label for="faq-7">Aktivasi Akun</label></h3>
                 <div class="p">
-                    <p align="justify">1. Untuk melakukan proses aktivasi akun, pastikan bahwa Anda telah berhasil melakukan registrasi/pendaftaran akun sebelumnya pada halaman <a href="https://kabayanpasti.kemenkumham.go.id/laponot/regsitrasi/index">Registrasi Akun</a>                         
+                    <p align="justify">1. Untuk melakukan proses aktivasi akun, pastikan bahwa Anda telah berhasil melakukan registrasi/pendaftaran akun sebelumnya pada halaman <a href="https://kabayanpasti.Kemenkum.go.id/laponot/regsitrasi/index">Registrasi Akun</a>                         
                     </p>
 
-                    <p align="justify">2. Cek email masuk dari Laporan Notaris Kanwil Kemenkumham Jabar dengan subject PENDAFTARAN LAPORAN NOTARIS pada email yang Anda masukkan pada saat registrasi akun. Jika tidak terdapat email tersebut pada kotak masuk, cek email pada bagian SPAM. Jika setelah beberapa saat setelah proses registrasi dan email untuk aktivasi akun belum terkirim hubungi bagian layanan pengaduan dan informasi kanwil kumham jabar untuk melakukan proses aktivasi. Pada email aktivasi akun, klik tombol Aktivasi.
+                    <p align="justify">2. Cek email masuk dari Laporan Notaris Kanwil Kemenkum Jabar dengan subject PENDAFTARAN LAPORAN NOTARIS pada email yang Anda masukkan pada saat registrasi akun. Jika tidak terdapat email tersebut pada kotak masuk, cek email pada bagian SPAM. Jika setelah beberapa saat setelah proses registrasi dan email untuk aktivasi akun belum terkirim hubungi bagian layanan pengaduan dan informasi kanwil KEMENKUM jabar untuk melakukan proses aktivasi. Pada email aktivasi akun, klik tombol Aktivasi.
                     <center><img src="../assets/img/panduan/panduan_5.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
 
@@ -321,7 +324,7 @@
     </div>
 
  <div id="footer-sec">
-        &copy; 2020 KANWIL KEMENKUMHAM JABAR 
+        &copy; 2020 KANWIL Kemenkum JABAR 
         <!--  &copy; 2018 SMAN 22 Bandung| Design By : <a href="http://www.binarytheme.com/" target="_blank">BinaryTheme.com</a> -->
     </div>
     <!-- /. FOOTER  -->

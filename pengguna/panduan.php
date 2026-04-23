@@ -75,7 +75,7 @@ date_default_timezone_Set('Asia/Jakarta');
     <div id="page-inner">
         <div class="row">
             <div class="col-md-12">
-                <h2 class="page-head-line" align="center">PANDUAN PENGGUNA <br> PENDAFTARAN PELANTIKAN ONLINE KANWIL KUMHAM JABAR</h2>
+                <h2 class="page-head-line" align="center">PANDUAN PENGGUNA <br> PENDAFTARAN PELANTIKAN ONLINE KANWIL KEMENKUM JABAR</h2>
             </div>
         </div>
         <body style="background-color: #E2E2E2;">
@@ -86,14 +86,17 @@ date_default_timezone_Set('Asia/Jakarta');
                 <input type="checkbox" id="faq-6">
                 <h3><label for="faq-6">Mendaftarkan Akun</label></h3>
                 <div class="p">
-                    <p>1. Untuk mendaftarkan akun pada aplikasi Laporan Notaris Kanwil Kemenkumham Jabar, pada halaman masuk aplikasi <a href="https://kabayanpasti.kemenkumham.go.id/laponot/">Laporan Notaris</a> klik Daftar.
+                    <p>1. Untuk mendaftarkan akun pada aplikasi Laporan Notaris Kanwil kemenkum Jabar, pada halaman masuk aplikasi <a href="https://kabayanpasti.kemenkum.go.id/laponot/">Laporan Notaris</a> klik Daftar.
                         <center><img src="../assets/img/panduan/panduan_1.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
                     <p>2. Selanjutnya akan tampil halaman registrasi untuk melakukan pendaftaran akun. Masukkan seluruh data yang diperlukan.
                     <center><img src="../assets/img/panduan/panduan_2.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
-                    <p align="justify">3. Perlu diperhatikan dalam pengisian form registrasi, pada bagian Email, pastikan email Anda aktif. Email tersebut akan digunakan untuk proses aktivasi akun setelah proses registrasi selesai. Pastikan pula dalam pengisian password sesuai dengan ketentuan dan pengisian captcha yang sesuai dengan yang ditampilkan. Jika seluruh data telah terisi, klik Simpan untuk menyelesaikan proses registrasi.
-                        <center><img src="../assets/img/panduan/panduan_3.jpg" class="img-responsive" width="700" height="400"></center>
+                    <p align="justify">
+                        3. Perlu diperhatikan dalam pengisian form registrasi, pastikan dalam pengisian <b>password</b> sesuai dengan ketentuan yang mencakup kombinasi <b>huruf kecil, huruf kapital, angka</b>, serta <b>tidak mengandung spasi ataupun emoji</b>. Pastikan pula pengisian captcha sesuai dengan yang ditampilkan pada layar. Jika seluruh data telah terisi dengan benar, klik <b>Simpan</b> untuk menyelesaikan proses registrasi.
+                        <center>
+                            <img src="../assets/img/panduan/panduan_3.jpg" class="img-responsive" width="700" height="400" style="margin-top: 20px; border-radius: 8px; shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        </center>
                     </p>
                     <p align="justify">4. Akan muncul notifikasi bahwa registrasi akun telah berhasil. Setelah registrasi selesai, akun dapat langsung digunakan. Klik OK untuk menutup notifikasi.
                         <center><img src="../assets/img/panduan/panduan_4_modify.jpg" class="img-responsive" width="700" height="400"></center>
@@ -109,9 +112,9 @@ date_default_timezone_Set('Asia/Jakarta');
                 <input type="checkbox" id="faq-7">
                 <h3><label for="faq-7">Aktivasi Akun</label></h3>
                 <div class="p">
-                    <p align="justify">1. Untuk melakukan proses aktivasi akun, pastikan bahwa Anda telah berhasil melakukan registrasi/pendaftaran akun sebelumnya pada halaman <a href="https://kabayanpasti.kemenkumham.go.id/laponot/regsitrasi/index">Registrasi Akun</a>                         
+                    <p align="justify">1. Untuk melakukan proses aktivasi akun, pastikan bahwa Anda telah berhasil melakukan registrasi/pendaftaran akun sebelumnya pada halaman <a href="https://kabayanpasti.kemenkum.go.id/laponot/regsitrasi/index">Registrasi Akun</a>                         
                     </p>
-                    <p align="justify">2. Cek email masuk dari Laporan Notaris Kanwil Kemenkumham Jabar dengan subject PENDAFTARAN LAPORAN NOTARIS pada email yang Anda masukkan pada saat registrasi akun. Jika tidak terdapat email tersebut pada kotak masuk, cek email pada bagian SPAM. Jika setelah beberapa saat setelah proses registrasi dan email untuk aktivasi akun belum terkirim hubungi bagian layanan pengaduan dan informasi kanwil kumham jabar untuk melakukan proses aktivasi. Pada email aktivasi akun, klik tombol Aktivasi.
+                    <p align="justify">2. Cek email masuk dari Laporan Notaris Kanwil kemenkum Jabar dengan subject PENDAFTARAN LAPORAN NOTARIS pada email yang Anda masukkan pada saat registrasi akun. Jika tidak terdapat email tersebut pada kotak masuk, cek email pada bagian SPAM. Jika setelah beberapa saat setelah proses registrasi dan email untuk aktivasi akun belum terkirim hubungi bagian layanan pengaduan dan informasi kanwil Kemenkum jabar untuk melakukan proses aktivasi. Pada email aktivasi akun, klik tombol Aktivasi.
                     <center><img src="../assets/img/panduan/panduan_5.jpg" class="img-responsive" width="700" height="400"></center>
                     </p>
                     <p align="justify">3. Akan muncul notifikasi bahwa Akun telah berhasil diaktifkan. Klik OK untuk menutup notifikasi.
