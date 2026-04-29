@@ -245,6 +245,7 @@ date_default_timezone_set('Asia/Jakarta');
                                 <li>Fitur unggah kolektif ini <strong>HANYA</strong> untuk jenis transaksi <strong>Pendaftaran Fidusia</strong>.</li>
                                 <li>Isi kolom <strong>Nilai Penjaminan</strong> dengan angka murni (contoh: 50000000). Sistem akan mengategorikan secara otomatis.</li>
                                 <li>Format tanggal pada Excel wajib <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24).</li>
+                                <li>UPLOAD RECORD DIBATASI MAKSIMAL 3000 RECORD PER FILE</li>
                             </ul>
                         </div>
 
@@ -265,7 +266,7 @@ date_default_timezone_set('Asia/Jakarta');
                                 <td>DAFTAR OLEH</td>
                             </tr>
                         </table>
-                        <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Contoh Excel</a>
+                        <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel</a>
                     </div>
 
                     <form action="<?=$url;?>act/unggah-laporan-kolektif_proses.php" method="POST" enctype="multipart/form-data">

@@ -58,8 +58,8 @@ if (isset($_POST['submit'])) {
             if($idx == 1) { $jumlah_baris--; break; }
         }
 
-        if ($jumlah_baris > 2000) {
-            throw new Exception("GAGAL: Maksimal 2000 record. Terdeteksi $jumlah_baris record.");
+        if ($jumlah_baris > 3000) {
+            throw new Exception("GAGAL: Maksimal 3000 record. Terdeteksi $jumlah_baris record.");
         }
         
         $koneksi->beginTransaction();
