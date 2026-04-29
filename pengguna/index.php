@@ -3,6 +3,19 @@ include "header.php";
 include("../config/koneksi.php");
 include("../models/models.php");
 $id = $_SESSION["kode_user"];
+
+// --- CEK NIK NOTARIS (PDO STYLE) ---
+try {
+    $stmt = $koneksi->prepare("SELECT nik FROM notaris WHERE id_notaris = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+    $dataNotaris = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Modal muncul jika NIK null, kosong, atau cuma spasi
+    $showModal = (empty($dataNotaris['nik']) || trim($dataNotaris['nik']) == '') ? true : false;
+} catch (PDOException $e) {
+    $showModal = false; 
+}
 ?>
 
 <!-- /. NAV SIDE  -->
@@ -10,10 +23,10 @@ $id = $_SESSION["kode_user"];
     <div id="page-inner">
         <div class="row">
             <div class="col-md-12">
-                <h1 class="page-head-line"align="center"><b>DASHBOARD APLIKASI LAPORAN NOTARIS<b></h1>
+                <h1 class="page-head-line" align="center"><b>DASHBOARD APLIKASI LAPORAN NOTARIS</b></h1>
             </div>
         </div>
-         <div class="row">
+        <div class="row">
             <?php echo notifUpload($koneksi, $id, date('Y-m-d H:i:s'));?>
         </div>
 
@@ -82,6 +95,48 @@ $id = $_SESSION["kode_user"];
         </div>
     </div>
 </div>
+
+<!-- MODAL WAJIB ISI NIK -->
+<div class="modal fade" id="modalNik" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #d9534f; color: white;">
+                <h4 class="modal-title text-center"><b><i class="fa fa-warning"></i> PERINGATAN: WAJIB ISI NIK</b></h4>
+            </div>
+            <form action="<?=$url;?>act/proses_update_nik.php" method="POST">
+                <div class="modal-body">
+                    <div class="alert alert-danger">
+                        Yth. Bapak/Ibu Notaris, Anda <b>wajib menginput NIK</b> untuk dapat menggunakan fitur aplikasi ini.
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Induk Kependudukan (16 Digit):</label>
+                        <input type="text" name="nik" class="form-control" placeholder="Input NIK sesuai KTP" required onkeypress="return isNumberKey(event)" maxlength="16" minlength="16" autocomplete="off">
+                        <input type="hidden" name="id_notaris" value="<?php echo $id; ?>">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="update_nik" class="btn btn-primary btn-block">SIMPAN DATA NIK</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <?php
 include "footer.php";
 ?>
+
+<?php if ($showModal): ?>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#modalNik').modal('show');
+    });
+
+    function isNumberKey(evt){
+        var charCode = (evt.which) ? evt.which : event.keyCode
+        if (charCode > 31 && (charCode < 48 || charCode > 57))
+            return false;
+        return true;
+    }
+</script>
+<?php endif; ?>
