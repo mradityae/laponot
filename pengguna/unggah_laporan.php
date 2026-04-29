@@ -73,6 +73,7 @@ date_default_timezone_set('Asia/Jakarta');
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#fidusia_normal" role="tab" data-toggle="tab">Isi Laporan Fidusia</a></li>
                 <li><a href="#fidusia_nihil" role="tab" data-toggle="tab">Kirim Laporan Nihil</a></li>
+                <li><a href="#fidusia_kolektif" role="tab" data-toggle="tab">Input Kolektif (Excel)</a></li>
             </ul>
 
             <!-- ✅ TAB CONTENT -->
@@ -90,8 +91,6 @@ date_default_timezone_set('Asia/Jakarta');
                                 <option value="">-- Pilih Jenis Transaksi --</option>
                                 <option value="Pendaftaran">Pendaftaran</option>
                                 <option value="Perubahan">Perubahan</option>
-                                <option value="Perbaikan">Perbaikan</option>
-                                <option value="Penghapusan">Penghapusan</option>
                             </select>
                         </div>
 
@@ -151,8 +150,15 @@ date_default_timezone_set('Asia/Jakarta');
                                     </select>
                                 </div>
 
-                                <div class="form-group" id="keterangan_box" style="display:none;">
-                                    <label>Keterangan Perubahan / Perbaikan</label>
+                                <div class="form-group">
+                                    <label>Didaftarkan Oleh</label>
+                                    <select style="width: 100%;" name="daftar_oleh" class="form-control" required>
+                                        <option value="Notaris">Notaris</option>
+                                        <option value="Pihak ke 3">Pihak ke 3</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Keterangan (Jika Ada)</label>
                                     <textarea name="ket" id="input_keterangan" class="form-control" rows="2"></textarea>
                                 </div>
                             </div>
@@ -228,7 +234,60 @@ date_default_timezone_set('Asia/Jakarta');
 
                 </div>
 
+                <div class="tab-pane fade" id="fidusia_kolektif">
+                    <div class="alert alert-info">
+                        <h4><i class="fa fa-file-excel-o"></i> Petunjuk Unggah Kolektif</h4>
+                        <p>Gunakan fitur ini untuk mengunggah banyak data fidusia sekaligus menggunakan file Excel (.xlsx / .xls).</p>
+                        
+                        <div style="background: #fff; padding: 10px; border-left: 4px solid #31708f; margin: 10px 0;">
+                            <p style="margin-bottom: 5px;"><strong>PENTING:</strong></p>
+                            <ul style="padding-left: 20px; font-size: 13px;">
+                                <li>Fitur unggah kolektif ini <strong>HANYA</strong> untuk jenis transaksi <strong>Pendaftaran Fidusia</strong>.</li>
+                                <li>Isi kolom <strong>Nilai Penjaminan</strong> dengan angka murni (contoh: 50000000). Sistem akan mengategorikan secara otomatis.</li>
+                                <li>Format tanggal pada Excel wajib <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24).</li>
+                            </ul>
+                        </div>
 
+                        <hr>
+                        <p><strong>Format Header Excel:</strong></p>
+                        <table class="table table-bordered" style="background: #f9f9f9; font-size: 11px;">
+                            <tr>
+                                <th>A1</th><th>B1</th><th>C1</th><th>D1</th><th>E1</th><th>F1</th><th>G1</th><th>H1</th>
+                            </tr>
+                            <tr>
+                                <td>JUDUL AKTA</td>
+                                <td>NOMOR AKTA</td>
+                                <td>TANGGAL AKTA</td>
+                                <td>PEMBERI FIDUSIA</td>
+                                <td>PENERIMA FIDUSIA</td>
+                                <td>SERTIFIKAT</td>
+                                <td>NILAI PENJAMINAN</td>
+                                <td>DAFTAR OLEH</td>
+                            </tr>
+                        </table>
+                        <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Contoh Excel</a>
+                    </div>
+
+                    <form action="<?=$url;?>act/unggah-laporan-kolektif_proses.php" method="POST" enctype="multipart/form-data">
+                        <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" />
+                        <input type="hidden" name="tipe" value="fidusia" />
+                        
+                        <div class="form-group">
+                            <label>Pilih File Excel</label>
+                            <input type="file" name="file_excel" class="form-control" accept=".xlsx, .xls" required />
+                            <small class="text-muted">Pastikan format kolom sesuai dengan template dan poin-poin petunjuk di atas.</small>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <input type="checkbox" id="confirm_kolektif" onclick="document.getElementById('submit_fidusia_kolektif').disabled = !this.checked;">
+                            <label for="confirm_kolektif" style="color:red; font-weight:bold;">
+                                Saya menjamin kebenaran data. Jika sistem menemukan nomor akta ganda pada bulan yang sama, seluruh proses unggah akan DIBATALKAN.
+                            </label>
+                        </div>
+
+                        <input type="submit" id="submit_fidusia_kolektif" name="submit" value="Unggah Kolektif" class="btn btn-primary" disabled>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -249,18 +308,9 @@ function tampilkanForm() {
 
 function toggleKeterangan() {
     const jenis = document.getElementById('jenis_transaksi').value;
-    const box = document.getElementById('keterangan_box');
     const noLama = document.getElementById('no_sertifikat_lama');
     const inputLama = document.getElementById('input_no_sertifikat_lama');
     const inputKet = document.getElementById('input_keterangan');
-
-    if (jenis === 'Perubahan' || jenis === 'Perbaikan') {
-        box.style.display = 'block';
-        inputKet.required = true;
-    } else {
-        box.style.display = 'none';
-        inputKet.required = false;
-    }
 
     if (jenis === 'Perubahan') {
         noLama.style.display = 'block';

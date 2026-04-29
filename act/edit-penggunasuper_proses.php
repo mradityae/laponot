@@ -23,13 +23,14 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$email          	= RemoveSpecialChar($_POST['email']);
 		$password       	= RemoveSpecialChar($_POST['password']);
 		$passwordulang  	= RemoveSpecialChar($_POST['passwordulang']);
+		$nik 				= RemoveSpecialChar($_POST['nik']);
 		
 
 		//CEK APAKAN PASSWORD DAN MASUKKAN KEMBALI PASSWORD KOSONG
 		if (($password == null || $password == "") || ($passwordulang == null || $passwordulang == "")) 
 		{	//CEK APAKAH EMAIL BARU KOSONG
 			
-			if (ubahNotarisSuper($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif, $level, $id_kedudukan, 0)) 
+			if (ubahNotarisSuper($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif, $level, $id_kedudukan, 0, $nik)) 
 			{	//KONDISI BERHASIL MENGUBAH DATA
 				echo "<script>alert('Data Notaris Berhasil Diubah')</script>";
 				$link = $url."superadmin/daftar_pengguna_super";
@@ -52,7 +53,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 			}
 			else
 			{	
-				if (ubahNotarisSuper($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif, $level, $id_kedudukan, $password)) 
+				if (ubahNotarisSuper($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $aktif, $level, $id_kedudukan, $password, $nik)) 
 				{	//BERHASIL
 					echo "<script>alert('Data Notaris Berhasil Diubah')</script>";
 					$link = $url."superadmin/daftar_pengguna_super";

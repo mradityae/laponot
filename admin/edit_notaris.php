@@ -72,6 +72,16 @@ $nama=$_GET['nama'];
 			                              <input type="text" name="nama" class="form-control" value="<?php echo $d['nama']?>" required/>
 			                          </div>
 			                      </div>
+								  <div class="form-group">
+									<div class="col-xs-6">
+										<label for="nik"><h4>NIK</h4></label>
+										<input type="text" name="nik" class="form-control" 
+											value="<?php echo $d['nik']?>" 
+											maxlength="16" 
+											onkeypress="return isNumberKey(event)" 
+											required/>
+									</div>
+								</div>
 			                      <div class="form-group">
 			                          <div class="col-xs-6">
 			                            <label for="email"><h4>Email</h4></label>
@@ -163,12 +173,21 @@ $nama=$_GET['nama'];
 								  <div class="form-group">			                          
 			                          <div class="col-xs-6">
 			                              <label for="aktif"><h4>Status Akun</h4></label>
-			                              <select name="aktif" class="form-control">
+			                              <select name="aktif" class="form-control" onchange="toggleAlasan(this.value)">
 												<option value="1" <?php if($d['aktif'] == 1) echo "selected";?>>Aktif</option>
 												<option value="0" <?php if($d['aktif'] == 0) echo "selected";?>>Belum Aktif</option>
 											</select>
 			                          </div>
 			                      </div>
+
+								  <div class="form-group" id="alasanBox" style="display: <?php echo ($d['aktif'] == 0) ? 'block' : 'none'; ?>;">
+									<div class="col-xs-6">
+										<label for="alasan"><h4>Alasan Belum Aktif</h4></label>
+										<input type="text" name="alasan" class="form-control"
+											value="<?php echo $d['alasan_tidak_aktif']; ?>"
+											placeholder="Masukkan alasan"/>
+									</div>
+								</div>
 
 			                      <div class="form-group">
 			                           <div class="col-xs-12">
@@ -196,6 +215,24 @@ $nama=$_GET['nama'];
         </div>
         <!-- /. PAGE WRAPPER  -->
     </div>
+
 <?php
 include "footer.php";
 ?>
+
+<script>
+function toggleAlasan(val){
+    var alasanBox = document.getElementById('alasanBox');
+    if(val == '0'){
+        alasanBox.style.display = 'block';
+    } else {
+        alasanBox.style.display = 'none';
+    }
+}
+
+// trigger saat pertama load
+window.onload = function(){
+    var val = document.querySelector('select[name="aktif"]').value;
+    toggleAlasan(val);
+}
+</script>

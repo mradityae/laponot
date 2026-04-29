@@ -33,6 +33,16 @@ $id=$_GET['id'];
 										<th>Nama</th>
 										<td><input type="text" name="nama" class="form-control" value="<?php echo $d['nama']?>" required/></td>
 									</tr>
+									<tr>
+										<th>NIK</th>
+										<td>
+											<input type="text" name="nik" class="form-control" 
+												value="<?php echo $d['nik']?>" 
+												maxlength="16" 
+												onkeypress="return isNumberKey(event)" 
+												required/>
+										</td>
+									</tr>
 
 									<tr>
 										<th>Jenis Kelamin</th>

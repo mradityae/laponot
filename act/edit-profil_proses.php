@@ -20,6 +20,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$email          	= RemoveSpecialChar($_POST['email']);
 		$password       	= RemoveSpecialChar($_POST['password']);
 		$passwordulang  	= RemoveSpecialChar($_POST['passwordulang']);
+		$nik 			    = RemoveSpecialChar($_POST['nik']);
 		$file 				= $_POST['file'];
 
 		$namaFile = $_FILES['file']['name'];
@@ -79,7 +80,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 						header("Pragma: no-cache");
 						clearstatcache();
 
-						if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, null, $fullDirBaru)) {
+						if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, null, $fullDirBaru, $nik)) {
 							echo "<script>alert('Profil Berhasil Diubah')</script>";
 							$link = $url."pengguna/profil";
 							header("refresh:0.1; url=$link");
@@ -94,7 +95,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 			}
 			else
 			{
-				if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, null, null)) 
+				if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, null, null, $nik)) 
 				{	//KONDISI BERHASIL MENGUBAH DATA
 					echo "<script>alert('Data Profil Berhasil Diubah')</script>";
 					$link = $url."pengguna/profil";
@@ -162,7 +163,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 							header("Pragma: no-cache");
 							clearstatcache();
 
-							if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, $fullDirBaru)) 
+							if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, $fullDirBaru, $nik)) 
 							{
 								echo "<script>alert('Profil Berhasil Diubah')</script>";
 								$link = $url."pengguna/profil";
@@ -180,7 +181,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 				}
 				else
 				{
-					if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, null)) 
+					if (ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, null, $nik)) 
 					{	//BERHASIL
 						echo "<script>alert('Data Profil Berhasil Diubah')</script>";
 						$link = $url."pengguna/profil";
