@@ -244,6 +244,9 @@ date_default_timezone_set('Asia/Jakarta');
                             <ul style="padding-left: 20px; font-size: 13px;">
                                 <li>Fitur unggah kolektif ini <strong>HANYA</strong> untuk jenis transaksi <strong>Pendaftaran Fidusia</strong>.</li>
                                 <li>Isi kolom <strong>Nilai Penjaminan</strong> dengan angka murni (contoh: 50000000). Sistem akan mengategorikan secara otomatis.</li>
+                                <li><strong>Kolom Nilai Penjaminan WAJIB diisi dan tidak boleh kosong.</strong></li>
+                                <li><strong>Kolom Daftar Oleh WAJIB diisi (Notaris atau Pihak ke 3).</strong></li>
+                                <li>Isi <strong>Daftar Oleh</strong> dengan <strong>"Notaris"</strong> atau <strong>"Pihak ke 3"</strong>. Jika didaftarkan oleh pihak lain seperti leasing, bank, atau perusahaan, gunakan <strong>"Pihak ke 3"</strong>.</li>
                                 <li>Format tanggal pada Excel wajib <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24).</li>
                                 <li>UPLOAD RECORD DIBATASI MAKSIMAL 3000 RECORD PER FILE</li>
                             </ul>

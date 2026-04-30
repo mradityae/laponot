@@ -79,17 +79,35 @@ if (isset($_POST['submit'])) {
             
             // --- PERUBAHAN 1: Default Nilai Penjaminan ---
             $raw_nilai = preg_replace('/[^0-9]/', '', $row['G']); 
+
+            // Penambahan Kode
+
+            $daftar_oleh = isset($row['H']) ? trim($row['H']) : '';
+            // ❗ VALIDASI WAJIB
             if (empty($raw_nilai)) {
-                // Jika kosong, set default ke kategori <= 50 juta
-                $label_penjaminan = '<=50 juta';
-                $value_penjaminan = 50000; // Sesuai permintaan "gocap"
-            } else {
-                $hasilPNBP = hitungPNBP((float)$raw_nilai);
-                $label_penjaminan = $hasilPNBP['label'];
-                $value_penjaminan = $raw_nilai; 
+                throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
             }
 
-            $daftar_oleh = isset($row['H']) ? trim($row['H']) : 'Notaris';
+            if (empty($daftar_oleh)) {
+                throw new Exception("Gagal: Kolom DAFTAR OLEH tidak boleh kosong (Baris $i)");
+            }
+            // proses normal
+            $hasilPNBP        = hitungPNBP((float)$raw_nilai);
+            $label_penjaminan = $hasilPNBP['label'];
+            $value_penjaminan = $raw_nilai;
+            
+            // end of Penambahan Kode
+            
+            // if (empty($raw_nilai)) {
+            //     // Jika kosong, set default ke kategori <= 50 juta
+            //     $label_penjaminan = '<=50 juta';
+            //     $value_penjaminan = 50000; // Sesuai permintaan "gocap"
+            // } else {
+            //     $hasilPNBP = hitungPNBP((float)$raw_nilai);
+            //     $label_penjaminan = $hasilPNBP['label'];
+            //     $value_penjaminan = $raw_nilai; 
+            // }
+            // $daftar_oleh = isset($row['H']) ? trim($row['H']) : 'Notaris';
 
             // Validasi Mandatory: Jika nomor/tanggal kosong total, baru skip
             if (empty($nomor) || empty($tanggal)) continue;
