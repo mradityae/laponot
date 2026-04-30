@@ -282,7 +282,7 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="form-group mt-3">
                             <input type="checkbox" id="confirm_kolektif" onclick="document.getElementById('submit_fidusia_kolektif').disabled = !this.checked;">
                             <label for="confirm_kolektif" style="color:red; font-weight:bold;">
-                                Saya menjamin kebenaran data. Jika sistem menemukan nomor akta ganda pada bulan yang sama, seluruh proses unggah akan DIBATALKAN.
+                                Saya menjamin kebenaran data. Jika sistem menemukan nomor akta ganda pada bulan yang sama difile ini, seluruh proses unggah akan DIBATALKAN dan harus diulangi lagi.
                             </label>
                         </div>
 

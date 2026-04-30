@@ -68,41 +68,49 @@ if (isset($_POST['submit'])) {
         $duplicateCheckFile = []; 
 
         foreach ($filteredData as $i => $row) {
-            // Lewati baris header
             if ($i == 1) continue;
 
-            $judul      = trim($row['A']);
-            $nomor      = trim($row['B']);
-            $tanggal    = trim($row['C']); 
-            $pemberi    = trim($row['D']);
-            $penerima   = trim($row['E']);
-            $sertifikat = trim($row['F']);
-            $raw_nilai  = preg_replace('/[^0-9]/', '', $row['G']); // Bersihkan angka
+            $judul       = trim($row['A']);
+            $nomor       = trim($row['B']);
+            $tanggal     = trim($row['C']); 
+            $pemberi     = trim($row['D']);
+            $penerima    = trim($row['E']);
+            $sertifikat  = trim($row['F']);
+            
+            // --- PERUBAHAN 1: Default Nilai Penjaminan ---
+            $raw_nilai = preg_replace('/[^0-9]/', '', $row['G']); 
+            if (empty($raw_nilai)) {
+                // Jika kosong, set default ke kategori <= 50 juta
+                $label_penjaminan = '<=50 juta';
+                $value_penjaminan = 50000; // Sesuai permintaan "gocap"
+            } else {
+                $hasilPNBP = hitungPNBP((float)$raw_nilai);
+                $label_penjaminan = $hasilPNBP['label'];
+                $value_penjaminan = $raw_nilai; 
+            }
+
             $daftar_oleh = isset($row['H']) ? trim($row['H']) : 'Notaris';
 
-            // Validasi Mandatory
+            // Validasi Mandatory: Jika nomor/tanggal kosong total, baru skip
             if (empty($nomor) || empty($tanggal)) continue;
 
-            // Logika PNBP & Kategori
-            $hasilPNBP = hitungPNBP((float)$raw_nilai);
-            $label_penjaminan = $hasilPNBP['label'];
-            // $value_penjaminan = $hasilPNBP['pnbp'];
-            $value_penjaminan = $raw_nilai;
             // Cek Format Tanggal
             $time = strtotime($tanggal);
             if (!$time) {
-                throw new Exception("Tanggal tidak valid di baris $i ($tanggal). Gunakan format YYYY-MM-DD.");
+                // Kita skip saja jika tanggalnya ngaco agar proses tidak berhenti
+                continue; 
             }
             $bulan_tahun = date('Y-m', $time);
             $unique_key  = $nomor . "|" . $bulan_tahun;
 
-            // 1. Cek Duplikat di dalam File Excel itu sendiri
+            // --- PERUBAHAN 2: Skip jika Duplikat di Excel ---
             if (in_array($unique_key, $duplicateCheckFile)) {
-                throw new Exception("GAGAL: Nomor Akta [$nomor] ganda pada periode [$bulan_tahun] di file Excel (Baris $i).");
+                throw new Exception("Gagal: Terdeteksi Nomor Akta ganda [$nomor] pada periode [$bulan_tahun] di file Excel (Baris $i). Silakan periksa kembali file Anda.");
+                //continue; // Lewati ke baris berikutnya
             }
             $duplicateCheckFile[] = $unique_key;
 
-            // 2. Cek Duplikat di Database
+            // --- PERUBAHAN 3: Skip jika Duplikat di Database ---
             $sql_cek = "SELECT id_laporan FROM laporan_entitas 
                         WHERE nomor = :nomor 
                         AND DATE_FORMAT(tanggal, '%Y-%m') = :bulan_tahun 
@@ -116,10 +124,10 @@ if (isset($_POST['submit'])) {
             ]);
 
             if ($stmt_cek->fetch()) {
-                throw new Exception("GAGAL: Nomor Akta [$nomor] periode [$bulan_tahun] sudah ada di database.");
+                continue; // Lewati jika data sudah ada di database
             }
 
-            // Siapkan data untuk bulk insert
+            // Masukkan ke array bulk insert
             $dataToInsert[] = [
                 $id_notaris, $judul, $tipe, $nomor, date('Y-m-d', $time), 
                 $pemberi, $penerima, $sertifikat, $label_penjaminan, 
