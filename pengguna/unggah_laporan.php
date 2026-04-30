@@ -239,17 +239,57 @@ date_default_timezone_set('Asia/Jakarta');
                         <h4><i class="fa fa-file-excel-o"></i> Petunjuk Unggah Kolektif</h4>
                         <p>Gunakan fitur ini untuk mengunggah banyak data fidusia sekaligus menggunakan file Excel (.xlsx / .xls).</p>
                         
-                        <div style="background: #fff; padding: 10px; border-left: 4px solid #31708f; margin: 10px 0;">
-                            <p style="margin-bottom: 5px;"><strong>PENTING:</strong></p>
-                            <ul style="padding-left: 20px; font-size: 13px;">
-                                <li>Fitur unggah kolektif ini <strong>HANYA</strong> untuk jenis transaksi <strong>Pendaftaran Fidusia</strong>.</li>
-                                <li>Isi kolom <strong>Nilai Penjaminan</strong> dengan angka murni (contoh: 50000000). Sistem akan mengategorikan secara otomatis.</li>
-                                <li><strong>Kolom Nilai Penjaminan WAJIB diisi dan tidak boleh kosong.</strong></li>
-                                <li><strong>Kolom Daftar Oleh WAJIB diisi (Notaris atau Pihak ke 3).</strong></li>
-                                <li>Isi <strong>Daftar Oleh</strong> dengan <strong>"Notaris"</strong> atau <strong>"Pihak ke 3"</strong>. Jika didaftarkan oleh pihak lain seperti leasing, bank, atau perusahaan, gunakan <strong>"Pihak ke 3"</strong>.</li>
-                                <li>Format tanggal pada Excel wajib <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24).</li>
-                                <li>UPLOAD RECORD DIBATASI MAKSIMAL 3000 RECORD PER FILE</li>
+                        <div style="background:#fff; padding:15px; border-left:4px solid #31708f; margin:10px 0; border-radius:4px;">
+    
+                            <p style="margin-bottom:10px; font-weight:bold; color:#31708f;">
+                                <i class="fa fa-info-circle"></i> PETUNJUK PENTING
+                            </p>
+
+                            <ul style="padding-left:18px; font-size:13px; line-height:1.6;">
+                                <li>Fitur ini hanya untuk <strong>Pendaftaran Fidusia</strong>.</li>
+                                
+                                <li>
+                                    <strong>Nilai Penjaminan</strong> dapat diisi:
+                                    <ul style="margin-top:5px;">
+                                        <li>Nominal angka (contoh: <code>50000000</code>)</li>
+                                        <li>Atau kategori (lihat tabel di bawah)</li>
+                                    </ul>
+                                </li>
                             </ul>
+
+                            <!-- TABEL RANGE -->
+                            <div style="margin-top:10px;">
+                                <table class="table table-bordered" style="font-size:12px; background:#fafafa;">
+                                    <tr style="background:#f1f1f1;">
+                                        <th style="width:50%;">Input Excel</th>
+                                        <th>Kategori</th>
+                                    </tr>
+                                    <tr><td><=50 juta</td><td>&le; 50 juta</td></tr>
+                                    <tr><td>50-100 juta</td><td>50 – 100 juta</td></tr>
+                                    <tr><td>100-250 juta</td><td>100 – 250 juta</td></tr>
+                                    <tr><td>250-500 juta</td><td>250 – 500 juta</td></tr>
+                                    <tr><td>500 juta - 1 m</td><td>500 juta – 1 M</td></tr>
+                                    <tr><td>1 - 100 m</td><td>1 – 100 M</td></tr>
+                                    <tr><td>100 - 500 m</td><td>100 – 500 M</td></tr>
+                                    <tr><td>500 m - 1 t</td><td>500 M – 1 T</td></tr>
+                                    <tr><td>>1 t</td><td>&gt; 1 T</td></tr>
+                                </table>
+
+                                <small style="color:#777;">
+                                    Bisa diisi angka atau kategori. Jika angka, sistem otomatis mengelompokkan ke kategori yang sesuai.
+                                </small>
+                            </div>
+
+                            <hr style="margin:12px 0;">
+
+                            <ul style="padding-left:18px; font-size:13px; line-height:1.6;">
+                                <li><strong>Nilai Penjaminan wajib diisi.</strong></li>
+                                <li><strong>Daftar Oleh wajib diisi (Notaris / Pihak ke 3).</strong></li>
+                                <li>Gunakan <strong>Pihak ke 3</strong> untuk leasing, bank, dll.</li>
+                                <li>Format tanggal: <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24)</li>
+                                <li>Maksimal <strong>3000 record</strong> per file</li>
+                            </ul>
+
                         </div>
 
                         <hr>
@@ -269,7 +309,8 @@ date_default_timezone_set('Asia/Jakarta');
                                 <td>DAFTAR OLEH</td>
                             </tr>
                         </table>
-                        <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel</a>
+                        <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel Nilai Penjaminan Nominal</a>
+                        <a href="/laponot/assets/templates/template_fidusia_range_nilai_penjaminan.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel Nilai Penjaminan Range</a>
                     </div>
 
                     <form action="<?=$url;?>act/unggah-laporan-kolektif_proses.php" method="POST" enctype="multipart/form-data">

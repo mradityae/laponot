@@ -9,6 +9,28 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
  * Fungsi untuk menentukan kategori teks dan nilai nominal PNBP
  * berdasarkan Nilai Penjaminan yang diinput.
  */
+
+function mappingKategori($input) {
+    $input = strtolower(trim($input));
+    $input = str_replace(['–','—'], '-', $input); // normalisasi dash
+    $input = preg_replace('/\s+/', ' ', $input);
+
+    $map = [
+        '<=50 juta' => ['label' => '<=50 juta', 'pnbp' => 50000],
+        '50-100 juta' => ['label' => '50-100 juta', 'pnbp' => 100000],
+        '100-250 juta' => ['label' => '100-250 juta', 'pnbp' => 200000],
+        '250-500 juta' => ['label' => '250-500 juta', 'pnbp' => 450000],
+        '500 juta - 1 m' => ['label' => '500 juta – 1 M', 'pnbp' => 850000],
+        '1 - 100 m' => ['label' => '1 – 100 M', 'pnbp' => 1800000],
+        '100 - 500 m' => ['label' => '100 – 500 M', 'pnbp' => 3500000],
+        '500 m - 1 t' => ['label' => '500 M – 1 T', 'pnbp' => 6800000],
+        '>1 t' => ['label' => '>1 T', 'pnbp' => 13300000],
+        'tidak relevan' => ['label' => 'Tidak Relevan', 'pnbp' => 0],
+    ];
+
+    return $map[$input] ?? null;
+}
+
 function hitungPNBP($nominal_input) {
     if ($nominal_input <= 0) {
         return ['label' => 'Tidak Relevan', 'pnbp' => 0];
@@ -78,25 +100,40 @@ if (isset($_POST['submit'])) {
             $sertifikat  = trim($row['F']);
             
             // --- PERUBAHAN 1: Default Nilai Penjaminan ---
-            $raw_nilai = preg_replace('/[^0-9]/', '', $row['G']); 
+            $input_nilai = trim($row['G']);
+
+            if (empty($input_nilai)) {
+                throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
+            }
+
+            if (is_numeric(str_replace(['.', ','], '', $input_nilai))) {
+
+                $raw_nilai = (float) preg_replace('/[^0-9]/', '', $input_nilai);
+                $hasilPNBP = hitungPNBP($raw_nilai);
+
+                $label_penjaminan = $hasilPNBP['label'];
+                $value_penjaminan = $raw_nilai;
+
+            } else {
+
+                $hasilMap = mappingKategori($input_nilai);
+
+                if (!$hasilMap) {
+                    throw new Exception("Gagal: Format NILAI PENJAMINAN tidak dikenali (Baris $i)");
+                }
+
+                $label_penjaminan = $hasilMap['label'];
+                $value_penjaminan = $hasilMap['pnbp'];
+            }
 
             // Penambahan Kode
 
             $daftar_oleh = isset($row['H']) ? trim($row['H']) : '';
-            // ❗ VALIDASI WAJIB
-            if (empty($raw_nilai)) {
-                throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
-            }
+            
 
             if (empty($daftar_oleh)) {
                 throw new Exception("Gagal: Kolom DAFTAR OLEH tidak boleh kosong (Baris $i)");
             }
-            // proses normal
-            $hasilPNBP        = hitungPNBP((float)$raw_nilai);
-            $label_penjaminan = $hasilPNBP['label'];
-            $value_penjaminan = $raw_nilai;
-            
-            // end of Penambahan Kode
             
             // if (empty($raw_nilai)) {
             //     // Jika kosong, set default ke kategori <= 50 juta
