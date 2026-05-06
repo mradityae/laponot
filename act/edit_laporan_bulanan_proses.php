@@ -30,24 +30,24 @@ try {
     $id_laporan           = $_POST['id_laporan'];
     $id_notaris           = $_POST['id_notaris'];
     $tanggal_input          = $_POST['tanggal_laporan'];
-    $tanggal                = $tanggal_input . "-01";
+    $tanggal                = $tanggal_input . "-10";
     $jml_buku_daftar      = $_POST['jml_buku_daftar'];
     $jml_tangan_dibukukan = $_POST['jml_tangan_dibukukan'];
     $jml_tangan_disahkan  = $_POST['jml_tangan_disahkan'];
     $jml_buku_protes      = $_POST['jml_buku_protes'];
     $file_upload_final    = $_POST['file_lama'];
 
-    $redirectUrl = $url . "pengguna/index";
+    $redirectUrl = $url . "pengguna/daftar_laporan";
 
     // =======================
     // VALIDASI DUPLIKASI BULAN
     // =======================
-    if (!cekUpdated($koneksi, $id_notaris, $tanggal, $id_laporan)) {
-        redirectWithAlert(
-            'Error Edit: Anda telah mengirim file pada bulan yang bersangkutan',
-            $redirectUrl
-        );
-    }
+    // if (!cekUpdated($koneksi, $id_notaris, $tanggal, $id_laporan)) {
+    //     redirectWithAlert(
+    //         'Error Edit: Anda telah mengirim file pada bulan yang bersangkutan',
+    //         $redirectUrl
+    //     );
+    // }
 
     // =======================
     // UPLOAD FILE (JIKA ADA)

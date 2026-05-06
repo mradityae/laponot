@@ -137,6 +137,9 @@
                                 <li>
                                     <a href="rekap_laporan_bulanan"><i class="fa fa-calendar"></i>Rekap Laporan Bulanan</a>
                                 </li>
+                                <li>
+                                    <a href="rekap_fidusia_ahu"><i class="fa fa-calendar"></i>Rekap Fidusia Ahu</a>
+                                </li>
                             </ul>
                     </li>
                     <li>

@@ -91,6 +91,8 @@ date_default_timezone_set('Asia/Jakarta');
                                 <option value="">-- Pilih Jenis Transaksi --</option>
                                 <option value="Pendaftaran">Pendaftaran</option>
                                 <option value="Perubahan">Perubahan</option>
+                                <option value="Perbaikan">Perbaikan</option>
+                                <option value="Penghapusan">Penghapusan</option>
                             </select>
                         </div>
 
@@ -129,8 +131,11 @@ date_default_timezone_set('Asia/Jakarta');
                                 </div>
 
                                 <div class="form-group">
-                                    <label>No Sertifikat</label>
-                                    <input type="text" name="no_sertifikat" class="form-control" required/>
+                                    <label>Nomor Sertifikat</label>
+                                    <input type="text" name="no_sertifikat" class="form-control"/>
+                                    <small class="form-text text-muted">
+                                        <strong> *Jika tidak ada nomor sertifikat, bisa diskip. </strong>
+                                    </small>
                                 </div>
 
                                 <div class="form-group">
@@ -154,7 +159,7 @@ date_default_timezone_set('Asia/Jakarta');
                                     <label>Didaftarkan Oleh</label>
                                     <select style="width: 100%;" name="daftar_oleh" class="form-control" required>
                                         <option value="Notaris">Notaris</option>
-                                        <option value="Pihak ke 3">Pihak ke 3</option>
+                                        <option value="Penerima Fidusia">Penerima Fidusia</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -255,6 +260,9 @@ date_default_timezone_set('Asia/Jakarta');
                                         <li>Atau kategori (lihat tabel di bawah)</li>
                                     </ul>
                                 </li>
+                                <li>
+                                    <strong> Nomor Sertifikat bisa dikosongkan namun tetap harus ada kolom nya </strong>
+                                </li>
                             </ul>
 
                             <!-- TABEL RANGE -->
@@ -284,8 +292,8 @@ date_default_timezone_set('Asia/Jakarta');
 
                             <ul style="padding-left:18px; font-size:13px; line-height:1.6;">
                                 <li><strong>Nilai Penjaminan wajib diisi.</strong></li>
-                                <li><strong>Daftar Oleh wajib diisi (Notaris / Pihak ke 3).</strong></li>
-                                <li>Gunakan <strong>Pihak ke 3</strong> untuk leasing, bank, dll.</li>
+                                <li><strong>Daftar Oleh wajib diisi (Notaris / Penerima Fidusia).</strong></li>
+                                <li>Gunakan <strong>Penerima Fidusia</strong> untuk leasing, bank, dll.</li>
                                 <li>Format tanggal: <strong>YYYY-MM-DD</strong> (contoh: 2026-04-24)</li>
                                 <li>Maksimal <strong>3000 record</strong> per file</li>
                             </ul>
