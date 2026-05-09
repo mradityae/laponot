@@ -67,7 +67,7 @@ $id = $_SESSION["kode_user"];
                                     echo "<td>".$row['jml_tangan_disahkan'];
                                     echo "<td>".$row['jml_buku_protes'];
                                     echo "<td>".(empty($row['jenis_laporan']) ? "-" : $row['jenis_laporan']);
-                                    echo "<td> <a href=".$row['file_upload']." target='_blank'>Lihat File Laporan</a>";
+                                    echo "<td><a href='".$row['file_upload']."?v=".time()."' target='_blank'>Lihat File Laporan</a></td>";
                                     echo "<td>".$row['status'];
                                     
                                     if ($row['keterangan'] == null || $row['keterangan'] == "") 

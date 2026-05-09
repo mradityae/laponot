@@ -52,7 +52,7 @@
                         name="tanggal_laporan" 
                         class="form-control" 
                         value="<?= $formattedMonth; ?>" 
-                        required>
+                        required readonly>
                     <small class="text-muted">Format: Bulan dan Tahun</small>
                 </div>
 
@@ -82,7 +82,7 @@
 
                 <div class="form-group">
                     <label>File Lama</label><br>
-                    <a href="<?= $d['file_upload']; ?>" target="_blank">Lihat File Lama</a>
+                    <a href="<?= $d['file_upload'].'?v='.time(); ?>" target="_blank">Lihat File Lama</a>
                 </div>
 
                 <div class="form-group">

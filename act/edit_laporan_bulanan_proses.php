@@ -42,17 +42,18 @@ try {
     // =======================
     // VALIDASI DUPLIKASI BULAN
     // =======================
-    // if (!cekUpdated($koneksi, $id_notaris, $tanggal, $id_laporan)) {
-    //     redirectWithAlert(
-    //         'Error Edit: Anda telah mengirim file pada bulan yang bersangkutan',
-    //         $redirectUrl
-    //     );
-    // }
+    if (!cekUpdated($koneksi, $id_notaris, $tanggal, $id_laporan)) {
+        redirectWithAlert(
+            'Error Edit: Anda telah mengirim file pada bulan yang bersangkutan',
+            $redirectUrl
+        );
+    }
 
     // =======================
     // UPLOAD FILE (JIKA ADA)
     // =======================
-    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+
+    if (isset($_FILES['file']) && $_FILES['file']['error'] == 0) {
 
         $file       = $_FILES['file'];
         $ekstensi   = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
