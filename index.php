@@ -161,13 +161,45 @@
                         </div>
                         <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionFAQ">
                             <div class="card-body pt-0 text-dark" style="font-size: 1.1rem; line-height: 1.6;">
-                                <p>Punten Bapak/Ibu Notaris, mohon diperhatikan bahwa <strong>Periode Laporan</strong> yang dipilih pada aplikasi adalah <strong>bulan kegiatan/isi laporan</strong>, bukan bulan saat penginputan.</p>
-                                <div class="bg-white p-3 rounded mt-2 border-left border-primary shadow-sm" style="border-left-width: 6px !important;">
-                                    <em class="text-primary">Contoh: Laporan untuk kegiatan bulan <strong>Maret</strong> tetap memilih periode <strong>Maret</strong>, meskipun diinput pada bulan April.</em>
-                                </div>
-                                <p class="mt-3 text-danger font-weight-bold" style="font-size: 1.15rem;">
-                                    <i data-feather="alert-circle"></i> Batas maksimal penyampaian laporan adalah tanggal 15 setiap bulannya.
+                                <p>
+                                    Punten Bapak/Ibu Notaris, mohon diperhatikan bahwa 
+                                    <strong>Periode Laporan</strong> yang dipilih pada aplikasi adalah 
+                                    <strong>bulan kegiatan/isi laporan</strong>, bukan bulan saat penginputan.
                                 </p>
+
+                                <div class="bg-white p-3 rounded mt-2 border-left border-primary shadow-sm" style="border-left-width: 6px !important;">
+                                    <em class="text-primary">
+                                        Contoh: Laporan untuk kegiatan bulan <strong>Maret</strong> tetap memilih periode 
+                                        <strong>Maret</strong>, meskipun diinput pada bulan April.
+                                    </em>
+                                </div>
+
+                                <p class="mt-3 text-danger font-weight-bold" style="font-size: 1.15rem;">
+                                    <i data-feather="alert-circle"></i> 
+                                    Batas maksimal penyampaian laporan adalah tanggal 15 setiap bulannya.
+                                </p>
+
+                                <div class="alert alert-warning mt-4 mb-0" style="border-radius: 10px;">
+                                    <p class="mb-2 font-weight-bold">
+                                        <i data-feather="info"></i> Informasi Login
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Apabila saat login aplikasi kembali ke halaman login secara terus-menerus (kepental/logout otomatis), 
+                                        silakan coba:
+                                    </p>
+
+                                    <ul class="mb-2 pl-3">
+                                        <li>Menggunakan browser lain</li>
+                                        <li>Menghapus cache dan cookies browser</li>
+                                    </ul>
+
+                                    <a href="https://support.google.com/accounts/answer/32050?hl=id&co=GENIE.Platform%3DDesktop" 
+                                    target="_blank" 
+                                    class="text-primary font-weight-bold">
+                                        Klik di sini untuk panduan membersihkan cache browser
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
