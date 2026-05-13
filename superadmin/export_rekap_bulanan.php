@@ -1,8 +1,17 @@
 <?php
+require '../vendor/autoload.php'; // Sesuaikan path vendor autoload Anda
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+
 include("../config/koneksi.php");
 
+// 1. Ambil Parameter
 $bulan_awal  = $_GET['bulan_awal'] ?? '01';
-$bulan_akhir = $_GET['bulan_akhir'] ?? '12';
+$bulan_akhir = $_GET['bulan_akhir'] ?? date('m');
 $tahun       = $_GET['tahun'] ?? date('Y');
 
 $nama_bulan = [
@@ -10,109 +19,119 @@ $nama_bulan = [
     '07' => 'Juli', '08' => 'Agustus', '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
 ];
 
-$data_notaris_aktif = [
-    'Kabupaten Bandung' => 360, 'Kabupaten Bandung Barat' => 178, 'Kabupaten Bekasi' => 218,
-    'Kabupaten Bogor' => 350, 'Kabupaten Ciamis' => 56, 'Kabupaten Cianjur' => 118,
-    'Kabupaten Cirebon' => 383, 'Kabupaten Garut' => 210, 'Kabupaten Indramayu' => 201,
-    'Kabupaten Karawang' => 247, 'Kabupaten Kuningan' => 110, 'Kabupaten Majalengka' => 104,
-    'Kabupaten Pangandaran' => 33, 'Kabupaten Purwakarta' => 132, 'Kabupaten Subang' => 198,
-    'Kabupaten Sukabumi' => 168, 'Kabupaten Sumedang' => 136, 'Kabupaten Tasikmalaya' => 94,
-    'Kota Bandung' => 164, 'Kota Banjar' => 20, 'Kota Bekasi' => 237, 'Kota Bogor' => 207,
-    'Kota Cimahi' => 102, 'Kota Cirebon' => 126, 'Kota Depok' => 185, 'Kota Sukabumi' => 71,
-    'Kota Tasikmalaya' => 91
-];
-
-// Header agar file terunduh sebagai Excel
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Rekap_Laporan_Bulanan_{$bulan_awal}_sd_{$bulan_akhir}_{$tahun}.xls");
-?>
-
-<center>
-    <h3>REKAP KEPATUHAN LAPORAN BULANAN NOTARIS</h3>
-    <h4>Periode: <?= $nama_bulan[$bulan_awal] ?> - <?= $nama_bulan[$bulan_akhir] ?> <?= $tahun ?></h4>
-</center>
-
-<table border="1">
-    <thead>
-        <tr style="background-color: #2c3e50; color: white;">
-            <th rowspan="2">No</th>
-            <th rowspan="2">MPD (Kedudukan)</th>
-            <th rowspan="2">Jml Notaris Aktif</th>
-            <th rowspan="2">Jml Notaris Kirim</th>
-            <th rowspan="2">Kepatuhan (%)</th>
-            <th colspan="4">Rincian Akta</th>
-            <th rowspan="2">Total Akta</th>
-        </tr>
-        <tr style="background-color: #2c3e50; color: white;">
-            <th>Buku Daftar</th>
-            <th>Waarmerking</th>
-            <th>Legalisasi</th>
-            <th>Buku Protes</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $sql = "
-        SELECT 
+// 2. Query Data
+$sql = "SELECT 
             k.nama_kedudukan AS mpd,
+            (SELECT COUNT(*) FROM notaris WHERE id_kedudukan = k.id_kedudukan AND level = '2') AS jml_notaris_aktif,
             COUNT(DISTINCT la.id_notaris) AS jumlah_notaris_kirim,
             SUM(la.jml_buku_daftar) AS jml_buku_daftar,
             SUM(la.jml_tangan_dibukukan) AS jml_tangan_dibukukan,
             SUM(la.jml_tangan_disahkan) AS jml_tangan_disahkan,
             SUM(la.jml_buku_protes) AS jml_buku_protes,
             SUM(la.jml_buku_daftar + la.jml_tangan_dibukukan + la.jml_tangan_disahkan + la.jml_buku_protes) AS total_akta
-        FROM laporan la
-        JOIN notaris n ON n.id_notaris = la.id_notaris
-        JOIN kedudukan k ON k.id_kedudukan = n.id_kedudukan
-        WHERE YEAR(la.tanggal) = :tahun
-          AND MONTH(la.tanggal) BETWEEN :bulan_awal AND :bulan_akhir
+        FROM kedudukan k
+        LEFT JOIN notaris n ON n.id_kedudukan = k.id_kedudukan AND n.level = '2'
+        LEFT JOIN laporan la ON la.id_notaris = n.id_notaris 
+            AND YEAR(la.tanggal) = :tahun 
+            AND MONTH(la.tanggal) BETWEEN :bulan_awal AND :bulan_akhir
         GROUP BY k.id_kedudukan
-        ORDER BY k.nama_kedudukan";
+        ORDER BY k.nama_kedudukan ASC";
 
-        $stmt = $koneksi->prepare($sql);
-        $stmt->bindParam(':tahun', $tahun);
-        $stmt->bindParam(':bulan_awal', $bulan_awal);
-        $stmt->bindParam(':bulan_akhir', $bulan_akhir);
-        $stmt->execute();
+$stmt = $koneksi->prepare($sql);
+$stmt->execute([':tahun' => $tahun, ':bulan_awal' => $bulan_awal, ':bulan_akhir' => $bulan_akhir]);
 
-        $no = 1;
-        $g_total_notaris = 0;
-        $g_total_kirim = 0;
-        $g_total_akta = 0;
+// 3. Inisialisasi Spreadsheet
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
 
-        while ($row = $stmt->fetch()) {
-            $notaris_aktif = $data_notaris_aktif[$row['mpd']] ?? 0;
-            $persentase = ($notaris_aktif > 0) ? ($row['jumlah_notaris_kirim'] / $notaris_aktif) * 100 : 0;
+// Judul
+$sheet->setCellValue('A1', 'REKAP KEPATUHAN LAPORAN BULANAN NOTARIS');
+$sheet->mergeCells('A1:J1');
+$sheet->setCellValue('A2', 'Periode: ' . $nama_bulan[$bulan_awal] . ' s/d ' . $nama_bulan[$bulan_akhir] . ' ' . $tahun);
+$sheet->mergeCells('A2:J2');
 
-            $g_total_notaris += $notaris_aktif;
-            $g_total_kirim += $row['jumlah_notaris_kirim'];
-            $g_total_akta += $row['total_akta'];
+// Header Tabel
+$sheet->setCellValue('A4', 'No');
+$sheet->setCellValue('B4', 'MPD (Kedudukan)');
+$sheet->setCellValue('C4', 'Jml Notaris Aktif');
+$sheet->setCellValue('D4', 'Jml Notaris Kirim');
+$sheet->setCellValue('E4', 'Kepatuhan (%)');
+$sheet->setCellValue('F4', 'Rincian Akta');
+$sheet->mergeCells('F4:I4');
+$sheet->setCellValue('J4', 'Total Akta');
 
-            echo "<tr>
-                <td align='center'>$no</td>
-                <td>{$row['mpd']}</td>
-                <td align='center'>$notaris_aktif</td>
-                <td align='center'>{$row['jumlah_notaris_kirim']}</td>
-                <td align='center'>".number_format($persentase, 2)."%</td>
-                <td align='center'>{$row['jml_buku_daftar']}</td>
-                <td align='center'>{$row['jml_tangan_dibukukan']}</td>
-                <td align='center'>{$row['jml_tangan_disahkan']}</td>
-                <td align='center'>{$row['jml_buku_protes']}</td>
-                <td align='center'><b>{$row['total_akta']}</b></td>
-            </tr>";
-            $no++;
-        }
-        $persentase_total = ($g_total_notaris > 0) ? ($g_total_kirim / $g_total_notaris) * 100 : 0;
-        ?>
-    </tbody>
-    <tfoot>
-        <tr style="background-color: #eee; font-weight: bold;">
-            <td colspan="2" align="center">TOTAL KESELURUHAN</td>
-            <td align="center"><?= $g_total_notaris ?></td>
-            <td align="center"><?= $g_total_kirim ?></td>
-            <td align="center"><?= number_format($persentase_total, 2) ?>%</td>
-            <td colspan="4"></td>
-            <td align="center"><?= $g_total_akta ?></td>
-        </tr>
-    </tfoot>
-</table>
+$sheet->setCellValue('F5', 'Buku Daftar');
+$sheet->setCellValue('G5', 'Waarmerking');
+$sheet->setCellValue('H5', 'Legalisasi');
+$sheet->setCellValue('I5', 'Buku Protes');
+
+// Merge Header yang memiliki rowspan
+foreach (['A', 'B', 'C', 'D', 'E', 'J'] as $col) {
+    $sheet->mergeCells($col . '4:' . $col . '5');
+}
+
+// Styling Header
+$headerStyle = [
+    'font' => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+    'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
+    'fill' => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '2C3E50']],
+    'borders' => ['allBorders' => ['borderStyle' => Border::BORDER_THIN]]
+];
+$sheet->getStyle('A4:J5')->applyFromArray($headerStyle);
+
+// 4. Isi Data
+$rowNum = 6;
+$no = 1;
+$g_notaris = 0; $g_kirim = 0; $g_akta = 0;
+
+while ($row = $stmt->fetch()) {
+    $notaris_aktif = (int)$row['jml_notaris_aktif'];
+    $notaris_kirim = (int)$row['jumlah_notaris_kirim'];
+    $persen = ($notaris_aktif > 0) ? ($notaris_kirim / $notaris_aktif) : 0;
+    
+    $sheet->setCellValue('A' . $rowNum, $no++);
+    $sheet->setCellValue('B' . $rowNum, $row['mpd']);
+    $sheet->setCellValue('C' . $rowNum, $notaris_aktif);
+    $sheet->setCellValue('D' . $rowNum, $notaris_kirim);
+    $sheet->setCellValue('E' . $rowNum, $persen);
+    $sheet->setCellValue('F' . $rowNum, (int)$row['jml_buku_daftar']);
+    $sheet->setCellValue('G' . $rowNum, (int)$row['jml_tangan_dibukukan']);
+    $sheet->setCellValue('H' . $rowNum, (int)$row['jml_tangan_disahkan']);
+    $sheet->setCellValue('I' . $rowNum, (int)$row['jml_buku_protes']);
+    $sheet->setCellValue('J' . $rowNum, (int)$row['total_akta']);
+    
+    // Format Persentase Excel
+    $sheet->getStyle('E' . $rowNum)->getNumberFormat()->setFormatCode('0.00%');
+    
+    $g_notaris += $notaris_aktif;
+    $g_kirim   += $notaris_kirim;
+    $g_akta    += $row['total_akta'];
+    $rowNum++;
+}
+
+// 5. Total Keseluruhan
+$sheet->setCellValue('A' . $rowNum, 'TOTAL KESELURUHAN');
+$sheet->mergeCells('A' . $rowNum . ':B' . $rowNum);
+$sheet->setCellValue('C' . $rowNum, $g_notaris);
+$sheet->setCellValue('D' . $rowNum, $g_kirim);
+$p_total = ($g_notaris > 0) ? ($g_kirim / $g_notaris) : 0;
+$sheet->setCellValue('E' . $rowNum, $p_total);
+$sheet->getStyle('E' . $rowNum)->getNumberFormat()->setFormatCode('0.00%');
+$sheet->setCellValue('J' . $rowNum, $g_akta);
+
+$sheet->getStyle('A' . $rowNum . ':J' . $rowNum)->getFont()->setBold(true);
+$sheet->getStyle('A4:J' . $rowNum)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+// Autosize kolom
+foreach (range('A', 'J') as $col) {
+    $sheet->getColumnDimension($col)->setAutoSize(true);
+}
+
+// 6. Output ke Browser
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="Rekap_Laporan_Notaris_' . $tahun . '.xlsx"');
+header('Cache-Control: max-age=0');
+
+$writer = new Xlsx($spreadsheet);
+$writer->save('php://output');
+exit;
