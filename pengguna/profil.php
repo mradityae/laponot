@@ -77,10 +77,25 @@ include "header.php";
 	                                      <label for="perempuan">Perempuan</label>
 			                          </div>
 
-			                           <div class="col-xs-6" style="margin-bottom: 20">
-			                            <label for="email"><h4>Kedudukan</h4></label>
-			                              <input type="text" name="kedudukan" class="form-control" value="<?php echo $d['nama_kedudukan']?>" readonly/>
-			                          </div>
+			                           <div class="col-xs-6" style="margin-bottom: 20px">
+										<label for="kedudukan"><h4>Kedudukan</h4></label>
+
+										<select name="id_kedudukan" class="form-control" required>
+											<option value="">-- Pilih Kedudukan --</option>
+
+											<?php
+											$qkedudukan = $koneksi->prepare("SELECT * FROM kedudukan ORDER BY nama_kedudukan ASC");
+											$qkedudukan->execute();
+
+											while($k = $qkedudukan->fetch(PDO::FETCH_ASSOC)){
+											?>
+												<option value="<?php echo $k['id_kedudukan']; ?>"
+													<?php if($d['id_kedudukan'] == $k['id_kedudukan']) echo 'selected'; ?>>
+													<?php echo $k['nama_kedudukan']; ?>
+												</option>
+											<?php } ?>
+										</select>
+									</div>
 			                      </div>
 
 			                      <div class="form-group">

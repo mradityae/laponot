@@ -810,25 +810,25 @@
     	}
 	}
 
-	function ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, $foto, $nik=null){
+	function ubahProfil($koneksi, $id_notaris, $nama, $jenis_kelamin, $alamat, $telepon, $sk, $tanggal_sk, $no_ba_pelantikan, $tgl_ba_pelantikan, $password, $foto, $nik=null, $id_kedudukan){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		//TIDAK MENGUBAH PASSWORD DAN FOTO
 		if($password == null && $foto == null)
 		{
-			$ambil=$koneksi->prepare("UPDATE notaris SET nik=:nik, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
+			$ambil=$koneksi->prepare("UPDATE notaris SET id_kedudukan=:id_kedudukan, nik=:nik, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
 		}
 		//TIDAK MENGUBAH PASSWORD MENGUBAH FOTO
 		else if($password == null && $foto != null)
 		{
-			$ambil=$koneksi->prepare("UPDATE notaris SET nik=:nik, photo=:photo, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
+			$ambil=$koneksi->prepare("UPDATE notaris SET id_kedudukan=:id_kedudukan, nik=:nik, photo=:photo, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
 
     		$ambil->BindParam(":photo", $foto, PDO::PARAM_STR);
 		}
 		//MENGUBAH PASSWORD TIDAK MENGUBAH FOTO
 		else if($password != null && $foto == null)
 		{
-			$ambil=$koneksi->prepare("UPDATE notaris SET nik=:nik, password=:password, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
+			$ambil=$koneksi->prepare("UPDATE notaris SET id_kedudukan=:id_kedudukan, nik=:nik, password=:password, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
 
 			$encrypPass = md5($password);
     		$ambil->BindParam(":password", $encrypPass, PDO::PARAM_STR);
@@ -836,7 +836,7 @@
 		//MENGUBAH PASSWORD DAN FOTO
 		else
 		{
-			$ambil=$koneksi->prepare("UPDATE notaris SET nik=:nik, password=:password, photo=:photo, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
+			$ambil=$koneksi->prepare("UPDATE notaris SET id_kedudukan=:id_kedudukan, nik=:nik, password=:password, photo=:photo, nama=:nama, jenis_kelamin=:jenis_kelamin, alamat=:alamat, telepon=:telepon, sk=:sk, tanggal_sk=:tanggal_sk, no_ba_pelantikan=:no_ba_pelantikan, tgl_ba_pelantikan=:tgl_ba_pelantikan WHERE id_notaris =:id_notaris");
 
     		$encrypPass = md5($password);
     		$ambil->BindParam(":password", $encrypPass, PDO::PARAM_STR);
@@ -854,6 +854,7 @@
     	$ambil->BindParam(":tgl_ba_pelantikan",$tgl_ba_pelantikan, PDO::PARAM_STR);
     	$ambil->BindParam(":id_notaris",$id_notaris, PDO::PARAM_INT);
 		$ambil->bindParam(":nik", $nik, PDO::PARAM_STR);
+		$ambil->bindParam(":id_kedudukan", $id_kedudukan, PDO::PARAM_STR);
 		$ambil->execute();
 
 		$count = $ambil->rowCount();
