@@ -550,10 +550,10 @@
 		}
 	}
 
-	function unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes,$fullDirBaru){
+	function unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes, $jml_wasiat, $jml_badan_usaha, $fullDirBaru){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$ambil=$koneksi->prepare("INSERT INTO laporan(id_notaris, tanggal, jml_buku_daftar, jml_tangan_dibukukan,jml_tangan_disahkan,jml_buku_protes, file_upload, status) VALUES (:id_notaris, :tanggal, :jml_buku_daftar, :jml_tangan_dibukukan, :jml_tangan_disahkan, :jml_buku_protes, :file_upload, :status)");
+		$ambil=$koneksi->prepare("INSERT INTO laporan(id_notaris, tanggal, jml_buku_daftar, jml_tangan_dibukukan,jml_tangan_disahkan,jml_buku_protes, jml_wasiat, jml_badan_usaha, file_upload, created_at, status) VALUES (:id_notaris, :tanggal, :jml_buku_daftar, :jml_tangan_dibukukan, :jml_tangan_disahkan, :jml_buku_protes, :jml_wasiat, :jml_badan_usaha, :file_upload, NOW(), :status)");
 
 		$status = "Laporan Terkirim";
     	$ambil->BindParam(":id_notaris", $id_notaris, PDO::PARAM_INT);
@@ -562,6 +562,8 @@
     	$ambil->BindParam(":jml_tangan_dibukukan", $jml_tangan_dibukukan, PDO::PARAM_INT);
     	$ambil->BindParam(":jml_tangan_disahkan", $jml_tangan_disahkan, PDO::PARAM_INT);
     	$ambil->BindParam(":jml_buku_protes", $jml_buku_protes, PDO::PARAM_INT);
+		$ambil->BindParam(":jml_wasiat", $jml_wasiat, PDO::PARAM_INT);
+		$ambil->BindParam(":jml_badan_usaha", $jml_badan_usaha, PDO::PARAM_INT);
     	$ambil->BindParam(":file_upload",$fullDirBaru, PDO::PARAM_STR);
     	$ambil->BindParam(":status",$status, PDO::PARAM_STR);
 
@@ -587,6 +589,8 @@
 		$jml_tangan_dibukukan,
 		$jml_tangan_disahkan,
 		$jml_buku_protes,
+		$jml_wasiat,      // Tambahkan parameter
+        $jml_badan_usaha, // Tambahkan parameter
 		$file_upload
 	){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -598,6 +602,8 @@
 				jml_tangan_dibukukan = :b,
 				jml_tangan_disahkan = :c,
 				jml_buku_protes = :d,
+				jml_wasiat = :wasiat,
+                jml_badan_usaha = :bu,
 				file_upload = :f
 			WHERE id_laporan = :id
 		");
@@ -608,6 +614,8 @@
 			':b'       => $jml_tangan_dibukukan,
 			':c'       => $jml_tangan_disahkan,
 			':d'       => $jml_buku_protes,
+			':wasiat'  => $jml_wasiat,
+            ':bu'      => $jml_badan_usaha,
 			':f'       => $file_upload,
 			':id'      => $id_laporan
 		]);

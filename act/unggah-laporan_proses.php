@@ -17,6 +17,9 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$jml_tangan_disahkan 	= $_POST['jml_tangan_disahkan'];
 		$jml_buku_protes 		= $_POST['jml_buku_protes'];
 		$file       			= $_POST['file'];
+		// Ambil variabel baru
+		$jml_wasiat             = $_POST['jml_wasiat'];
+		$jml_badan_usaha        = $_POST['jml_badan_usaha'];
 
 		$monthYear = date("F_Y",strtotime($tanggal));
 		$namaFile = $_FILES['file']['name'];
@@ -75,7 +78,7 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 				header("Pragma: no-cache");
 				clearstatcache();
 				
-				if (unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes,$fullDirBaru)) {
+				if (unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes, $jml_wasiat, $jml_badan_usaha ,$fullDirBaru)) {
 					echo "<script>alert('Laporan Berhasil Dikirim')</script>";
 					$link = $url."pengguna/index";
 					header("refresh:0.1; url=$link");

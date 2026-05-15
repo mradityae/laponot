@@ -20,12 +20,13 @@ date_default_timezone_set('Asia/Jakarta');
         <div id="form_bulanan" style="display:none;">
             <form action="<?=$url;?>act/unggah-laporan_proses.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" readonly/>
+                <!-- Bagian dalam Form Bulanan -->
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label>Periode Laporan</label>
+                            <label>Laporan Bulan Berjalan</label>
                             <input type="month" name="tanggal_laporan" class="form-control" value="<?=date('Y-m', strtotime('-1 month'))?>" max="<?=date('Y-m') ?>" required/>
-                            <small class="text-muted">Pilih Bulan dan Tahun Laporan</small>
+                            <small class="text-muted">Pastikan yang diisi adalah <b>Laporan Bulan Berjalan</b>.</small>
                         </div>
 
                         <div class="form-group">
@@ -36,6 +37,12 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="form-group">
                             <label>Jumlah Akta Surat Di Bawah Tangan Yang Dibukukan</label>
                             <input type="number" name="jml_tangan_dibukukan" class="form-control" required/>
+                        </div>
+
+                        <!-- TAMBAHAN BARU: Jumlah Wasiat -->
+                        <div class="form-group">
+                            <label>Jumlah Wasiat</label>
+                            <input type="number" name="jml_wasiat" class="form-control" required/>
                         </div>
                     </div>
 
@@ -48,6 +55,12 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="form-group">
                             <label>Jumlah Akta Protes</label>
                             <input type="number" name="jml_buku_protes" class="form-control" required/>
+                        </div>
+
+                        <!-- TAMBAHAN BARU: Jumlah Badan Usaha -->
+                        <div class="form-group">
+                            <label>Jumlah Badan Usaha</label>
+                            <input type="number" name="jml_badan_usaha" class="form-control" required/>
                         </div>
 
                         <div class="form-group">
@@ -72,8 +85,8 @@ date_default_timezone_set('Asia/Jakarta');
             <!-- ✅ NAV TABS (Bootstrap 3) -->
             <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#fidusia_normal" role="tab" data-toggle="tab">Isi Laporan Fidusia</a></li>
-                <li><a href="#fidusia_nihil" role="tab" data-toggle="tab">Kirim Laporan Nihil</a></li>
                 <li><a href="#fidusia_kolektif" role="tab" data-toggle="tab">Input Kolektif (Excel)</a></li>
+                <li><a href="#fidusia_nihil" role="tab" data-toggle="tab">Kirim Laporan Nihil</a></li>
             </ul>
 
             <!-- ✅ TAB CONTENT -->
@@ -318,6 +331,7 @@ date_default_timezone_set('Asia/Jakarta');
                             </tr>
                         </table>
                         <a href="/laponot/assets/templates/template_fidusia.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel Nilai Penjaminan Nominal</a>
+                        <b>atau</b>
                         <a href="/laponot/assets/templates/template_fidusia_range_nilai_penjaminan.xlsx" class="btn btn-sm btn-default"><i class="fa fa-download"></i> Download Template Excel Nilai Penjaminan Range</a>
                     </div>
 
@@ -349,14 +363,33 @@ date_default_timezone_set('Asia/Jakarta');
 <script>
 function tampilkanForm() {
     const pilihan = document.getElementById('jenis_laporan').value;
+
     document.getElementById('form_bulanan').style.display = 'none';
     document.getElementById('form_fidusia').style.display = 'none';
 
     if (pilihan === 'bulanan') {
+
         document.getElementById('form_bulanan').style.display = 'block';
+
     } else if (pilihan === 'fidusia') {
+
         document.getElementById('form_fidusia').style.display = 'block';
+
+        // cek apakah popup disembunyikan permanen
+        const hidePopup = localStorage.getItem('hide_popup_fidusia');
+
+        if (hidePopup !== '1') {
+            $('#popupFidusiaKolektif').modal('show');
+        }
     }
+}
+
+// tombol jangan tampilkan lagi
+function hilangkanPopupFidusia() {
+
+    localStorage.setItem('hide_popup_fidusia', '1');
+
+    $('#popupFidusiaKolektif').modal('hide');
 }
 
 function toggleKeterangan() {
@@ -376,5 +409,61 @@ function toggleKeterangan() {
 
 document.addEventListener("DOMContentLoaded", tampilkanForm);
 </script>
+
+<!-- POPUP INFO FIDUSIA KOLEKTIF -->
+<div class="modal fade" id="popupFidusiaKolektif" tabindex="-1" role="dialog" aria-labelledby="popupFidusiaLabel">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden;">
+
+            <div class="modal-header" style="background:#0B2447; color:white;">
+                <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="popupFidusiaLabel">
+                    <i class="fa fa-bullhorn"></i> Informasi Baru
+                </h4>
+            </div>
+
+            <div class="modal-body text-center" style="padding:30px;">
+                <i class="fa fa-file-excel-o" style="font-size:60px; color:#28a745;"></i>
+
+                <h3 style="margin-top:15px; color:#0B2447;">
+                    Kini Telah Tersedia
+                </h3>
+
+                <h4 style="font-weight:bold; color:#007BFF;">
+                    Unggah Fidusia Kolektif (Excel)
+                </h4>
+
+                <p style="margin-top:15px; font-size:15px; color:#555;">
+                    Anda sekarang dapat mengunggah banyak data fidusia sekaligus menggunakan file Excel.
+                </p>
+
+                <div class="alert alert-info" style="margin-top:20px; text-align:left;">
+                    <ul style="padding-left:18px; margin-bottom:0;">
+                        <li>Maksimal 3000 data per file</li>
+                        <li>Menggunakan format template Excel</li>
+                        <li>Khusus untuk transaksi Pendaftaran Fidusia</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="text-align:center;">
+                <button type="button"
+                        class="btn btn-default"
+                        onclick="hilangkanPopupFidusia()">
+                    Jangan tampilkan lagi
+                </button>
+
+                <button type="button"
+                        class="btn btn-primary"
+                        data-dismiss="modal">
+                    Mengerti
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <?php include "footer.php"; ?>

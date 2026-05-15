@@ -62,6 +62,13 @@
                         value="<?= $d['jml_buku_daftar']; ?>" required>
                 </div>
 
+                <!-- TAMBAHAN BARU: Jumlah Wasiat -->
+                <div class="form-group">
+                    <label>Jumlah Wasiat</label>
+                    <input type="number" name="jml_wasiat" class="form-control"
+                        value="<?= $d['jml_wasiat']; ?>" required>
+                </div>
+
                 <div class="form-group">
                     <label>Jumlah Surat Dibukukan</label>
                     <input type="number" name="jml_tangan_dibukukan" class="form-control"
@@ -78,6 +85,13 @@
                     <label>Jumlah Buku Protes</label>
                     <input type="number" name="jml_buku_protes" class="form-control"
                         value="<?= $d['jml_buku_protes']; ?>" required>
+                </div>
+
+                <!-- TAMBAHAN BARU: Jumlah Badan Usaha -->
+                <div class="form-group">
+                    <label>Jumlah Badan Usaha</label>
+                    <input type="number" name="jml_badan_usaha" class="form-control"
+                        value="<?= $d['jml_badan_usaha']; ?>" required>
                 </div>
 
                 <div class="form-group">
