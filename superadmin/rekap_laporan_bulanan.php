@@ -17,7 +17,7 @@ $nama_bulan = [
 $sql = "SELECT 
             k.id_kedudukan,
             k.nama_kedudukan AS mpd,
-            (SELECT COUNT(*) FROM notaris WHERE id_kedudukan = k.id_kedudukan AND level = '2') AS jml_notaris_aktif,
+            (SELECT COUNT(*) FROM notaris WHERE id_kedudukan = k.id_kedudukan AND level = '2' AND aktif='1') AS jml_notaris_aktif,
             COUNT(DISTINCT la.id_notaris) AS jumlah_notaris_kirim,
             SUM(la.jml_buku_daftar) AS jml_buku_daftar,
             SUM(la.jml_tangan_dibukukan) AS jml_tangan_dibukukan,
@@ -25,7 +25,7 @@ $sql = "SELECT
             SUM(la.jml_buku_protes) AS jml_buku_protes,
             SUM(la.jml_buku_daftar + la.jml_tangan_dibukukan + la.jml_tangan_disahkan + la.jml_buku_protes) AS total_akta
         FROM kedudukan k
-        LEFT JOIN notaris n ON n.id_kedudukan = k.id_kedudukan AND n.level = '2'
+        LEFT JOIN notaris n ON n.id_kedudukan = k.id_kedudukan AND n.level = '2' AND n.aktif='1'
         LEFT JOIN laporan la ON la.id_notaris = n.id_notaris 
             AND YEAR(la.tanggal) = :tahun 
             AND MONTH(la.tanggal) BETWEEN :bulan_awal AND :bulan_akhir

@@ -42,6 +42,13 @@ if(!isset($_GET['prc']))
 				$_SESSION["hak_akses"] = $result['level'];
 				$_SESSION["kode_user"] = $result['id_notaris'];
 				$_SESSION["kedudukan"] = $result['id_kedudukan'];
+
+				$waktu_sekarang = date('Y-m-d H:i:s');
+
+				$updateLogin = $koneksi->prepare("UPDATE notaris SET terakhir_login = :waktu WHERE id_notaris = :id_notaris");
+				$updateLogin->bindParam(":waktu", $waktu_sekarang);
+				$updateLogin->bindParam(":id_notaris", $result['id_notaris'], PDO::PARAM_INT);
+				$updateLogin->execute();
 /*
 				$sub_query = "
 			        INSERT INTO login_details 

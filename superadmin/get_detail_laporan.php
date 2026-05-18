@@ -15,7 +15,7 @@ $sql = "SELECT n.nama, n.telepon,
         (SELECT COUNT(*) FROM laporan l WHERE l.id_notaris = n.id_notaris 
          AND YEAR(l.tanggal) = :th AND MONTH(l.tanggal) BETWEEN :b1 AND :b2) as cek
         FROM notaris n 
-        WHERE n.id_kedudukan = :id AND n.level = '2'
+        WHERE n.id_kedudukan = :id AND n.level = '2' AND n.aktif='1'
         ORDER BY n.nama ASC";
 
 $stmt = $koneksi->prepare($sql);
@@ -24,15 +24,25 @@ $data = $stmt->fetchAll();
 ?>
 
 <!-- Toolbar Modal -->
-<div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
-    <div>
-        <label>Filter Status: </label>
-        <select id="filterStatus" class="form-control input-sm" style="display:inline-block; width: 150px;">
-            <option value="">Semua</option>
-            <option value="SUDAH LAPOR">Sudah Lapor</option>
-            <option value="BELUM LAPOR">Belum Lapor</option>
-        </select>
+<div style="margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <div style="display: flex; gap: 15px; align-items: center;">
+        <!-- Filter Status -->
+        <div>
+            <label>Filter Status: </label>
+            <select id="filterStatus" class="form-control input-sm" style="display:inline-block; width: 150px;">
+                <option value="">Semua</option>
+                <option value="SUDAH LAPOR">Sudah Lapor</option>
+                <option value="BELUM LAPOR">Belum Lapor</option>
+            </select>
+        </div>
+        
+        <!-- Input Search Kustom -->
+        <div>
+            <label>Cari: </label>
+            <input type="text" id="customSearch" class="form-control input-sm" placeholder="Ketik nama / telepon..." style="display:inline-block; width: 200px;">
+        </div>
     </div>
+    
     <a href="export_pdf_detail.php?id_kedudukan=<?=$id?>&bulan_awal=<?=$b1?>&bulan_akhir=<?=$b2?>&tahun=<?=$th?>" 
        target="_blank" class="btn btn-danger btn-sm">
         <i class="fa fa-file-pdf-o"></i> Export PDF
@@ -67,12 +77,18 @@ $data = $stmt->fetchAll();
 </table>
 
 <script>
+    // Inisialisasi DataTables
     var table = $('#tablePop').DataTable({
-        "dom": 'lrtip' // Sembunyikan search box default karena kita pakai custom filter
+        "dom": 'lrtip' // Sembunyikan search box default bawaan DT
     });
 
-    // Logika Filter Status
+    // Logika Filter Status (Kolom indeks ke-2)
     $('#filterStatus').on('change', function(){
         table.column(2).search(this.value).draw();
+    });
+
+    // Logika Live Search Kustom (Global Search)
+    $('#customSearch').on('keyup', function(){
+        table.search(this.value).draw();
     });
 </script>

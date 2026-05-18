@@ -38,6 +38,8 @@ else{
                                             <th align='center'>Nama</th>
                                             <th align='center'>Email</th>
                                             <th align='center'>Kedudukan</th>
+                                            <th align='center'>NIK</th>
+                                            <th align='center'>Terakhir Login</th>
                                             <th align='center'>Level</th>
                                             <th align='center'>Akun</th>
                                             <th align='center'>Terdaftar</th>
@@ -90,8 +92,10 @@ else{
                                                 echo "<td>".$no."</td>";
                                                 echo "<td>".$row['nama']."</td>";
                                                 echo "<td>".$row['email']."</td>";                                              
-
                                                 echo "<td>".$row['nama_kedudukan']."</td>";
+                                                echo "<td>".$row['nik']."</td>";
+                                                echo "<td>".$row['terakhir_login']."</td>";
+
                                                 
                                                 if($row['level'] == 0)
                                                 {

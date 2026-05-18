@@ -237,13 +237,6 @@ $persentase = ($total_notaris > 0)
 
                         <p>Sudah Melapor</p>
 
-                        <button class="btn btn-default btn-detail-lapor"
-                                onclick="showDetailLapor('sudah')">
-
-                            Lihat Detail
-
-                        </button>
-
                     </div>
 
                 </div>
@@ -263,13 +256,6 @@ $persentase = ($total_notaris > 0)
 
                         <p>Belum Melapor</p>
 
-                        <button class="btn btn-default btn-detail-lapor"
-                                onclick="showDetailLapor('belum')">
-
-                            Lihat Detail
-
-                        </button>
-
                     </div>
 
                 </div>
@@ -288,6 +274,13 @@ $persentase = ($total_notaris > 0)
                         </h2>
 
                         <p>Persentase Kepatuhan</p>
+
+                        <button class="btn btn-default btn-detail-lapor"
+                                onclick="showDetailLapor()">
+
+                            Lihat Detail
+
+                        </button>
 
                     </div>
 
@@ -869,23 +862,9 @@ $persentase = ($total_notaris > 0)
 
 <script>
 
-function showDetailLapor(status){
+function showDetailLapor(){
 
     $('#modalDetailLapor').modal('show');
-
-    if(status == 'sudah'){
-
-        $('#modalTitleLapor').html(
-            'Daftar Notaris Sudah Melapor'
-        );
-
-    }else{
-
-        $('#modalTitleLapor').html(
-            'Daftar Notaris Belum Melapor'
-        );
-
-    }
 
     $('#modalContentLapor').html(
         '<center>Memuat data...</center>'
@@ -893,7 +872,6 @@ function showDetailLapor(status){
 
     $.get('get_detail_kepatuhan_mpd.php', {
 
-        status: status,
         bulan_berjalan: '<?= $bulan_berjalan ?>',
         tahun: '<?= $tahun ?>'
 

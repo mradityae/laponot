@@ -9,58 +9,39 @@ if (!isset($_SESSION['kedudukan'])) {
     exit;
 }
 
-$kedudukan   = $_SESSION['kedudukan'];
-$status      = $_GET['status'] ?? '';
+$kedudukan       = $_SESSION['kedudukan'];
 $bulan_berjalan  = $_GET['bulan_berjalan'] ?? date('m');
-$tahun       = $_GET['tahun'] ?? date('Y');
+$tahun           = $_GET['tahun'] ?? date('Y');
 
-if ($status == 'sudah') {
-
-    $sql = "
-        SELECT DISTINCT
-            n.id_notaris,
-            n.nama,
-            n.email,
-            n.telepon
-        FROM laporan la
-        INNER JOIN notaris n
-            ON la.id_notaris = n.id_notaris
-        WHERE n.id_kedudukan = ?
-        AND n.level='2'
-        AND n.aktif='1'
-        AND YEAR(la.tanggal)=?
-        AND MONTH(la.tanggal)=?
-        ORDER BY n.nama ASC
-    ";
-
-} else {
-
-    $sql = "
-        SELECT
-            n.id_notaris,
-            n.nama,
-            n.email,
-            n.telepon
-        FROM notaris n
-        WHERE n.id_kedudukan = ?
-        AND n.level='2'
-        AND n.aktif='1'
-        AND n.id_notaris NOT IN (
-            SELECT DISTINCT la.id_notaris
-            FROM laporan la
-            WHERE YEAR(la.tanggal)=?
-            AND MONTH(la.tanggal)=?
-        )
-        ORDER BY n.nama ASC
-    ";
-}
+// Query digabung menggunakan LEFT JOIN untuk mendapatkan semua notaris beserta status lapornya
+$sql = "
+    SELECT 
+        n.id_notaris,
+        n.nama,
+        n.email,
+        n.telepon,
+        CASE 
+            WHEN la.id_laporan IS NOT NULL THEN 'sudah'
+            ELSE 'belum'
+        END AS status_lapor
+    FROM notaris n
+    LEFT JOIN laporan la ON n.id_notaris = la.id_notaris 
+        AND YEAR(la.tanggal) = ? 
+        AND MONTH(la.tanggal) = ?
+    WHERE n.id_kedudukan = ?
+    AND n.level = '2'
+    AND n.aktif = '1'
+    GROUP BY n.id_notaris
+    ORDER BY n.nama ASC
+";
 
 $stmt = $koneksi->prepare($sql);
 
+// Urutan parameter disesuaikan dengan query SQL di atas: tahun, bulan, kedudukan
 $stmt->execute([
-    $kedudukan,
     $tahun,
-    $bulan_berjalan
+    $bulan_berjalan,
+    $kedudukan
 ]);
 
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -71,7 +52,6 @@ $total = count($data);
 <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css">
 
 <style>
-
 .wrapper-kepatuhan{
     background:#fff;
     border-radius:14px;
@@ -238,193 +218,110 @@ $total = count($data);
 table.dataTable{
     width:100%!important;
 }
-
 </style>
 
 <div class="wrapper-kepatuhan">
-
     <div class="content-kepatuhan">
 
         <div class="header-action">
-
             <div class="total-data">
                 Total Data : <?= number_format($total) ?>
             </div>
-
-            <a href="export_pdf_kepatuhan.php?status=<?= $status ?>&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>"
+            <!-- Mengirim parameter semua data ke export PDF -->
+            <a href="export_pdf_kepatuhan.php?status=all&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>"
                target="_blank"
                class="btn-export-pdf">
-
-                <i class="fa fa-file-pdf-o"></i>
-                Export PDF
-
+                <i class="fa fa-file-pdf-o"></i> Export PDF
             </a>
-
         </div>
 
         <div class="table-responsive">
-
             <table id="tableKepatuhan" class="table table-bordered table-hover table-kepatuhan">
-
                 <thead>
-
                     <tr>
-
                         <th width="5%">No</th>
-
                         <th>Nama Notaris</th>
-
-                        <th>Email</th>
-
                         <th>No HP</th>
-
                         <th width="15%">Status</th>
-
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                     <?php if($total > 0): ?>
-
                         <?php $no = 1; ?>
-
                         <?php foreach($data as $d): ?>
-
                             <tr>
-
                                 <td align="center">
                                     <b><?= $no++ ?></b>
                                 </td>
-
                                 <td>
-
                                     <div class="nama-notaris">
                                         <?= htmlspecialchars($d['nama']) ?>
                                     </div>
-
                                 </td>
-
                                 <td>
-
-                                    <div class="email-text">
-                                        <?= htmlspecialchars($d['email']) ?>
-                                    </div>
-
-                                </td>
-
-                                <td>
-
                                     <div class="hp-text">
                                         <?= htmlspecialchars($d['telepon']) ?>
                                     </div>
-
                                 </td>
-
                                 <td align="center">
-
-                                    <?php if($status == 'sudah'): ?>
-
+                                    <?php if($d['status_lapor'] == 'sudah'): ?>
                                         <span class="badge-status badge-sudah">
                                             SUDAH LAPOR
                                         </span>
-
                                     <?php else: ?>
-
                                         <span class="badge-status badge-belum">
                                             BELUM LAPOR
                                         </span>
-
                                     <?php endif; ?>
-
                                 </td>
-
                             </tr>
-
                         <?php endforeach; ?>
-
                     <?php else: ?>
-
                         <tr>
-
                             <td colspan="5">
-
                                 <div class="empty-data">
-
                                     <i class="fa fa-folder-open fa-3x"></i>
-
                                     <h4>Tidak Ada Data</h4>
-
                                     <p>Belum terdapat data notaris pada periode ini.</p>
-
                                 </div>
-
                             </td>
-
                         </tr>
-
                     <?php endif; ?>
-
                 </tbody>
-
             </table>
-
         </div>
 
     </div>
-
 </div>
 
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
 
 <script>
-
 $(document).ready(function(){
-
     $('#tableKepatuhan').DataTable({
-
         pageLength: 10,
-
         lengthMenu: [
             [10,25,50,100,-1],
             [10,25,50,100,"Semua"]
         ],
-
         scrollX: true,
         scrollY: "500px",
         scrollCollapse: true,
         fixedHeader: true,
-
         language: {
-
             search: "Cari Notaris :",
-
             lengthMenu: "Tampilkan _MENU_ data",
-
             zeroRecords: "Data tidak ditemukan",
-
             info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-
             infoEmpty: "Tidak ada data",
-
             paginate: {
-
                 first: "Awal",
-
                 last: "Akhir",
-
                 next: "›",
-
                 previous: "‹"
-
             }
-
         }
-
     });
-
 });
-
 </script>
