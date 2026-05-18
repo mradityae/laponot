@@ -145,9 +145,6 @@
                             <li>
                                 <a href="index"><i class="fa fa-file-text-o"></i>Laporan Notaris</a>
                             </li>
-                            <li>
-                                <a href="dashboard_fidusia"><i class="fa fa-file-text-o"></i>Laporan Fidusia</a>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -177,6 +174,9 @@
                     </li>
                     <li>
                         <a href="unggah_laporan"><i class="fa fa-book"></i>Unggah Laporan</a>
+                    </li>
+                    <li>
+                        <a href="dashboard_fidusia"><i class="fa fa-book"></i>Rekap Laporan Fidusia</a>
                     </li>
                     <li>
                         <a href="profil"><i class="fa fa-user "></i>Profil</a>

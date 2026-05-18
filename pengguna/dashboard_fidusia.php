@@ -83,7 +83,7 @@ $topJenis = getTopJenisTransaksi($koneksi, $id);
     <div id="page-inner">
         <div class="row">
             <div class="col-md-12">
-                <h1 align="center"><b>DASHBOARD APLIKASI LAPORAN FIDUSIA<b></h1>
+                <h1 align="center"><b>REKAPITULASI LAPORAN FIDUSIA<b></h1>
             </div>
         </div>
         <div class="row">
