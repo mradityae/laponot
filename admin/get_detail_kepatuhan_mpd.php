@@ -13,39 +13,46 @@ $kedudukan       = $_SESSION['kedudukan'];
 $bulan_berjalan  = $_GET['bulan_berjalan'] ?? date('m');
 $tahun           = $_GET['tahun'] ?? date('Y');
 
-// Query digabung menggunakan LEFT JOIN untuk mendapatkan semua notaris beserta status lapornya
-$sql = "
-    SELECT 
-        n.id_notaris,
-        n.nama,
-        n.email,
-        n.telepon,
-        CASE 
-            WHEN la.id_laporan IS NOT NULL THEN 'sudah'
-            ELSE 'belum'
-        END AS status_lapor
-    FROM notaris n
-    LEFT JOIN laporan la ON n.id_notaris = la.id_notaris 
-        AND YEAR(la.tanggal) = ? 
-        AND MONTH(la.tanggal) = ?
-    WHERE n.id_kedudukan = ?
-    AND n.level = '2'
-    AND n.aktif = '1'
-    GROUP BY n.id_notaris
-    ORDER BY n.nama ASC
-";
+// TAMBAHKAN DUA BARIS INI:
+$tanggal_mulai   = "$tahun-$bulan_berjalan-01 00:00:00";
+$tanggal_selesai = date('Y-m-d H:i:s', strtotime("$tanggal_mulai +1 month"));
 
-$stmt = $koneksi->prepare($sql);
+try {
+    // Query SQL aman dari aturan ONLY_FULL_GROUP_BY MySQL modern
+    $sql = "
+        SELECT 
+            n.id_notaris,
+            n.nama,
+            n.email,
+            n.telepon,
+            CASE 
+                WHEN la.id_laporan IS NOT NULL THEN 'sudah'
+                ELSE 'belum'
+            END AS status_lapor
+        FROM notaris n
+        LEFT JOIN laporan la ON n.id_notaris = la.id_notaris 
+            AND la.tanggal >= ? 
+            AND la.tanggal < ?
+        WHERE n.id_kedudukan = ?
+        AND n.level = '2'
+        AND n.aktif = '1'
+        ORDER BY n.nama ASC
+    ";
 
-// Urutan parameter disesuaikan dengan query SQL di atas: tahun, bulan, kedudukan
-$stmt->execute([
-    $tahun,
-    $bulan_berjalan,
-    $kedudukan
-]);
+    $stmt = $koneksi->prepare($sql);
+    $stmt->execute([
+        $tanggal_mulai,
+        $tanggal_selesai,
+        $kedudukan
+    ]);
 
-$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-$total = count($data);
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $total = count($data);
+
+} catch (PDOException $e) {
+    echo "<div class='alert alert-danger'>Database Error: " . htmlspecialchars($e->getMessage()) . "</div>";
+    exit;
+}
 ?>
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
@@ -128,11 +135,6 @@ $total = count($data);
     color:#2c3e50;
 }
 
-.email-text{
-    color:#3498db;
-    font-size:13px;
-}
-
 .hp-text{
     font-size:14px;
     font-weight:600;
@@ -182,23 +184,10 @@ $total = count($data);
     border:none!important;
 }
 
-.dataTables_wrapper .dataTables_info{
-    font-size:14px;
-}
-
 .empty-data{
     padding:40px;
     text-align:center;
     color:#999;
-}
-
-.dataTables_scrollBody{
-    border-bottom:1px solid #dee2e6!important;
-}
-
-.dataTables_scrollHeadInner,
-.dataTables_scrollHeadInner table{
-    width:100%!important;
 }
 
 .dataTables_scrollBody::-webkit-scrollbar{
@@ -211,12 +200,14 @@ $total = count($data);
     border-radius:10px;
 }
 
-.dataTables_scrollBody::-webkit-scrollbar-track{
-    background:#f1f1f1;
-}
-
 table.dataTable{
     width:100%!important;
+}
+
+/* FIX: Memaksa Lebar Kontainer Header DataTables Agar Sesuai 100% */
+.dataTables_scrollHeadInner, 
+.dataTables_scrollHeadInner table.table-kepatuhan {
+    width: 100% !important;
 }
 </style>
 
@@ -227,7 +218,6 @@ table.dataTable{
             <div class="total-data">
                 Total Data : <?= number_format($total) ?>
             </div>
-            <!-- Mengirim parameter semua data ke export PDF -->
             <a href="export_pdf_kepatuhan.php?status=all&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>"
                target="_blank"
                class="btn-export-pdf">
@@ -241,7 +231,7 @@ table.dataTable{
                     <tr>
                         <th width="5%">No</th>
                         <th>Nama Notaris</th>
-                        <th>No HP</th>
+                        <th>Nomor HP</th>
                         <th width="15%">Status</th>
                     </tr>
                 </thead>
@@ -255,16 +245,16 @@ table.dataTable{
                                 </td>
                                 <td>
                                     <div class="nama-notaris">
-                                        <?= htmlspecialchars($d['nama']) ?>
+                                        <?= htmlspecialchars($d['nama'] ?? '') ?>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="hp-text">
-                                        <?= htmlspecialchars($d['telepon']) ?>
+                                        <?= htmlspecialchars($d['telepon'] ?? '') ?>
                                     </div>
                                 </td>
                                 <td align="center">
-                                    <?php if($d['status_lapor'] == 'sudah'): ?>
+                                    <?php if(($d['status_lapor'] ?? '') == 'sudah'): ?>
                                         <span class="badge-status badge-sudah">
                                             SUDAH LAPOR
                                         </span>
@@ -278,7 +268,7 @@ table.dataTable{
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5">
+                            <td colspan="4">
                                 <div class="empty-data">
                                     <i class="fa fa-folder-open fa-3x"></i>
                                     <h4>Tidak Ada Data</h4>
@@ -299,7 +289,11 @@ table.dataTable{
 
 <script>
 $(document).ready(function(){
-    $('#tableKepatuhan').DataTable({
+    if ($.fn.DataTable.isDataTable('#tableKepatuhan')) {
+        $('#tableKepatuhan').DataTable().destroy();
+    }
+
+    var table = $('#tableKepatuhan').DataTable({
         pageLength: 10,
         lengthMenu: [
             [10,25,50,100,-1],
@@ -321,6 +315,13 @@ $(document).ready(function(){
                 next: "›",
                 previous: "‹"
             }
+        },
+        // FIX: Menyesuaikan ulang lebar kolom sesaat setelah inisialisasi selesai render
+        initComplete: function() {
+            var api = this.api();
+            setTimeout(function() {
+                api.columns.adjust().draw();
+            }, 150); // delay aman 150ms untuk rendering engine browser
         }
     });
 });

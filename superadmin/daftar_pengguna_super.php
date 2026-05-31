@@ -11,24 +11,21 @@ else{
     $kedudukan = "Semua Daerah";
 }
 ?>
-        <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
             <div id="page-inner">
                 <div class="row">
                     <div class="col-md-12">
                         <h1 class="page-head-line" align="left">Daftar Pengguna : <?php
-                                                         if($kedudukan == "Semua Daerah"){
-                                                            echo $kedudukan;
-                                                         }else{
-                                                            echo getWilayah($koneksi, $kedudukan);
-                                                         }  
-                                                    ?></h1>
+                                                                                         if($kedudukan == "Semua Daerah"){
+                                                                                            echo $kedudukan;
+                                                                                         }else{
+                                                                                            echo getWilayah($koneksi, $kedudukan);
+                                                                                         }  
+                                                                                    ?></h1>
                     </div>
                 </div>
-              <!-- /. ROW  -->
-            <div class="row">
-                     <!--    Hover Rows  -->
-                    <div class="panel panel-default">
+              <div class="row">
+                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="table-responsive">
                                  <table class="table table-hover table-striped table-sm table-bordered data">
@@ -43,6 +40,7 @@ else{
                                             <th align='center'>Level</th>
                                             <th align='center'>Akun</th>
                                             <th align='center'>Terdaftar</th>
+                                            <th align='center'>Laporan</th>
                                             <th align='center'>Detail</th>
                                             <th align='center'>Hapus</th>
                                         </tr>
@@ -91,7 +89,7 @@ else{
                                                 echo "<tr>";
                                                 echo "<td>".$no."</td>";
                                                 echo "<td>".$row['nama']."</td>";
-                                                echo "<td>".$row['email']."</td>";                                              
+                                                echo "<td>".$row['email']."</td>";                                             
                                                 echo "<td>".$row['nama_kedudukan']."</td>";
                                                 echo "<td>".$row['nik']."</td>";
                                                 echo "<td>".$row['terakhir_login']."</td>";
@@ -121,6 +119,13 @@ else{
 
                                                 echo "<td>".date('d-F-Y', strtotime($row['createDate']))."</td>";
                                                 
+                                                // DI SINI: Ditambahkan &kedudukan= pada parameter GET URL target _blank
+                                                echo "<td align='center'>
+                                                        <a href='daftar_laporan_notaris.php?id=".$row['id_notaris']."&nama=".urlencode($row['nama'])."&kedudukan=".$row['id_kedudukan']."' target='_blank'>
+                                                            <button class='btn btn-xs btn-info'><i class='fa fa-file'></i> Lihat Laporan</button>
+                                                        </a>
+                                                      </td>";
+
                                                 echo "<td align='center'><a href='edit_pengguna_super.php?id=".$row['id_notaris']."'><img src='../assets/img/edit.png' border='0' height='20' width='20'></img></a></td>";
 
                                                 echo "<td align='center'><a href='#' onclick='deletepengguna(".$row['id_notaris'].")'><img src='../assets/img/delete.png' border='0' height='20' width='20'></img></a></td>";
@@ -134,14 +139,10 @@ else{
                             </div>
                         </div>
                     </div>
-                    <!-- End  Hover Rows  -->
+                    </div>
+                </div>
             </div>
-                <!-- /. ROW  -->
-            </div>
-            <!-- /. PAGE INNER  -->
         </div>
-        <!-- /. PAGE WRAPPER  -->
-    </div>
 <?php
 include "footer.php";
 ?>
