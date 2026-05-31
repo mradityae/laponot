@@ -124,7 +124,13 @@
                                 </div>
                             </center>
                         </div>
-                    </li>                   
+                    </li>                 
+                    <li>
+                        <a href="perkara_index"><i class="fa fa-file-text-o"></i>Daftar Perkara</a>
+                    </li>
+                    <li>
+                        <a href="dashboard_fidusia"><i class="fa fa-dashboard "></i>Dashboard Fidusia</a>
+                    </li>             
                     <li>
                         <a href="index"><i class="fa fa-dashboard "></i>Dashboard Laporan Notaris <span class="fa arrow"></span></a></a>
                             <ul class="nav nav-second-level ">
@@ -141,9 +147,6 @@
                                     <a href="rekap_fidusia_ahu"><i class="fa fa-calendar"></i>Rekap Fidusia Ahu</a>
                                 </li>
                             </ul>
-                    </li>
-                    <li>
-                        <a href="dashboard_fidusia"><i class="fa fa-dashboard "></i>Dashboard Fidusia</a>
                     </li>
                     <li>
                         <a href=""><i class="fa fa-users"></i>Pengguna<span class="fa arrow"></span></a>

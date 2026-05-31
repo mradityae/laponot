@@ -165,7 +165,9 @@
                             </li>
                         </ul>
                     </li>
-
+                    <li>
+                        <a href="perkara_index"><i class="fa fa-file-text-o"></i>Daftar Perkara</a>
+                    </li>
                     <li>
                         <a href=""><i class="fa fa-users"></i>Notaris <span class="fa arrow"></span></a>
                          <ul class="nav nav-second-level ">
