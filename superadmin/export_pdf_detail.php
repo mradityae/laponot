@@ -18,7 +18,7 @@ $nama_kedudukan = $stmt_k->fetchColumn();
 $sql = "SELECT n.nama, n.telepon,
         (SELECT COUNT(*) FROM laporan l WHERE l.id_notaris = n.id_notaris 
          AND YEAR(l.tanggal) = :th AND MONTH(l.tanggal) BETWEEN :b1 AND :b2) as cek
-        FROM notaris n WHERE n.id_kedudukan = :id AND n.level = '2' ORDER BY n.nama ASC";
+        FROM notaris n WHERE n.id_kedudukan = :id AND n.level = '2' AND n.aktif='1' ORDER BY n.nama ASC";
 $stmt = $koneksi->prepare($sql);
 $stmt->execute([':id'=>$id, ':th'=>$th, ':b1'=>$b1, ':b2'=>$b2]);
 

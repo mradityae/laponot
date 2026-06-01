@@ -5,9 +5,9 @@ include "../models/models.php";
 include_once("../log_activity.php");
 
 // Ambil data filter
-$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-01-01'; // format YYYY-MM-DD
+$tgl_a = $_GET['tgl_a'] ?? date('Y') . '-'.date('m', strtotime('-1 month')).'-01'; // format YYYY-MM-DD
 $tgl_b = $_GET['tgl_b'] ?? date('Y-m-d'); // tanggal sekarang
-$id_kedudukan = $_GET['id_kedudukan'] ?? '';
+$id_kedudukan = $_GET['id_kedudukan'] ?? '1';
 $id_notaris = $_GET['id_notaris'] ?? '';
 $jenis_transaksi = $_GET['jenis_transaksi'] ?? '';
 $filter_ready = $tgl_a && $tgl_b;
@@ -41,8 +41,7 @@ $daftar_notaris = $koneksi->query("SELECT id_notaris, nama, id_kedudukan FROM no
 
           <div class="form-group">
             <label>Kedudukan</label>
-            <select name="id_kedudukan" class="form-control" onchange="this.form.submit()">
-              <option value="">-- Semua Kedudukan --</option>
+            <select name="id_kedudukan" class="form-control">
               <?php foreach ($daftar_kedudukan as $k) : ?>
                 <option value="<?= $k['id_kedudukan'] ?>" <?= ($id_kedudukan == $k['id_kedudukan']) ? 'selected' : '' ?>>
                   <?= htmlspecialchars($k['nama_kedudukan']) ?>
