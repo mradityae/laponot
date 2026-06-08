@@ -71,7 +71,9 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 					" | Tmp File: " . $fileTemp .
 					" | Tujuan: " . $dirSaveFile .
 					" | Size: " . $ukuran . " bytes" .
-					" | Upload Error: " . ($_FILES['file']['error'] ?? 'unknown')
+					" | Upload Error: " . ($_FILES['file']['error'] ?? 'unknown') .
+					" | Dir Exists: " . (is_dir($direktory) ? 'YES' : 'NO') .
+					" | Dir Writable: " . (is_writable($direktory) ? 'YES' : 'NO')
 				);
 
 				echo "<script>alert('Ukuran File Terlalu Besar. Gagal Simpan File')</script>";
