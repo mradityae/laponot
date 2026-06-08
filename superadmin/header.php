@@ -125,8 +125,11 @@
                             </center>
                         </div>
                     </li>                 
-                    <li>
+                    <!-- <li>
                         <a href="perkara_index"><i class="fa fa-file-text-o"></i>Daftar Perkara</a>
+                    </li> -->
+                    <li>
+                        <a href="daftar_logs"><i class="fa fa-file-text-o"></i>Daftar Logs</a>
                     </li>
                     <li>
                         <a href="dashboard_fidusia"><i class="fa fa-dashboard "></i>Dashboard Fidusia</a>
