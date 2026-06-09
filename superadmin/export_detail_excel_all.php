@@ -132,6 +132,7 @@ while ($kedudukan = $stmt_kedudukan->fetch(PDO::FETCH_ASSOC))
                 AND n.aktif = '1'
         ) x
         WHERE rn = 1
+        AND cek = 0
         ORDER BY nama ASC
         ";
 
@@ -153,36 +154,17 @@ while ($kedudukan = $stmt_kedudukan->fetch(PDO::FETCH_ASSOC))
 
     while ($data = $stmt_notaris->fetch(PDO::FETCH_ASSOC))
     {
-        $status = ($data['cek'] > 0)
-            ? 'SUDAH LAPOR'
-            : 'BELUM LAPOR';
-
-        if ($data['cek'] > 0) {
-            $sudah++;
-        } else {
-            $belum++;
-        }
-
         $sheet->setCellValue("A{$row}", $no++);
         $sheet->setCellValue("B{$row}", $data['nama']);
         $sheet->setCellValue("C{$row}", $data['telepon']);
-        $sheet->setCellValue("D{$row}", $status);
+        $sheet->setCellValue("D{$row}", "BELUM LAPOR");
 
-        if ($status == 'SUDAH LAPOR')
-        {
-            $sheet->getStyle("D{$row}")
-                ->getFont()
-                ->getColor()
-                ->setARGB('008000');
-        }
-        else
-        {
-            $sheet->getStyle("D{$row}")
-                ->getFont()
-                ->getColor()
-                ->setARGB('FF0000');
-        }
+        $sheet->getStyle("D{$row}")
+            ->getFont()
+            ->getColor()
+            ->setARGB('FF0000');
 
+        $belum++;
         $row++;
     }
 
