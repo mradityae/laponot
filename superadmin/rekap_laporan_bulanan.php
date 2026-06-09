@@ -92,7 +92,11 @@ $g_persentase  = ($g_total_notaris > 0) ? ($g_total_kirim / $g_total_notaris) * 
             <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-search"></i> Tampilkan</button>
             <a href="export_rekap_bulanan.php?bulan_awal=<?=$bulan_awal?>&bulan_akhir=<?=$bulan_akhir?>&tahun=<?=$tahun?>" 
                 class="btn btn-success btn-sm">
-                <i class="fa fa-file-excel-o"></i> Export Excel
+                <i class="fa fa-file-excel-o"></i> Export Rekap
+            </a>
+            <a href="export_detail_excel_all.php?bulan_awal=<?=$bulan_awal?>&bulan_akhir=<?=$bulan_akhir?>&tahun=<?=$tahun?>"
+                class="btn btn-success btn-sm">
+                <i class="fa fa-file-excel-o"></i> Export Semua Status Laporan Bulanan Notaris 
             </a>
         </form>
 
