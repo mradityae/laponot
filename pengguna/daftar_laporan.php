@@ -87,12 +87,15 @@ $id = $_SESSION["kode_user"];
                                             </a>
                                             </td>";
                                     }
-                                    echo "<td align='center'>
-                                            <a href='edit_laporan_bulanan.php?idLaporan=".$row['id_laporan']."'>
-                                                <img src='../assets/img/edit.png' height='20' width='20'>
-                                            </a>
-                                        </td>";
-                                
+                                    else
+                                    {
+                                        echo "<td align='center'>
+                                                <a href='edit_laporan_bulanan.php?idLaporan=".$row['id_laporan']."'>
+                                                    <img src='../assets/img/edit.png' height='20' width='20'>
+                                                </a>
+                                            </td>";
+                                    }
+
                                     echo "</tr>";
                                     $no++;
                                 }
