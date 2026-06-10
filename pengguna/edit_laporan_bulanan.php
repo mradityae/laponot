@@ -42,17 +42,22 @@
                 <input type="hidden" name="file_lama" value="<?= $d['file_upload']; ?>">
 
                 <div class="form-group">
-                    <label>Periode Laporan</label>
+                    <label>Bulan Akta</label>
                     <?php 
                         // Ambil data tanggal dari DB (misal 2026-03-01) 
                         // Lalu potong hanya ambil Tahun dan Bulannya saja (2026-03)
                         $formattedMonth = date('Y-m', strtotime($displayDate)); 
+
+                        $bulanLaporan = date('Y-m', strtotime($d['tanggal'].' +1 month'));
+                        $bulanLaporanMin1 = date('Y-m', strtotime($d['tanggal'].' -1 month'));
                     ?>
                     <input type="month" 
                         name="tanggal_laporan" 
                         class="form-control" 
                         value="<?= $formattedMonth; ?>" 
-                        required readonly>
+                        min="<?= $bulanLaporanMin1; ?>"
+                        max="<?= $bulanLaporan; ?>"
+                        required>
                     <small class="text-muted">Format: Bulan dan Tahun</small>
                 </div>
 

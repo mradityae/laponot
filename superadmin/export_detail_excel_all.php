@@ -168,16 +168,6 @@ while ($kedudukan = $stmt_kedudukan->fetch(PDO::FETCH_ASSOC))
         $row++;
     }
 
-    $sheet->setCellValue("A{$row}", "");
-    $sheet->setCellValue("B{$row}", "TOTAL SUDAH LAPOR");
-    $sheet->setCellValue("C{$row}", $sudah);
-
-    $sheet->getStyle("B{$row}:C{$row}")
-        ->getFont()
-        ->setBold(true);
-
-    $row++;
-
     $sheet->setCellValue("B{$row}", "TOTAL BELUM LAPOR");
     $sheet->setCellValue("C{$row}", $belum);
 
