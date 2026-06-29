@@ -16,6 +16,7 @@ function sanitize($data)
 
 $id_perkara         = (int)($_POST['id_perkara'] ?? 0);
 $judulPerkara       = sanitize($_POST['judul'] ?? '');
+$uraian_pengaduan   = sanitize($_POST['uraian_pengaduan'] ?? '');
 $jenisTerlapor      = sanitize($_POST['jenis_terlapor'] ?? '');
 $namaPelapor        = sanitize($_POST['nama_pelapor'] ?? '');
 $noHpPelapor        = sanitize($_POST['no_hp_pelapor'] ?? '');
@@ -226,6 +227,7 @@ try {
     $queryUpdate = $koneksi->prepare("
         UPDATE perkara_mpw SET 
             judul = ?,
+            uraian_pengaduan = ?,
             jenis_terlapor = ?,
             id_notaris = ?,
             nama_terlapor_manual = ?,
@@ -247,6 +249,7 @@ try {
 
     $queryUpdate->execute([
         $judulPerkara,
+        $uraian_pengaduan,
         $jenisTerlapor,
         $idNotaris,
         $namaTerlaporManual,

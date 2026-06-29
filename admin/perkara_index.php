@@ -54,7 +54,7 @@ function getHariLiburNasional() {
  * Hitung sisa 30 hari kerja menggunakan data API Hari Libur Nasional
  */
 function hitungSisaHariKerja($tgl_input, $daftar_libur = []) {
-    $target_days = 30;
+    $target_days = 31;
     $start_date = strtotime(date('Y-m-d', strtotime($tgl_input)));
     $current_date = strtotime(date('Y-m-d')); 
     
@@ -84,6 +84,33 @@ function hitungSisaHariKerja($tgl_input, $daftar_libur = []) {
 
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'semua';
 $kedudukan = $_SESSION['kedudukan'] ?? null;
+$filter_map = [
+    'semua' => null,
+    'pending' => [
+        'condition' => 'LOWER(p.status) = :status_filter',
+        'value' => 'pending'
+    ],
+    'proses' => [
+        'condition' => 'p.status = :status_filter',
+        'value' => 'Proses Pemeriksaan MPD'
+    ],
+    'selesai_mpd' => [
+        'condition' => 'p.status = :status_filter',
+        'value' => 'Selesai di MPD'
+    ],
+    'diteruskan_mpw' => [
+        'condition' => 'p.status = :status_filter',
+        'value' => 'Diteruskan ke MPW'
+    ]
+];
+
+if ($filter == 'Pending') {
+    $filter = 'pending';
+}
+
+if (!array_key_exists($filter, $filter_map)) {
+    $filter = 'semua';
+}
 
 // Base Query (p.* akan otomatis menarik kolom judul baru)
 $params = ['id_kedudukan' => $kedudukan];
@@ -93,16 +120,9 @@ $sql = "SELECT p.*, n.nama AS nama_notaris, k.nama_kedudukan
         LEFT JOIN kedudukan k ON p.id_kedudukan = k.id_kedudukan
         WHERE p.id_kedudukan = :id_kedudukan";
 
-if ($filter == 'register') {
-    $sql .= " AND status = 'Register Perkara'";
-} elseif ($filter == 'pemeriksaan') {
-    $sql .= " AND status = 'Perkara Pemeriksaan'";
-} elseif ($filter == 'Pending') {
-    $sql .= " AND status = 'Pending'";
-} elseif ($filter == 'Terverifikasi') {
-    $sql .= " AND verifikasi = 'Terverifikasi'";
-} elseif ($filter == 'Tidak_Terverifikasi') {
-    $sql .= " AND verifikasi = 'Tidak Terverifikasi'";
+if ($filter_map[$filter] !== null) {
+    $sql .= " AND " . $filter_map[$filter]['condition'];
+    $params['status_filter'] = $filter_map[$filter]['value'];
 }
 
 $sql .= " ORDER BY p.id_perkara DESC";
@@ -126,7 +146,7 @@ $daftar_libur = getHariLiburNasional();
     .header-title { margin: 0; font-weight: 700; color: #1e293b; font-size: 26px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
     .header-icon { color: #3b82f6; background: #eff6ff; padding: 10px; border-radius: 10px; font-size: 20px; }
     .header-subtitle { color: #64748b; margin: 6px 0 0 0; font-size: 14px; }
-    .btn-add-perkara { font-weight: 600; padding: 10px 20px; border-radius: 8px; background-color: #2563eb; border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); display: inline-flex; align-items: center; gap: 8px; }
+    .btn-add-perkara { font-weight: 600; padding: 10px 20px; border-radius: 8px; border: none; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); display: inline-flex; align-items: center; gap: 8px; }
     .filter-container { margin-bottom: 20px; display: flex; gap: 10px; }
     .btn-filter { border-radius: 20px; font-weight: 600; padding: 6px 18px; }
     .panel-table-container { border: none; border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); background: #fff; overflow: hidden; position: relative; min-height: 200px; }
@@ -178,6 +198,24 @@ $daftar_libur = getHariLiburNasional();
     .phone-container { font-size: 12px; color: #475569; background: #f8fafc; padding: 3px 6px; border-radius: 4px; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; }
     .flex-center-column { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .btn-dukung-tambahan { width: 100%; max-width: 160px; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: normal; text-align: center; line-height: 1.4; padding: 6px 10px; }
+
+    .badge-progress-proses{
+        background:#FEF3C7;
+        color:#92400E;
+        border:1px solid #FCD34D;
+    }
+
+    .badge-progress-selesai{
+        background:#DCFCE7;
+        color:#166534;
+        border:1px solid #BBF7D0;
+    }
+
+    .badge-progress-mpw{
+        background:#DBEAFE;
+        color:#1D4ED8;
+        border:1px solid #BFDBFE;
+    }
 </style>
 
 <!-- ==========================================
@@ -198,7 +236,7 @@ $daftar_libur = getHariLiburNasional();
                             <p class="header-subtitle">Manajemen daftar perkara hukum Majelis Pengawas</p>
                         </div>
                         <div>
-                            <a href="perkara_tambah.php" class="btn btn-primary btn-add-perkara">
+                            <a href="perkara_tambah.php" class="btn btn-success btn-add-perkara">
                                 <i class="fa fa-plus-circle"></i> Tambah Perkara Baru
                             </a>
                         </div>
@@ -207,35 +245,29 @@ $daftar_libur = getHariLiburNasional();
 
                 <!-- Bagian Navigasi Filter -->
                 <div class="filter-container">
-                    <a href="perkara_index.php?filter=semua"
-                    class="btn btn-filter <?= ($filter == 'semua') ? 'btn-primary' : 'btn-default'; ?>">
-                        Semua Data
-                    </a>
-
-                    <a href="perkara_index.php?filter=Pending"
-                    class="btn btn-filter <?= ($filter == 'Pending') ? 'btn-primary' : 'btn-default'; ?>">
-                        Pending
-                    </a>
-
-                    <a href="perkara_index.php?filter=register"
-                    class="btn btn-filter <?= ($filter == 'register') ? 'btn-primary' : 'btn-default'; ?>">
-                        Register Perkara
-                    </a>
-
-                    <a href="perkara_index.php?filter=pemeriksaan"
-                    class="btn btn-filter <?= ($filter == 'pemeriksaan') ? 'btn-primary' : 'btn-default'; ?>">
-                        Pemeriksaan
-                    </a>
-
-                    <a href="perkara_index.php?filter=Terverifikasi"
-                    class="btn btn-filter <?= ($filter == 'Terverifikasi') ? 'btn-primary' : 'btn-default'; ?>">
-                        Terverifikasi
-                    </a>
-
-                    <a href="perkara_index.php?filter=Tidak_Terverifikasi"
-                    class="btn btn-filter <?= ($filter == 'Tidak_Terverifikasi') ? 'btn-primary' : 'btn-default'; ?>">
-                        Tidak Terverifikasi
-                    </a>
+                    <?php
+                    $filter_labels = [
+                        'semua' => 'Semua Data',
+                        'pending' => 'Pending',
+                        'proses' => 'Proses MPD',
+                        'selesai_mpd' => 'Selesai MPD',
+                        'diteruskan_mpw' => 'Diteruskan MPW'
+                    ];
+                    ?>
+                    <form method="GET" action="perkara_index.php" style="display:inline-flex; align-items:center; gap:8px;">
+                        <label for="filterPerkara" style="margin:0; font-weight:600; color:#475569;">Filter</label>
+                        <select id="filterPerkara"
+                                name="filter"
+                                class="form-control"
+                                style="width:220px; border-radius:8px; font-weight:600;"
+                                onchange="this.form.submit()">
+                            <?php foreach ($filter_labels as $filter_key => $filter_label): ?>
+                                <option value="<?= htmlspecialchars($filter_key); ?>" <?= ($filter == $filter_key) ? 'selected' : ''; ?>>
+                                    <?= htmlspecialchars($filter_label); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
                 </div>
 
                 <!-- Main Content Table Card -->
@@ -258,11 +290,11 @@ $daftar_libur = getHariLiburNasional();
                                         <th style="width: 120px;">Tgl. Input</th>
                                         <th style="min-width: 140px;">Pihak Terlapor</th>
                                         <th style="min-width: 140px;">Pihak Pelapor</th>
-                                        <th style="min-width: 250px;">Daftar Seluruh Berkas Perkara (PDF)</th>
-                                        <th style="width: 130px; text-align: center;">Data Dukung</th>
-                                        <th style="width: 180px; text-align: center;">Tahapan / Progress</th>
+                                        <th style="width: 180px; text-align: center;">Status Penanganan</th>
                                         <th style="width: 90px; text-align: center;">Aksi</th>
                                         <th style="width:180px; text-align:center;">Status Verifikasi</th>
+                                        <th style="min-width: 250px;">Daftar Seluruh Berkas Perkara (PDF)</th>
+                                        <th style="width: 130px; text-align: center;">Data Dukung</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -320,6 +352,97 @@ $daftar_libur = getHariLiburNasional();
                                                 <div class="phone-container" style="background-color: #ffffff;"><i class="fa fa-phone"></i> <?= htmlspecialchars($data['no_hp_pelapor']); ?></div>
                                             <?php endif; ?>
                                         </td>
+                                        <td class="text-center align-middle">
+                                            <div class="d-flex flex-column align-items-center justify-content-center" style="gap: 6px;">
+                                                
+                                                <?php 
+                                                // Pindahkan inisialisasi logika ke atas agar rapi
+                                                $sisa_hari = hitungSisaHariKerja($data['created_at'], $daftar_libur); 
+                                                ?>
+
+                                                <?php if($status == 'Pending'): ?>
+                                                    <span class="badge badge-secondary px-2 py-1c">
+                                                        <i class="fa fa-clock-o mr-1"></i> Pending
+                                                    </span>
+
+                                                <?php elseif($status == 'Proses Pemeriksaan MPD'): ?>
+                                                    <span class="badge badge-warning text-dark px-2 py-1">
+                                                        <i class="fa fa-hourglass-half mr-1"></i> Proses Pemeriksaan MPD
+                                                    </span>
+
+                                                    <?php if($sisa_hari > 5): ?>
+                                                        <small class="text-success font-weight-bold">
+                                                            <i class="fa fa-check-circle-o"></i> Sisa <?= $sisa_hari ?> Hari Kerja
+                                                        </small>
+                                                    <?php elseif($sisa_hari >= 0): ?>
+                                                        <small class="text-warning font-weight-bold">
+                                                            <i class="fa fa-exclamation-triangle"></i> Sisa <?= $sisa_hari ?> Hari
+                                                        </small>
+                                                    <?php else: ?>
+                                                        <small class="text-danger font-weight-bold">
+                                                            <i class="fa fa-times-circle"></i> Lewat <?= abs($sisa_hari) ?> Hari
+                                                        </small>
+                                                    <?php endif; ?>
+
+                                                <?php elseif($status == 'Selesai di MPD'): ?>
+                                                    <span class="badge badge-success px-2 py-1">
+                                                        <i class="fa fa-check-circle mr-1"></i> Selesai di MPD
+                                                    </span>
+
+                                                <?php elseif($status == 'Diteruskan ke MPW'): ?>
+                                                    <span class="badge badge-info px-2 py-1">
+                                                        <i class="fa fa-share-square mr-1"></i> Diteruskan ke MPW
+                                                    </span>
+                                                <?php endif; ?>
+
+                                            </div>
+                                        </td>
+                                        <td style="text-align: center; white-space: nowrap; vertical-align: middle;">
+                                            <!-- Tombol Periksa hanya muncul jika sudah ada nomor register -->
+                                            <?php if(!empty($data['nomor_register'])): ?>
+                                                <a href="perkara_periksa.php?id=<?= $data['id_perkara']; ?>"
+                                                class="btn btn-info btn-sm"
+                                                style="font-weight: 600; margin-right: 4px;">
+                                                    <i class="fa fa-search"></i> Periksa
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <!-- Tombol Edit -->
+                                            <a href="perkara_edit.php?id=<?= $data['id_perkara']; ?>"
+                                            class="btn btn-warning btn-sm"
+                                            style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </a>
+
+                                        </td>
+                                        <td style="text-align:center;">
+                                            <?php if($status=='Diteruskan ke MPW'): ?>
+
+                                                <?php if(isset($data['verifikasi']) && $data['verifikasi'] == 'Terverifikasi'): ?>
+
+                                                    <span class="badge badge-success" style="padding:8px 12px;">
+                                                        <i class="fa fa-check-circle"></i>
+                                                        Terverifikasi
+                                                    </span>
+
+                                                <?php elseif(isset($data['verifikasi']) && $data['verifikasi'] == 'Tidak Terverifikasi'): ?>
+
+                                                    <span class="badge badge-danger" style="padding:8px 12px;">
+                                                        <i class="fa fa-times-circle"></i>
+                                                        Ditolak
+                                                    </span>
+
+                                                <?php else: ?>
+
+                                                    <span class="badge badge-warning" style="padding:8px 12px;">
+                                                        Belum Verifikasi
+                                                    </span>
+
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span style="color:#94a3b8;">-</span>
+                                            <?php endif; ?>
+                                        </td>
                                         <td>
                                             <div style="display: flex; flex-wrap: wrap; gap: 2px;">
                                                 <?php if(!empty($data['surat_pengaduan'])): ?>
@@ -368,101 +491,6 @@ $daftar_libur = getHariLiburNasional();
                                                     <span style="color: #cbd5e1;">-</span>
                                                 <?php endif; ?>
                                             </div>
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <div class="flex-center-column">
-                                                <?php if($status == 'Pending'): ?>
-                                                    <span class="badge badge-secondary" style="padding:8px 12px; font-size:12px;">
-                                                        <i class="fa fa-clock-o"></i> Pending
-                                                    </span>
-
-                                                <?php elseif($status == 'Register Perkara'): ?>
-
-                                                    <span class="badge-progress-register">
-                                                        <i class="fa fa-folder"></i> Register Perkara
-                                                    </span>
-
-                                                    <?php
-                                                    $sisa_hari = hitungSisaHariKerja($data['created_at'], $daftar_libur);
-                                                    if($sisa_hari > 5): ?>
-                                                        <small class="text-success" style="font-weight: 600;">
-                                                            <i class="fa fa-clock-o"></i>
-                                                            Sisa <?= $sisa_hari; ?> Hari Kerja
-                                                        </small>
-
-                                                    <?php elseif($sisa_hari >= 0): ?>
-
-                                                        <small class="text-warning" style="font-weight: 700;">
-                                                            <i class="fa fa-exclamation-triangle"></i>
-                                                            Sisa <?= $sisa_hari; ?> Hari!
-                                                        </small>
-
-                                                    <?php else: ?>
-
-                                                        <small class="text-danger" style="font-weight: 700;">
-                                                            <i class="fa fa-times-circle"></i>
-                                                            Lewat <?= abs($sisa_hari); ?> Hari
-                                                        </small>
-
-                                                    <?php endif; ?>
-
-                                                <?php elseif($status == 'Perkara Pemeriksaan'): ?>
-                                                    <span class="badge-progress-pemeriksaan">
-                                                        <i class="fa fa-gavel"></i> Perkara Pemeriksaan
-                                                    </span>
-                                                <?php elseif($status == 'Selesai'): ?>
-                                                    <span class="badge-progress-pemeriksaan">
-                                                        <i class="fa fa-check-circle"></i> Selesai
-                                                    </span>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                        <td style="text-align: center; white-space: nowrap; vertical-align: middle;">
-                                            <!-- Tombol Periksa hanya muncul jika sudah ada nomor register -->
-                                            <?php if(!empty($data['nomor_register'])): ?>
-                                                <a href="perkara_periksa.php?id=<?= $data['id_perkara']; ?>"
-                                                class="btn btn-info btn-sm"
-                                                style="font-weight: 600; margin-right: 4px;">
-                                                    <i class="fa fa-search"></i> Periksa
-                                                </a>
-                                            <?php endif; ?>
-
-                                            <!-- Tombol Edit -->
-                                            <a href="perkara_edit.php?id=<?= $data['id_perkara']; ?>"
-                                            class="btn btn-warning btn-sm"
-                                            style="font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
-                                                <i class="fa fa-edit"></i> Edit
-                                            </a>
-
-                                        </td>
-
-                                        <td style="text-align:center;">
-                                            <?php if($status == 'Perkara Pemeriksaan' || $status == 'Selesai'): ?>
-
-                                                <?php if(isset($data['verifikasi']) && $data['verifikasi'] == 'Terverifikasi'): ?>
-
-                                                    <span class="badge badge-success" style="padding:8px 12px;">
-                                                        <i class="fa fa-check-circle"></i>
-                                                        Terverifikasi
-                                                    </span>
-
-                                                <?php elseif(isset($data['verifikasi']) && $data['verifikasi'] == 'Tidak Terverifikasi'): ?>
-
-                                                    <span class="badge badge-danger" style="padding:8px 12px;">
-                                                        <i class="fa fa-times-circle"></i>
-                                                        Tidak Terverifikasi
-                                                    </span>
-
-                                                <?php else: ?>
-
-                                                    <span class="badge badge-warning" style="padding:8px 12px;">
-                                                        Belum Verifikasi
-                                                    </span>
-
-                                                <?php endif; ?>
-                                            <?php else: ?>
-                                                <span style="color:#94a3b8;">-</span>
-                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                     <?php endwhile; ?>

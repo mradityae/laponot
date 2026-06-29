@@ -20,6 +20,41 @@ if (!$perkara) {
 }
 
 $nama_terlapor = ($perkara['jenis_terlapor'] == 'database') ? $perkara['nama_notaris'] : $perkara['nama_terlapor_manual'];
+$status_pengaduan = trim($perkara['status'] ?? '');
+
+switch ($status_pengaduan) {
+
+    case 'Proses Pemeriksaan MPD':
+        $statusBadge = '
+            <span class="status-badge status-proses">
+                <i class="fa fa-hourglass-half"></i>
+                Proses Pemeriksaan MPD
+            </span>';
+        break;
+
+    case 'Selesai di MPD':
+        $statusBadge = '
+            <span class="status-badge status-mpd">
+                <i class="fa fa-check-circle"></i>
+                Selesai di MPD
+            </span>';
+        break;
+
+    case 'Diteruskan ke MPW':
+        $statusBadge = '
+            <span class="status-badge status-mpw">
+                <i class="fa fa-share-square"></i>
+                Diteruskan ke MPW
+            </span>';
+        break;
+
+    default:
+        $statusBadge = '
+            <span class="status-badge status-belum">
+                <i class="fa fa-minus-circle"></i>
+                Belum Ditentukan
+            </span>';
+}
 
 // Helper fungsional yang menghasilkan badge modern dan tombol aksi dengan style seragam
 function renderFileStatus($nama_file_db) {
@@ -99,6 +134,79 @@ function renderFileStatus($nama_file_db) {
     .btn-action-save:hover { background: #1d4ed8; }
     .btn-action-back { background: #fff; color: #475569; font-weight: 600; border: 1px solid #cbd5e1; padding: 12px 24px; border-radius: 8px; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none !important; transition: all 0.2s; }
     .btn-action-back:hover { background: #f8fafc; color: #1e293b; border-color: #94a3b8; }
+
+    /* Status Pengaduan */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .status-proses{
+        background:#FEF3C7;
+        color:#92400E;
+        border:1px solid #FCD34D;
+    }
+
+    .status-mpd{
+        background:#DCFCE7;
+        color:#166534;
+        border:1px solid #BBF7D0;
+    }
+
+    .status-mpw{
+        background:#DBEAFE;
+        color:#1D4ED8;
+        border:1px solid #BFDBFE;
+    }
+
+    .status-belum{
+        background:#F1F5F9;
+        color:#64748B;
+        border:1px solid #CBD5E1;
+    }
+
+    /* ===================== */
+
+    .decision-box{
+        background:#F8FAFC;
+        border:1px solid #E2E8F0;
+        border-radius:12px;
+        padding:18px;
+        margin-bottom:25px;
+    }
+
+    .decision-title{
+        font-size:15px;
+        font-weight:700;
+        color:#1E293B;
+        margin-bottom:5px;
+    }
+
+    .decision-desc{
+        color:#64748B;
+        font-size:13px;
+        margin-bottom:15px;
+    }
+
+    .form-select-custom{
+        width:100%;
+        height:46px;
+        border:1px solid #CBD5E1;
+        border-radius:8px;
+        padding:0 14px;
+        background:#fff;
+    }
+
+    .form-select-custom:focus{
+        outline:none;
+        border-color:#2563EB;
+        box-shadow:0 0 0 3px rgba(37,99,235,.15);
+    }
 </style>
 
 <!-- ==========================================
@@ -131,6 +239,10 @@ function renderFileStatus($nama_file_db) {
                         <div class="info-block">
                             <span class="info-label">Nomor Register</span>
                             <h4 class="register-highlight"><?= htmlspecialchars($perkara['nomor_register']); ?></h4>
+                        </div>
+                        <div class="info-block">
+                            <span class="info-label">Status Pengaduan</span>
+                            <?= $statusBadge; ?>
                         </div>
                         <div class="info-block">
                             <span class="info-label">Judul Perkara</span>
@@ -199,6 +311,56 @@ function renderFileStatus($nama_file_db) {
                                         </a>
                                     </div>
                                 <?php endif; ?>
+                            </div>
+
+                            <div class="decision-box">
+
+                                <div class="decision-title">
+                                    <i class="fa fa-balance-scale text-primary"></i>
+                                    Keputusan Penanganan Pengaduan
+                                </div>
+
+                                <div class="decision-desc">
+                                    Tentukan hasil pemeriksaan perkara.
+                                </div>
+
+                                <div class="form-group">
+
+                                    <label>Status Penanganan</label>
+
+                                    <select name="status" class="form-select-custom">
+
+                                        <option value="Proses Pemeriksaan MPD"
+                                            <?= ($perkara['status']=="Proses Pemeriksaan MPD")?'selected':'';?>>
+                                            🟡 Proses Pemeriksaan MPD
+                                        </option>
+
+                                        <option value="Selesai di MPD"
+                                            <?= ($perkara['status']=="Selesai di MPD")?'selected':'';?>>
+                                            🟢 Selesai di MPD
+                                        </option>
+
+                                        <option value="Diteruskan ke MPW"
+                                            <?= ($perkara['status']=="Diteruskan ke MPW")?'selected':'';?>>
+                                            🔵 Diteruskan ke MPW
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+                                <div class="form-group" style="margin-top:20px;">
+
+                                    <label>Keterangan</label>
+
+                                    <textarea
+                                        class="form-control"
+                                        rows="5"
+                                        name="keterangan"
+                                        placeholder="Masukkan catatan hasil pemeriksaan atau keputusan majelis..."><?= htmlspecialchars($perkara['keterangan']); ?></textarea>
+
+                                </div>
+
                             </div>
 
                             <hr style="border-top: 1px solid #f1f5f9; margin: 25px 0;">

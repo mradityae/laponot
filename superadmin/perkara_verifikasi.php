@@ -2,6 +2,28 @@
 include "header.php";
 include "../config/koneksi.php";
 
+function e($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
+
+function formatTanggalIndo($datetime) {
+    if (empty($datetime) || $datetime == '0000-00-00 00:00:00') {
+        return '-';
+    }
+
+    $bulan = [
+        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    $timestamp = strtotime($datetime);
+    if ($timestamp === false) {
+        return '-';
+    }
+
+    return date('j', $timestamp) . ' ' . $bulan[(int)date('n', $timestamp)] . ' ' . date('Y H:i', $timestamp);
+}
+
 $id_perkara = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 $query = $koneksi->prepare("
@@ -26,6 +48,9 @@ if(!$data){
 $nama_terlapor = ($data['jenis_terlapor'] == 'database')
     ? $data['nama_notaris']
     : $data['nama_terlapor_manual'];
+$status_alur = trim($data['status'] ?? '');
+$status_verifikasi = trim($data['verifikasi'] ?? '');
+$catatan_verifikasi = $data['catatan_verifikasi'] ?? '';
 
 // Basis URL jika berkas disimpan di direktori berbeda (kosongkan jika relatif)
 $baseUrl = $url ?? '';
@@ -143,39 +168,93 @@ $has_links = !empty($data['data_dukung_link']) || !empty($data['data_dukung_tamb
                             <tr>
                                 <th width="35%">Nomor Register</th>
                                 <td style="font-weight: bold;">
-                                    <?= !empty($data['nomor_register']) ? htmlspecialchars($data['nomor_register']) : '<span class="text-muted">- Belum Diregistrasi -</span>'; ?>
+                                    <?= !empty($data['nomor_register']) ? e($data['nomor_register']) : '<span class="text-muted">- Belum Diregistrasi -</span>'; ?>
                                 </td>
                             </tr>
                             <tr>
+                                <th>Tanggal Register</th>
+                                <td><?= formatTanggalIndo($data['tanggal_register'] ?? null); ?></td>
+                            </tr>
+                            <tr>
                                 <th>Judul Perkara</th>
-                                <td><?= htmlspecialchars($data['judul']); ?></td>
+                                <td><?= !empty($data['judul']) ? e($data['judul']) : '-'; ?></td>
                             </tr>
                             <tr>
                                 <th>Pihak Terlapor</th>
                                 <td>
-                                    <strong><?= htmlspecialchars($nama_terlapor); ?></strong>
+                                    <strong><?= !empty($nama_terlapor) ? e($nama_terlapor) : '-'; ?></strong>
                                     <?php if(!empty($data['nama_kedudukan'])): ?>
-                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;"><i class="fa fa-map-marker"></i> Kedudukan: <?= htmlspecialchars($data['nama_kedudukan']); ?></div>
+                                        <div style="font-size: 11px; color: #64748b; margin-top: 2px;"><i class="fa fa-map-marker"></i> Kedudukan: <?= e($data['nama_kedudukan']); ?></div>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Pihak Pelapor</th>
-                                <td><?= htmlspecialchars($data['nama_pelapor']); ?></td>
+                                <td><?= !empty($data['nama_pelapor']) ? e($data['nama_pelapor']) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>No. HP Pelapor</th>
+                                <td><?= !empty($data['no_hp_pelapor']) ? e($data['no_hp_pelapor']) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>No. HP Terlapor</th>
+                                <td><?= !empty($data['no_hp_terlapor']) ? e($data['no_hp_terlapor']) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Alamat Pelapor</th>
+                                <td><?= !empty($data['alamat_pelapor']) ? nl2br(e($data['alamat_pelapor'])) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Alamat Terlapor</th>
+                                <td><?= !empty($data['alamat_terlapor']) ? nl2br(e($data['alamat_terlapor'])) : '-'; ?></td>
                             </tr>
                             <tr>
                                 <th>Status Alur</th>
                                 <td>
                                     <span class="label label-info" style="padding: 5px 10px; font-size: 11px;">
-                                        <?= htmlspecialchars($data['status']); ?>
+                                        <?= e($status_alur); ?>
                                     </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Status Verifikasi</th>
+                                <td>
+                                    <?php if($status_verifikasi == 'Terverifikasi'): ?>
+                                        <span class="label label-success" style="padding: 5px 10px; font-size: 11px;">Terverifikasi</span>
+                                    <?php elseif($status_verifikasi == 'Tidak Terverifikasi'): ?>
+                                        <span class="label label-danger" style="padding: 5px 10px; font-size: 11px;">Tidak Terverifikasi</span>
+                                    <?php else: ?>
+                                        <span class="label label-warning" style="padding: 5px 10px; font-size: 11px;">Belum Verifikasi</span>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Waktu Masuk</th>
                                 <td style="font-size: 12px; color: #475569;">
-                                    <i class="fa fa-calendar"></i> <?= date('d M Y H:i', strtotime($data['created_at'])); ?> WIB
+                                    <i class="fa fa-calendar"></i> <?= formatTanggalIndo($data['created_at'] ?? null); ?> WIB
                                 </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel-custom">
+                    <div class="panel-heading-custom" style="background: #334155;">
+                        <i class="fa fa-commenting-o"></i> URAIAN, KETERANGAN, DAN CATATAN VERIFIKASI
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-detail" style="margin-bottom: 0;">
+                            <tr>
+                                <th width="35%">Uraian Pengaduan</th>
+                                <td><?= !empty($data['uraian_pengaduan']) ? nl2br(e($data['uraian_pengaduan'])) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Keterangan MPD</th>
+                                <td><?= !empty($data['keterangan']) ? nl2br(e($data['keterangan'])) : '-'; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Catatan Verifikasi MPW</th>
+                                <td><?= !empty($catatan_verifikasi) ? nl2br(e($catatan_verifikasi)) : '-'; ?></td>
                             </tr>
                         </table>
                     </div>
@@ -283,16 +362,32 @@ $has_links = !empty($data['data_dukung_link']) || !empty($data['data_dukung_tamb
 
                         <form action="../act/verifikasi-perkara_proses.php" method="POST">
 
-                            <input type="hidden" name="id_perkara" value="<?= $data['id_perkara']; ?>">
+                            <input type="hidden" name="id_perkara" value="<?= (int)$data['id_perkara']; ?>">
 
                             <div class="form-group" style="margin-bottom: 20px;">
-                                <label style="color: #334155; font-weight: 600; margin-bottom: 8px;">Status Hasil Verifikasi</label>
+                                <label style="color: #334155; font-weight: 600; margin-bottom: 8px;">Status Verifikasi MPW</label>
                                 <select name="verifikasi" class="form-control" style="height: 42px; border-radius: 6px; font-weight: 500;" required>
                                     <option value="">-- PILIH STATUS VERIFIKASI --</option>
-                                    <option value="Terverifikasi" <?= ($data['verifikasi'] == 'Terverifikasi') ? 'selected' : ''; ?>>
+                                    <option value="Terverifikasi" <?= ($status_verifikasi == 'Terverifikasi') ? 'selected' : ''; ?>>
+                                        Terverifikasi - Berkas lengkap dan valid
+                                    </option>
+                                    <option value="Tidak Terverifikasi" <?= ($status_verifikasi == 'Tidak Terverifikasi') ? 'selected' : ''; ?>>
+                                        Tidak Terverifikasi - Perlu perbaikan dari MPD
+                                    </option>
+                                </select>
+                                <small style="display:block; margin-top:6px; color:#64748b;">
+                                    Nilai ini terpisah dari status alur perkara. MPD dapat memperbaiki lalu meneruskan ulang ke MPW untuk diverifikasi lagi.
+                                </small>
+                            </div>
+
+                            <div class="form-group" style="display:none;">
+                                <label style="color: #334155; font-weight: 600; margin-bottom: 8px;">Status Verifikasi MPW</label>
+                                <select class="form-control" style="height: 42px; border-radius: 6px; font-weight: 500;">
+                                    <option value="">-- PILIH STATUS VERIFIKASI --</option>
+                                    <option value="Terverifikasi" <?= ($status_verifikasi == 'Terverifikasi') ? 'selected' : ''; ?>>
                                         ✓ Terverifikasi (Berkas Lengkap & Valid)
                                     </option>
-                                    <option value="Tidak Terverifikasi" <?= ($data['verifikasi'] == 'Tidak Terverifikasi') ? 'selected' : ''; ?>>
+                                    <option value="Tidak Terverifikasi" <?= ($status_verifikasi == 'Tidak Terverifikasi') ? 'selected' : ''; ?>>
                                         ✗ Tidak Terverifikasi (Ditolak / Butuh Perbaikan)
                                     </option>
                                 </select>
@@ -305,7 +400,7 @@ $has_links = !empty($data['data_dukung_link']) || !empty($data['data_dukung_tamb
                                     class="form-control" 
                                     rows="8" 
                                     style="border-radius: 6px; resize: vertical; padding: 12px;"
-                                    placeholder="Tuliskan catatan detail mengenai keabsahan dokumen, kekurangan berkas, atau alasan penolakan di sini..."><?= htmlspecialchars($data['catatan_verifikasi'] ?? ''); ?></textarea>
+                                    placeholder="Tuliskan catatan detail mengenai keabsahan dokumen, kekurangan berkas, atau alasan penolakan di sini..."><?= e($catatan_verifikasi); ?></textarea>
                             </div>
 
                             <div style="display: flex; gap: 10px;">

@@ -265,6 +265,108 @@ $baseUrl = isset($url) ? $url : '';
                 </a>
             </div>
 
+            <?php if ($data['status'] == 'Diteruskan ke MPW' && $data['verifikasi'] == 'Terverifikasi'): ?>
+
+            <form method="POST" action="<?= $url ?>act/proses_upload_putusan.php" enctype="multipart/form-data">
+                <input type="hidden" name="id_perkara" value="<?= $data['id_perkara'] ?? ''; ?>">  
+                <div class="detail-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3 class="card-section-title mb-1">
+                                <i class="fa fa-gavel text-primary mr-2"></i>
+                                Dokumen Putusan
+                            </h3>
+                            <small class="text-muted">
+                                Upload dokumen Putusan MPW dan/atau Putusan MPP.
+                            </small>
+                        </div>
+
+                        <?php if(!empty($data['putusan_mpw']) || !empty($data['putusan_mpp'])): ?>
+                            <span class="badge badge-success badge-pill px-3 py-2">
+                                <i class="fa fa-check-circle"></i>
+                                Dokumen Tersedia
+                            </span>
+                        <?php else: ?>
+                            <span class="badge badge-warning badge-pill px-3 py-2">
+                                <i class="fa fa-clock-o"></i>
+                                Belum Upload
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card border shadow-sm h-100">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <strong>
+                                        <i class="fa fa-balance-scale text-primary mr-1"></i>
+                                        Putusan MPW
+                                    </strong> 
+                                    <?php if(!empty($data['putusan_mpw'])): ?>
+                                        <span class="badge badge-success">Sudah Upload</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-secondary">Belum Ada</span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="card-body">
+                                    <?php if(!empty($data['putusan_mpw'])): ?>
+                                        <a href="<?= $baseUrl.$data['putusan_mpw']; ?>" target="_blank" class="btn btn-outline-primary btn-block mb-3">
+                                            <i class="fa fa-eye"></i> Lihat Dokumen
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="putusan_mpw" name="putusan_mpw" accept=".pdf,.doc,.docx">
+                                        <label class="custom-file-label" for="putusan_mpw">Pilih Dokumen...</label>
+                                    </div>
+                                    <small class="form-text text-muted mt-2">Format PDF, DOC, DOCX.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border shadow-sm h-100">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                    <strong>
+                                        <i class="fa fa-university text-success mr-1"></i>
+                                        Putusan MPP
+                                    </strong>
+                                    <?php if(!empty($data['putusan_mpp'])): ?>
+                                        <span class="badge badge-success">Sudah Upload</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-secondary">Belum Ada</span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="card-body">
+                                    <?php if(!empty($data['putusan_mpp'])): ?>
+                                        <a href="<?= $baseUrl.$data['putusan_mpp']; ?>" target="_blank" class="btn btn-outline-success btn-block mb-3">
+                                            <i class="fa fa-eye"></i> Lihat Dokumen
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="putusan_mpp" name="putusan_mpp" accept=".pdf,.doc,.docx">
+                                        <label class="custom-file-label" for="putusan_mpp">Pilih Dokumen...</label>
+                                    </div>
+                                    <small class="form-text text-muted mt-2">Format PDF, DOC, DOCX.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <div class="text-right">
+                        <button type="submit" name="simpan_putusan" class="btn btn-primary px-4">
+                            <i class="fa fa-save mr-1"></i> Simpan Dokumen Putusan
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <?php endif; ?>
+
             <!-- Main Layout Grid -->
             <div class="detail-grid">
                 
@@ -321,7 +423,7 @@ $baseUrl = isset($url) ? $url : '';
                     <div class="detail-card">
                         <h3 class="card-section-title">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
-                            Dokumen Perkara Berkas Utama
+                            Dokumen Perkara Berkas Utama MPD 
                         </h3>
                         <div class="doc-grid">
                             <?php 
@@ -360,7 +462,7 @@ $baseUrl = isset($url) ? $url : '';
                     <div class="detail-card">
                         <h3 class="card-section-title">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
-                            Data Dukung Tambahan
+                            Data Dukung Tambahan MPD
                         </h3>
                         <div class="doc-grid">
                             <?php if(!empty($data['data_dukung_link'])): ?>

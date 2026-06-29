@@ -15,6 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_perkara = isset($_POST['id_perkara']) ? (int)$_POST['id_perkara'] : 0;
     $db_data_tambahan = isset($_POST['data_dukung_tambahan']) ? trim($_POST['data_dukung_tambahan']) : "";
 
+    $status = isset($_POST['status']) ? trim($_POST['status']) : 'Proses Pemeriksaan MPD';
+    $keterangan = isset($_POST['keterangan']) ? trim($_POST['keterangan']) : '';
+
     if ($id_perkara <= 0) {
         echo "ID Perkara Tidak Valid.";
         exit();
@@ -67,24 +70,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         }
 
+        $reset_verifikasi_sql = '';
+        if ($status == 'Diteruskan ke MPW') {
+            $reset_verifikasi_sql = ",
+                verifikasi = NULL,
+                catatan_verifikasi = NULL";
+        }
+
         // Simpan semua ke kolom database yang valid (menggunakan data_dukung_tambahan)
         $queryUpdatePemeriksaan = $koneksi->prepare("
-            UPDATE perkara_mpw SET
+             UPDATE perkara_mpw SET
                 ba_pemeriksaan = ?,
                 laporan_hasil_pemeriksaan = ?,
                 surat_pemanggilan = ?,
                 rekomendasi = ?,
                 data_dukung_tambahan = ?,
-                status = 'Perkara Pemeriksaan'
+                status = ?,
+                keterangan = ?
+                $reset_verifikasi_sql
             WHERE id_perkara = ?
         ");
         
         $queryUpdatePemeriksaan->execute([
-            $db_ba, 
-            $db_lhp, 
-            $db_pemanggilan, 
-            $db_rekomendasi, 
-            $db_data_tambahan, 
+            $db_ba,
+            $db_lhp,
+            $db_pemanggilan,
+            $db_rekomendasi,
+            $db_data_tambahan,
+            $status,
+            $keterangan,
             $id_perkara
         ]);
 

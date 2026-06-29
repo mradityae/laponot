@@ -45,8 +45,13 @@ $dataNotaris = $queryNotaris->fetchAll(PDO::FETCH_ASSOC);
                             <input type="hidden" name="id_perkara" value="<?= $perkara['id_perkara']; ?>">
 
                             <div class="form-group">
-                                <label>Judul Perkara / Ringkasan Kasus <span class="text-danger">*</span></label>
+                                <label>Judul Perkara <span class="text-danger">*</span></label>
                                 <input type="text" name="judul" class="form-control" value="<?= $perkara['judul']; ?>" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Uraian Pengaduan<span class="text-danger">*</span></label>
+                                <textarea name="uraian_pengaduan" class="form-control" rows="3"><?= $perkara['uraian_pengaduan']; ?></textarea>
                             </div>
 
                             <div class="form-group">

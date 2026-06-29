@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Sanitasi input data string text (Termasuk kolom judul baru)
     $judulPerkara        = RemoveSpecialChar($_POST['judul'] ?? '');
+    $uraian_pengaduan    = RemoveSpecialChar($_POST['uraian_pengaduan'] ?? '');
     $jenisTerlapor       = RemoveSpecialChar($_POST['jenis_terlapor'] ?? '');
     $namaPelapor         = RemoveSpecialChar($_POST['nama_pelapor'] ?? '');
     $noHpPelapor         = RemoveSpecialChar($_POST['no_hp_pelapor'] ?? '');
@@ -86,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             INSERT INTO perkara_mpw (
                 nomor_register,
                 judul,
+                uraian_pengaduan,
                 jenis_terlapor,
                 id_notaris,
                 nama_terlapor_manual,
@@ -101,12 +103,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 status
             ) VALUES (
                 NULL,
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?
             )
         ");
 
         $queryInsert->execute([
             $judulPerkara,
+            $uraian_pengaduan,
             $jenisTerlapor,
             $idNotaris,
             $namaTerlaporManual,

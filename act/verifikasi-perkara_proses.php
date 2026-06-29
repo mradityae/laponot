@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id_perkara = (int)($_POST['id_perkara'] ?? 0);
 
     $verifikasi = trim($_POST['verifikasi'] ?? '');
-    $status = $verifikasi == 'Tidak Terverifikasi' ? 'Perkara Pemeriksaan' : 'Selesai';
     $catatan = trim($_POST['catatan_verifikasi'] ?? '');
 
     if($id_perkara <= 0){
@@ -34,15 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             UPDATE perkara_mpw
             SET
                 verifikasi = ?,
-                catatan_verifikasi = ?,
-                status = ?
+                catatan_verifikasi = ?
             WHERE id_perkara = ?
         ");
 
         $query->execute([
             $verifikasi,
             $catatan,
-            $status,
             $id_perkara
         ]);
 

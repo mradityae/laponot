@@ -145,7 +145,7 @@ $update = $koneksi->prepare("
     UPDATE perkara_mpw
     SET
         nomor_register = ?,
-        status = 'Register Perkara'
+        status = 'Proses Pemeriksaan MPD'
     WHERE id_perkara = ?
 ");
 

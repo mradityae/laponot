@@ -45,8 +45,13 @@ $dataNotaris = $queryNotaris->fetchAll(PDO::FETCH_ASSOC);
                             
                             <!-- INPUT BARU: JUDUL PERKARA -->
                             <div class="form-group">
-                                <label>Judul Perkara / Ringkasan Kasus <span class="text-danger">*</span></label>
+                                <label>Judul Perkara<span class="text-danger">*</span></label>
                                 <input type="text" name="judul" class="form-control" placeholder="Contoh: Dugaan Pelanggaran Kode Etik Notaris Terkait Akta Jual Beli" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Uraian Singkat Pengaduan<span class="text-danger">*</span></label>
+                                <textarea name="uraian_pengaduan" maxlength="50" class="form-control" rows="4"></textarea>
                             </div>
 
                             <div class="form-group">

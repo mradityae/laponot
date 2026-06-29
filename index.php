@@ -132,19 +132,57 @@
                 </button>
             </div>
 
-            <div class="card border-0 mb-2 shadow-sm" style="border-radius: 10px;">
+            <div class="card border-0 shadow-sm mb-3" style="border-radius:15px;">
                 <div class="card-header bg-white border-0" id="headingThree">
-                    <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 collapsed d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#collapseThree" style="font-size: 1.2rem;">
-                        <span><i class="feather-icon mr-10 text-primary"><i data-feather="play-circle"></i></i> Tutorial Penggunaan Aplikasi</span>
-                        <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
+                    <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 d-flex justify-content-between align-items-center"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#collapseThree"
+                        aria-expanded="true">
+
+                        <span>
+                            <i class="feather-icon text-primary mr-2">
+                                <i data-feather="book-open"></i>
+                            </i>
+                            Panduan Penggunaan Aplikasi
+                        </span>
+
+                        <i class="feather-icon">
+                            <i data-feather="chevron-down"></i>
+                        </i>
                     </button>
                 </div>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionFAQ">
-                    <div class="card-body pt-0 text-dark text-center" style="font-size: 1.1rem;">
-                        <p class="mb-3">Masih bingung cara menggunakan aplikasi?</p>
-                        <a target="_blank" href="<?=$url;?>register/panduan" class="btn btn-primary btn-lg rounded-pill px-5 shadow">
-                            Lihat Panduan Pelaporan
+
+                <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionFAQ">
+                    <div class="card-body text-center py-4">
+
+                        <i data-feather="help-circle" class="text-primary mb-3" style="width:50px;height:50px;"></i>
+
+                        <h5 class="font-weight-bold mb-2">
+                            Butuh Bantuan?
+                        </h5>
+
+                        <p class="text-muted mb-4">
+                            Pelajari tata cara penggunaan <strong>Aplikasi Kabayan PASTI</strong> melalui
+                            panduan interaktif maupun dokumen resmi yang telah disediakan.
+                        </p>
+
+                        <a href="<?=$url;?>register/panduan"
+                        target="_blank"
+                        class="btn btn-primary rounded-pill px-4 py-2 shadow-sm mb-3">
+                            <i data-feather="monitor" class="mr-2"></i>
+                            Buka Panduan Online
                         </a>
+
+                        <br>
+
+                        <a href="<?=$url;?>assets/templates/tutorial_aplikasi_kabayan_pasti.pdf"
+                        target="_blank"
+                        class="btn btn-outline-primary rounded-pill px-4 py-2">
+                            <i data-feather="file-text" class="mr-2"></i>
+                            Unduh Panduan (PDF)
+                        </a>
+
                     </div>
                 </div>
             </div>
@@ -159,7 +197,7 @@
                                 <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
                             </button>
                         </div>
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionFAQ">
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionFAQ">
                             <div class="card-body pt-0 text-dark" style="font-size: 1.1rem; line-height: 1.6;">
                                 <p>
                                     Punten Bapak/Ibu Notaris, mohon diperhatikan bahwa 
@@ -200,20 +238,6 @@
                                         Klik di sini untuk panduan membersihkan cache browser
                                     </a>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card border-0 mb-2 shadow-sm" style="border-radius: 10px;">
-                        <div class="card-header bg-white border-0" id="headingTwo">
-                            <button class="btn btn-link btn-block text-left text-dark font-weight-bold py-3 collapsed d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#collapseTwo" style="font-size: 1.2rem;">
-                                <span><i class="feather-icon mr-10 text-primary"><i data-feather="file-text"></i></i> Lampiran Laporan Fidusia</span>
-                                <i class="feather-icon font-12"><i data-feather="chevron-down"></i></i>
-                            </button>
-                        </div>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionFAQ">
-                            <div class="card-body pt-0 text-dark" style="font-size: 1.1rem;">
-                                <p>Bapak/Ibu Notaris tetap berkewajiban untuk <strong>melampirkan laporan fidusia</strong> ke dalam berkas laporan bulanan secara lengkap guna pemenuhan tertib administrasi pelaporan.</p>
                             </div>
                         </div>
                     </div>
