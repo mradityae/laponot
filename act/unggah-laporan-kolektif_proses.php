@@ -208,7 +208,7 @@ if (isset($_POST['submit'])) {
         }
 
         $koneksi->commit();
-        echo "<script>alert('Berhasil! ".count($dataToInsert)." data telah diunggah.'); window.location='../pengguna/daftar_laporan_entitas';</script>";
+        echo "<script>alert('Berhasil! ".count($dataToInsert)." data telah diunggah.'); window.location='../pengguna/unggah_laporan';</script>";
 
     } catch (Exception $e) {
         if ($koneksi->inTransaction()) {
