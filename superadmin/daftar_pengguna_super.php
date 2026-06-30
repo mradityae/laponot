@@ -40,6 +40,10 @@ else{
                                             <th align='center'>Level</th>
                                             <th align='center'>Akun</th>
                                             <th align='center'>Terdaftar</th>
+                                            <th align='center'>Jumlah Akta Buku Daftar</th>
+                                            <th align='center'>Jumlah Akta Waarmeking</th>
+                                            <th align='center'>Jumlah Akta Legalisasi</th>
+                                            <th align='center'>Jumlah Akta Buku Protes</th>
                                             <th align='center'>Laporan</th>
                                             <th align='center'>Detail</th>
                                             <th align='center'>Hapus</th>
@@ -47,39 +51,61 @@ else{
                                     </thead>
                                     <tbody>
                                         <?php
+                                            $select = "
+                                                SELECT
+                                                    n.*,
+                                                    k.nama_kedudukan,
+                                                    COALESCE(SUM(l.jml_buku_daftar),0) AS total_jml_buku_daftar,
+                                                    COALESCE(SUM(l.jml_tangan_dibukukan),0) AS total_jml_tangan_dibukukan,
+                                                    COALESCE(SUM(l.jml_tangan_disahkan),0) AS total_jml_tangan_disahkan,
+                                                    COALESCE(SUM(l.jml_buku_protes),0) AS total_jml_buku_protes
+                                                FROM notaris n
+                                                JOIN kedudukan k
+                                                    ON k.id_kedudukan = n.id_kedudukan
+                                                LEFT JOIN laporan l
+                                                    ON l.id_notaris = n.id_notaris
+                                                ";
                                             $no=1;
                                             $level = 0;
                                             if($status == "Semua" && $kedudukan =="Semua Daerah"){
-                                                $ambil=$koneksi->prepare("SELECT notaris.*, kedudukan.nama_kedudukan 
-                                                FROM notaris
-                                                join kedudukan on kedudukan.id_kedudukan = notaris.id_kedudukan                                    
-                                                WHERE level!=:level
-                                                order by notaris.id_notaris desc");                                                
+                                                $sql = $select."
+                                                        WHERE n.level != :level
+                                                        GROUP BY n.id_notaris
+                                                        ORDER BY n.id_notaris DESC";
+
+                                                        $ambil = $koneksi->prepare($sql);                                                
                                             }
                                             else if ($status == "Semua" && $kedudukan != "Semua Daerah") {
-                                                $ambil=$koneksi->prepare("SELECT notaris.*, kedudukan.nama_kedudukan 
-                                                FROM notaris
-                                                join kedudukan on kedudukan.id_kedudukan = notaris.id_kedudukan                                    
-                                                WHERE level!=:level and notaris.id_kedudukan=:kedudukan
-                                                order by notaris.id_notaris desc");
-                                                $ambil->BindParam(":kedudukan",$kedudukan,PDO::PARAM_INT);
+                                                 $sql = $select."
+                                                WHERE n.level != :level
+                                                AND n.id_kedudukan = :kedudukan
+                                                GROUP BY n.id_notaris
+                                                ORDER BY n.id_notaris DESC";
+
+                                                $ambil = $koneksi->prepare($sql);
+                                                $ambil->bindParam(":kedudukan",$kedudukan,PDO::PARAM_INT);
                                             }
                                             else if ($status != "Semua" && $kedudukan == "Semua Daerah") {
-                                                $ambil=$koneksi->prepare("SELECT notaris.*, kedudukan.nama_kedudukan 
-                                                FROM notaris
-                                                join kedudukan on kedudukan.id_kedudukan = notaris.id_kedudukan                                    
-                                                WHERE level!=:level and notaris.aktif=:aktif
-                                                order by notaris.id_notaris desc");
-                                                $ambil->BindParam(":aktif",$status,PDO::PARAM_INT);
+                                                $sql = $select."
+                                                        WHERE n.level != :level
+                                                        AND n.aktif = :aktif
+                                                        GROUP BY n.id_notaris
+                                                        ORDER BY n.id_notaris DESC";
+
+                                                        $ambil = $koneksi->prepare($sql);
+                                                        $ambil->bindParam(":aktif",$status,PDO::PARAM_INT);
                                             }
                                             else{
-                                                $ambil=$koneksi->prepare("SELECT notaris.*, kedudukan.nama_kedudukan 
-                                                FROM notaris
-                                                join kedudukan on kedudukan.id_kedudukan = notaris.id_kedudukan                                    
-                                                WHERE level!=:level and notaris.aktif=:aktif and notaris.id_kedudukan=:kedudukan
-                                                order by notaris.id_notaris desc");
-                                                $ambil->BindParam(":kedudukan",$kedudukan,PDO::PARAM_INT);
-                                                $ambil->BindParam(":aktif",$status,PDO::PARAM_INT);
+                                                $sql = $select."
+                                                WHERE n.level != :level
+                                                AND n.aktif = :aktif
+                                                AND n.id_kedudukan = :kedudukan
+                                                GROUP BY n.id_notaris
+                                                ORDER BY n.id_notaris DESC";
+
+                                                $ambil = $koneksi->prepare($sql);
+                                                $ambil->bindParam(":aktif",$status,PDO::PARAM_INT);
+                                                $ambil->bindParam(":kedudukan",$kedudukan,PDO::PARAM_INT);
                                             }
                                             $ambil->BindParam(":level",$level,PDO::PARAM_INT);
                                             $ambil->execute();
@@ -118,6 +144,11 @@ else{
                                                 }
 
                                                 echo "<td>".date('d-F-Y', strtotime($row['createDate']))."</td>";
+                                                // TOTAL LAPORAN
+                                                echo "<td align='center'>".$row['total_jml_buku_daftar']."</td>";
+                                                echo "<td align='center'>".$row['total_jml_tangan_dibukukan']."</td>";
+                                                echo "<td align='center'>".$row['total_jml_tangan_disahkan']."</td>";
+                                                echo "<td align='center'>".$row['total_jml_buku_protes']."</td>";
                                                 
                                                 // DI SINI: Ditambahkan &kedudukan= pada parameter GET URL target _blank
                                                 echo "<td align='center'>
