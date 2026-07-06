@@ -1,7 +1,7 @@
 <?php
 require '../vendor/autoload.php';
 include("../config/koneksi.php");
-include("../log_activity.php");
+// include("../log_activity.php");
 
 use Dompdf\Dompdf;
 
@@ -105,7 +105,7 @@ $cleanNama = preg_replace('/[^A-Za-z0-9 ]/', '', $namaNotaris);
 $cleanKedudukan = preg_replace('/[^A-Za-z0-9 ]/', '', $namaKedudukan);
 $filename = "Laporan Fidusia - $cleanNama - $cleanKedudukan.pdf";
 
-write_log("Export PDF: $filename");
+// write_log("Export PDF: $filename");
 
 // Buat PDF
 $dompdf = new Dompdf();
