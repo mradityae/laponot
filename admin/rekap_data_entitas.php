@@ -2,7 +2,7 @@
 include "header.php";
 include "../config/koneksi.php";
 include "../models/models.php";
-include_once("../log_activity.php");
+// include_once("../log_activity.php");
 
 // Ambil dari session
 $id_kedudukan = $_SESSION['kedudukan'];
@@ -104,9 +104,9 @@ function getMonthColumns($tgl_a, $tgl_b) {
                 $total_nominal += $row['nominal'];
                 $total_laporan += $row['total'];
             }
-            write_log("Berhasil mengambil rekap laporan per notaris dari $tgl_a sampai $tgl_b untuk kedudukan ID $id_kedudukan");
+            // write_log("Berhasil mengambil rekap laporan per notaris dari $tgl_a sampai $tgl_b untuk kedudukan ID $id_kedudukan");
         } catch (PDOException $e) {
-            write_log("ERROR saat ambil rekap laporan notaris: " . $e->getMessage());
+            // write_log("ERROR saat ambil rekap laporan notaris: " . $e->getMessage());
             $data = []; // supaya tetap aman diproses meskipun error
         }
 

@@ -2,7 +2,7 @@
 include "header.php";
 include "../config/koneksi.php";
 include "../models/models.php";
-include_once("../log_activity.php");
+// include_once("../log_activity.php");
 
 // Ambil data filter
 $tgl_a = $_GET['tgl_a'] ?? '';
@@ -168,7 +168,7 @@ function get_label_class($jenis) {
 
                   $stmt->execute();
 
-                  write_log("Berhasil mengambil data laporan entitas dari $tgl_a sampai $tgl_b (Kedudukan ID $id_kedudukan_session" . (!empty($id_notaris) ? ", Notaris ID $id_notaris" : "") . ")");
+                  // write_log("Berhasil mengambil data laporan entitas dari $tgl_a sampai $tgl_b (Kedudukan ID $id_kedudukan_session" . (!empty($id_notaris) ? ", Notaris ID $id_notaris" : "") . ")");
 
                   $no = 1;
                   while ($row = $stmt->fetch()) {
@@ -190,7 +190,7 @@ function get_label_class($jenis) {
                   }
 
                 } catch (PDOException $e) {
-                    write_log("ERROR saat mengambil laporan entitas: " . $e->getMessage());
+                    // write_log("ERROR saat mengambil laporan entitas: " . $e->getMessage());
                     echo "<tr><td colspan='8' class='text-center text-danger'>Terjadi kesalahan saat mengambil data.</td></tr>";
                 }
               ?>
