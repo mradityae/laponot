@@ -9,11 +9,10 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
  * Fungsi untuk menentukan kategori teks dan nilai nominal PNBP
  * berdasarkan Nilai Penjaminan yang diinput.
  */
-
 function mappingKategori($input) {
-    $input = strtolower(trim($input));
-    $input = str_replace(['–','—'], '-', $input); // normalisasi dash
-    $input = preg_replace('/\s+/', ' ', $input);
+    $input = trim(strtolower(
+        str_replace(['–','—'], '-', $input)
+    ));
 
     $map = [
         '<=50 juta' => ['label' => '<=50 juta', 'pnbp' => 50000],
@@ -68,118 +67,94 @@ if (isset($_POST['submit'])) {
         $spreadsheet = IOFactory::load($file_tmp);
         $sheetData   = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
 
-        // --- SOLUSI BARIS KOSONG (FILTERING) ---
-        // Kita hanya mengambil baris yang kolom B (Nomor Akta) tidak kosong
-        $filteredData = array_filter($sheetData, function($row) {
-            return !empty(trim($row['B'])); 
-        });
-
-        $jumlah_baris = count($filteredData);
-        // Cek jika header ikut terhitung (asumsi baris 1 adalah header)
-        foreach($filteredData as $idx => $val) {
-            if($idx == 1) { $jumlah_baris--; break; }
+        // --- SOLUSI BARIS KOSONG & HITUNG TOTAL ---
+        $filteredData = [];
+        foreach ($sheetData as $i => $row) {
+            if ($i == 1) continue; // Skip header
+            // Masukkan data ke array baru jika kolom B tidak kosong
+            if (isset($row['B']) && !empty(trim($row['B']))) {
+                $filteredData[$i] = $row;
+            }
         }
 
+        $jumlah_baris = count($filteredData);
         if ($jumlah_baris > 3000) {
             throw new Exception("GAGAL: Maksimal 3000 record. Terdeteksi $jumlah_baris record.");
         }
         
+        // --- AMBIL DATA EXISTING DARI DATABASE SEKALIGUS (OPTIMASI) ---
+        $sqlExisting = "SELECT nomor, DATE_FORMAT(tanggal,'%Y-%m') AS bulan FROM laporan_entitas WHERE id_notaris = ?";
+        $stmtExisting = $koneksi->prepare($sqlExisting);
+        $stmtExisting->execute([$id_notaris]);
+        
+        $dbExisting = [];
+        while ($r = $stmtExisting->fetch(PDO::FETCH_ASSOC)) {
+            $dbExisting[$r['nomor'] . '|' . $r['bulan']] = true;
+        }
+
         $koneksi->beginTransaction();
 
         $dataToInsert = [];
         $duplicateCheckFile = []; 
 
         foreach ($filteredData as $i => $row) {
-            if ($i == 1) continue;
-
-            $judul       = trim($row['A']);
+            $judul       = isset($row['A']) ? trim($row['A']) : '';
             $nomor       = trim($row['B']);
-            $tanggal     = trim($row['C']); 
-            $pemberi     = trim($row['D']);
-            $penerima    = trim($row['E']);
-            $sertifikat  = trim($row['F']);
-            
-            // --- PERUBAHAN 1: Default Nilai Penjaminan ---
-            $input_nilai = trim($row['G']);
+            $tanggal     = isset($row['C']) ? trim($row['C']) : ''; 
+            $pemberi     = isset($row['D']) ? trim($row['D']) : '';
+            $penerima    = isset($row['E']) ? trim($row['E']) : '';
+            $sertifikat  = isset($row['F']) ? trim($row['F']) : '';
+            $input_nilai = isset($row['G']) ? trim($row['G']) : '';
+            $daftar_oleh = isset($row['H']) ? trim($row['H']) : '';
 
             if (empty($input_nilai)) {
                 throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
             }
 
-            if (is_numeric(str_replace(['.', ','], '', $input_nilai))) {
+            if (empty($daftar_oleh)) {
+                throw new Exception("Gagal: Kolom DAFTAR OLEH tidak boleh kosong (Baris $i)");
+            }
 
-                $raw_nilai = (float) preg_replace('/[^0-9]/', '', $input_nilai);
+            // Bersihkan format string uang jika input berupa angka/nominal rupiah
+            $clean_numeric = str_replace(['Rp', 'rp', '.', ',', ' '], '', $input_nilai);
+
+            if (is_numeric($clean_numeric) && !empty($clean_numeric)) {
+                $raw_nilai = (float) $clean_numeric;
                 $hasilPNBP = hitungPNBP($raw_nilai);
 
                 $label_penjaminan = $hasilPNBP['label'];
                 $value_penjaminan = $raw_nilai;
-
             } else {
-
                 $hasilMap = mappingKategori($input_nilai);
 
                 if (!$hasilMap) {
-                    throw new Exception("Gagal: Format NILAI PENJAMINAN tidak dikenali (Baris $i)");
+                    throw new Exception("Gagal: Format NILAI PENJAMINAN tidak dikenali (Baris $i) -> '$input_nilai'");
                 }
 
                 $label_penjaminan = $hasilMap['label'];
                 $value_penjaminan = $hasilMap['pnbp'];
             }
 
-            // Penambahan Kode
-
-            $daftar_oleh = isset($row['H']) ? trim($row['H']) : '';
-            
-
-            if (empty($daftar_oleh)) {
-                throw new Exception("Gagal: Kolom DAFTAR OLEH tidak boleh kosong (Baris $i)");
-            }
-            
-            // if (empty($raw_nilai)) {
-            //     // Jika kosong, set default ke kategori <= 50 juta
-            //     $label_penjaminan = '<=50 juta';
-            //     $value_penjaminan = 50000; // Sesuai permintaan "gocap"
-            // } else {
-            //     $hasilPNBP = hitungPNBP((float)$raw_nilai);
-            //     $label_penjaminan = $hasilPNBP['label'];
-            //     $value_penjaminan = $raw_nilai; 
-            // }
-            // $daftar_oleh = isset($row['H']) ? trim($row['H']) : 'Notaris';
-
-            // Validasi Mandatory: Jika nomor/tanggal kosong total, baru skip
+            // Validasi Mandatory Akhir
             if (empty($nomor) || empty($tanggal)) continue;
 
             // Cek Format Tanggal
             $time = strtotime($tanggal);
-            if (!$time) {
-                // Kita skip saja jika tanggalnya ngaco agar proses tidak berhenti
-                continue; 
+            if ($time === false) {
+                continue; // Skip jika format tanggal rusak
             }
             $bulan_tahun = date('Y-m', $time);
             $unique_key  = $nomor . "|" . $bulan_tahun;
 
-            // --- PERUBAHAN 2: Skip jika Duplikat di Excel ---
-            if (in_array($unique_key, $duplicateCheckFile)) {
-                throw new Exception("Gagal: Terdeteksi Nomor Akta ganda [$nomor] pada periode [$bulan_tahun] di file Excel (Baris $i). Silakan periksa kembali file Anda.");
-                //continue; // Lewati ke baris berikutnya
+            // --- CEK DUPLIKAT DI EXCEL ---
+            if (isset($duplicateCheckFile[$unique_key])) {
+                throw new Exception("Gagal: Terdeteksi Nomor Akta ganda [$nomor] pada periode [$bulan_tahun] di file Excel (Baris $i).");
             }
-            $duplicateCheckFile[] = $unique_key;
+            $duplicateCheckFile[$unique_key] = true;
 
-            // --- PERUBAHAN 3: Skip jika Duplikat di Database ---
-            $sql_cek = "SELECT id_laporan FROM laporan_entitas 
-                        WHERE nomor = :nomor 
-                        AND DATE_FORMAT(tanggal, '%Y-%m') = :bulan_tahun 
-                        AND id_notaris = :id_notaris LIMIT 1";
-            
-            $stmt_cek = $koneksi->prepare($sql_cek);
-            $stmt_cek->execute([
-                ':nomor'       => $nomor,
-                ':bulan_tahun' => $bulan_tahun,
-                ':id_notaris'  => $id_notaris
-            ]);
-
-            if ($stmt_cek->fetch()) {
-                continue; // Lewati jika data sudah ada di database
+            // --- CEK DUPLIKAT DI DATABASE ---
+            if (isset($dbExisting[$unique_key])) {
+                throw new Exception("Gagal: Nomor Akta [$nomor] pada periode [$bulan_tahun] sudah pernah terdaftar di database (Baris $i).");
             }
 
             // Masukkan ke array bulk insert
@@ -208,12 +183,12 @@ if (isset($_POST['submit'])) {
         }
 
         $koneksi->commit();
-        echo "<script>alert('Berhasil! ".count($dataToInsert)." data telah diunggah.'); window.location='../pengguna/unggah_laporan';</script>";
+        echo "<script>alert('Berhasil! " . count($dataToInsert) . " data telah diunggah.'); window.location='../pengguna/unggah_laporan';</script>";
 
     } catch (Exception $e) {
-        if ($koneksi->inTransaction()) {
+        if (isset($koneksi) && $koneksi->inTransaction()) {
             $koneksi->rollBack();
         }
-        echo "<script>alert('PROSES BERHENTI: " . $e->getMessage() . "'); window.history.back();</script>";
+        echo "<script>alert('PROSES BERHENTI: " . addslashes($e->getMessage()) . "'); window.history.back();</script>";
     }
 }
