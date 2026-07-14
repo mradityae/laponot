@@ -75,11 +75,14 @@ $nama=$_GET['nama'];
 								  <div class="form-group">
 									<div class="col-xs-6">
 										<label for="nik"><h4>NIK</h4></label>
-										<input type="text" name="nik" class="form-control" 
-											value="<?php echo $d['nik']?>" 
-											maxlength="16" 
-											onkeypress="return isNumberKey(event)" 
-											required/>
+										<input type="text"
+											name="nik"
+											id="nik"
+											class="form-control"
+											value="<?php echo $d['nik']?>"
+											maxlength="16"
+											onkeypress="return isNumberKey(event)"
+											<?php echo ($d['aktif'] == 1) ? 'required' : ''; ?> />
 									</div>
 								</div>
 			                      <div class="form-group">
@@ -223,12 +226,17 @@ include "footer.php";
 <script>
 function toggleAlasan(val){
     var alasanBox = document.getElementById('alasanBox');
+    var nik = document.getElementById('nik');
+
     if(val == '0'){
         alasanBox.style.display = 'block';
+        nik.removeAttribute('required');
     } else {
         alasanBox.style.display = 'none';
+        nik.setAttribute('required', 'required');
     }
 }
+
 
 // trigger saat pertama load
 window.onload = function(){
