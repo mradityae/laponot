@@ -71,7 +71,6 @@ if (isset($_POST['submit'])) {
         $filteredData = [];
         foreach ($sheetData as $i => $row) {
             if ($i == 1) continue; // Skip header
-            // Masukkan data ke array baru jika kolom B tidak kosong
             if (isset($row['B']) && !empty(trim($row['B']))) {
                 $filteredData[$i] = $row;
             }
@@ -82,7 +81,7 @@ if (isset($_POST['submit'])) {
             throw new Exception("GAGAL: Maksimal 3000 record. Terdeteksi $jumlah_baris record.");
         }
         
-        // --- AMBIL DATA EXISTING DARI DATABASE SEKALIGUS (OPTIMASI) ---
+        // --- AMBIL DATA EXISTING DARI DATABASE SEKALIGUS (OPTIMASI MEMORI) ---
         $sqlExisting = "SELECT nomor, DATE_FORMAT(tanggal,'%Y-%m') AS bulan FROM laporan_entitas WHERE id_notaris = ?";
         $stmtExisting = $koneksi->prepare($sqlExisting);
         $stmtExisting->execute([$id_notaris]);
@@ -105,14 +104,13 @@ if (isset($_POST['submit'])) {
             $penerima    = isset($row['E']) ? trim($row['E']) : '';
             $sertifikat  = isset($row['F']) ? trim($row['F']) : '';
             $input_nilai = isset($row['G']) ? trim($row['G']) : '';
-            $daftar_oleh = isset($row['H']) ? trim($row['H']) : '';
+            
+            // Berikan nilai otomatis 'Notaris' jika kolom DAFTAR OLEH kosong
+            $daftar_oleh = (isset($row['H']) && trim($row['H']) !== '') ? trim($row['H']) : 'Notaris';
 
             if (empty($input_nilai)) {
-                throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
-            }
-
-            if (empty($daftar_oleh)) {
-                throw new Exception("Gagal: Kolom DAFTAR OLEH tidak boleh kosong (Baris $i)");
+                $input_nilai=50000000;
+                //throw new Exception("Gagal: Kolom NILAI PENJAMINAN tidak boleh kosong (Baris $i)");
             }
 
             // Bersihkan format string uang jika input berupa angka/nominal rupiah
@@ -141,7 +139,7 @@ if (isset($_POST['submit'])) {
             // Cek Format Tanggal
             $time = strtotime($tanggal);
             if ($time === false) {
-                continue; // Skip jika format tanggal rusak
+                continue; 
             }
             $bulan_tahun = date('Y-m', $time);
             $unique_key  = $nomor . "|" . $bulan_tahun;
@@ -157,33 +155,42 @@ if (isset($_POST['submit'])) {
                 throw new Exception("Gagal: Nomor Akta [$nomor] pada periode [$bulan_tahun] sudah pernah terdaftar di database (Baris $i).");
             }
 
-            // Masukkan ke array bulk insert
-            $dataToInsert[] = [
-                $id_notaris, $judul, $tipe, $nomor, date('Y-m-d', $time), 
-                $pemberi, $penerima, $sertifikat, $label_penjaminan, 
-                $value_penjaminan, $daftar_oleh
-            ];
+            // Gabungkan semua parameter untuk Bulk Insert nanti
+            $dataToInsert[] = $id_notaris;
+            $dataToInsert[] = $judul;
+            $dataToInsert[] = $tipe;
+            $dataToInsert[] = $nomor;
+            $dataToInsert[] = date('Y-m-d', $time);
+            $dataToInsert[] = $pemberi;
+            $dataToInsert[] = $penerima;
+            $dataToInsert[] = $sertifikat;
+            $dataToInsert[] = $label_penjaminan;
+            $dataToInsert[] = $value_penjaminan;
+            $dataToInsert[] = $daftar_oleh;
         }
 
-        if (empty($dataToInsert)) {
+        $total_data = count($dataToInsert) / 11; // 11 kolom per baris
+
+        if ($total_data === 0) {
             throw new Exception("Tidak ada data valid untuk diunggah.");
         }
 
-        // --- PROSES INSERT ---
+        // --- OPTIMASI TERBESAR: BULK INSERT PREPARED STATEMENTS ---
+        // Membuat string placeholders secara dinamis, misal: (?,?,?,?,?,?,?,?,?,?,?), (?,?,?,?,?,?,?,?,?,?,?)
+        $rowPlaces = '(' . implode(',', array_fill(0, 11, '?')) . ', "Pendaftaran", "Terverifikasi", NOW())';
+        $allPlaces = implode(',', array_fill(0, $total_data, $rowPlaces));
+
         $sql_ins = "INSERT INTO laporan_entitas (
                         id_notaris, judul_akta, tipe, nomor, tanggal, 
                         pemberi, penerima, no_sertifikat, nilai_penjaminan, 
                         value_penjaminan, daftar_oleh, jenis_transaksi, status, created_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendaftaran', 'Terverifikasi', NOW())";
+                    ) VALUES $allPlaces";
         
         $stmt_ins = $koneksi->prepare($sql_ins);
-
-        foreach ($dataToInsert as $dataRow) {
-            $stmt_ins->execute($dataRow);
-        }
+        $stmt_ins->execute($dataToInsert); // Eksekusi sekaligus 1 kali kirim untuk 3000 data
 
         $koneksi->commit();
-        echo "<script>alert('Berhasil! " . count($dataToInsert) . " data telah diunggah.'); window.location='../pengguna/unggah_laporan';</script>";
+        echo "<script>alert('Berhasil! " . $total_data . " data telah diunggah dengan aman.'); window.location='../pengguna/unggah_laporan';</script>";
 
     } catch (Exception $e) {
         if (isset($koneksi) && $koneksi->inTransaction()) {
