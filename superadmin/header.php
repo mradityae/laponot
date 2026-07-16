@@ -186,6 +186,9 @@
                         <a href="hasil_survey"><i class="fa fa-bar-chart "></i>Survey</a>
                     </li>
                     <li>
+                        <a href="register_mpw_tabel"><i class="fa fa-plus-square-o "></i>Register Perkara MPW</a>
+                    </li>
+                    <li>
                         <a href="#"  onclick='konfirmasiKeluar()'><i class="fa fa-sign-out"></i>Keluar</a>
                     </li> 
                 </ul>
