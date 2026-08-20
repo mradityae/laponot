@@ -38,6 +38,10 @@ try {
     $jml_tangan_disahkan   = $_POST['jml_tangan_disahkan'];
     $jml_buku_protes       = $_POST['jml_buku_protes'];
 
+    $jml_akta_fidusia      = $_POST['jml_akta_fidusia'];
+    $jml_akta_badan_usaha  = $_POST['jml_akta_badan_usaha'];
+    $jml_akta_wasiat       = $_POST['jml_akta_wasiat'];
+
     $redirectUrl           = $url . "pengguna/daftar_laporan";
 
     // =======================
@@ -179,6 +183,9 @@ try {
         $jml_tangan_dibukukan,
         $jml_tangan_disahkan,
         $jml_buku_protes,
+        $jml_akta_fidusia,
+        $jml_akta_badan_usaha,
+        $jml_akta_wasiat,
         $file_upload_final
     );
 

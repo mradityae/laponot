@@ -66,7 +66,7 @@ $status = "Semua";
                                             echo "<tr>";
                                             echo "<td>".$no;
                                             echo "<td>".$row['nama'];
-                                            echo "<td>".date('d-F-Y', strtotime($row['tanggal']));
+                                            echo "<td>".date('F-Y', strtotime($row['tanggal']));
                                             echo "<td> <a href=".$row['file_upload']." target='_blank'>Lihat File Laporan</a>";
                                             echo "<td>".$row['status'];
                                             

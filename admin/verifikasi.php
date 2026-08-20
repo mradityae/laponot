@@ -61,6 +61,18 @@ include("../config/koneksi.php");
 										<td><?php echo $d['jml_buku_protes'] ?></td>
 									</tr>
 									<tr>
+										<th width="40%">Jumlah Akta Fidusia</th>
+										<td><?php echo $d['jml_akta_fidusia'] ?></td>
+									</tr>
+									<tr>
+										<th width="40%">Jumlah Akta Badan Usaha</th>
+										<td><?php echo $d['jml_akta_badan_usaha'] ?></td>
+									</tr>
+									<tr>
+										<th width="40%">Jumlah Akta Wasiat</th>
+										<td><?php echo $d['jml_akta_wasiat'] ?></td>
+									</tr>
+									<tr>
 										<th width="40%">File Laporan</th>
 										<td><a href="<?php echo $d['file_upload']?>"  target="_blank">Lihat File Laporan</a></td>
 									</tr>

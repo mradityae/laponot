@@ -35,6 +35,9 @@ $id = $_SESSION["kode_user"];
                                 <th>Jumlah Akta Surat Di Bawah Tangan Yang Dibukukan</th>
                                 <th>Jumlah Akta Surat Di Bawah Tangan Yang Disahkan</th>
                                 <th>Jumlah Akta Protes</th>
+                                <th>Jumlah Akta Fidusia</th>
+                                <th>Jumlah Akta Badan Usaha</th>
+                                <th>Jumlah Akta Wasiat</th>
                                 <th>Jenis Laporan</th>
                                 <th>File Laporan</th>
                                 <th>Status</th>
@@ -61,11 +64,14 @@ $id = $_SESSION["kode_user"];
                                 {
                                     echo "<tr>";
                                     echo "<td>".$no;
-                                    echo "<td>".date('d-F-Y', strtotime($row['tanggal']));
+                                    echo "<td>".date('F-Y', strtotime($row['tanggal']));
                                     echo "<td>".$row['jml_buku_daftar'];
                                     echo "<td>".$row['jml_tangan_dibukukan'];
                                     echo "<td>".$row['jml_tangan_disahkan'];
                                     echo "<td>".$row['jml_buku_protes'];
+                                    echo "<td>".$row['jml_akta_fidusia'];
+                                    echo "<td>".$row['jml_akta_badan_usaha'];
+                                    echo "<td>".$row['jml_akta_wasiat'];
                                     echo "<td>".(empty($row['jenis_laporan']) ? "-" : $row['jenis_laporan']);
                                     echo "<td><a href='".$row['file_upload']."?v=".time()."' target='_blank'>Lihat File Laporan</a></td>";
                                     echo "<td>".$row['status'];

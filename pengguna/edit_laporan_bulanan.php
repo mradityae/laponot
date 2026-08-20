@@ -86,6 +86,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Jumlah Akta Fidusia</label>
+                    <input type="number" name="jml_akta_fidusia" class="form-control"
+                        value="<?= $d['jml_akta_fidusia']; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Jumlah Akta Badan Usaha</label>
+                    <input type="number" name="jml_akta_badan_usaha" class="form-control"
+                        value="<?= $d['jml_akta_badan_usaha']; ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Jumlah Akta Wasiat</label>
+                    <input type="number" name="jml_akta_wasiat" class="form-control"
+                        value="<?= $d['jml_akta_wasiat']; ?>" required>
+                </div>
+
+                <div class="form-group">
                     <label>File Lama</label><br>
                     <a href="<?= $d['file_upload'].'?v='.time(); ?>" target="_blank">Lihat File Lama</a>
                 </div>

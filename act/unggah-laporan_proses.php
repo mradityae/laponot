@@ -16,6 +16,9 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 		$jml_tangan_dibukukan 	= $_POST['jml_tangan_dibukukan'];
 		$jml_tangan_disahkan 	= $_POST['jml_tangan_disahkan'];
 		$jml_buku_protes 		= $_POST['jml_buku_protes'];
+		$jml_akta_fidusia       = $_POST['jml_akta_fidusia'];
+		$jml_akta_badan_usaha   = $_POST['jml_akta_badan_usaha'];
+		$jml_akta_wasiat        = $_POST['jml_akta_wasiat'];
 
 		$monthYear = date("F_Y",strtotime($tanggal));
 		$namaFile = $_FILES['file']['name'];
@@ -74,10 +77,15 @@ if(isset($_POST['submit']) && isset($_SESSION['email']) && (($_SESSION['user_rol
 				header("Pragma: no-cache");
 				clearstatcache();
 				
-				if (unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes,$fullDirBaru)) {
-					echo "<script>alert('Laporan Berhasil Dikirim')</script>";
-					$link = $url."pengguna/index";
-					header("refresh:0.1; url=$link");
+				if (unggahLaporan(
+					$koneksi, $id_notaris, $tanggal, 
+					$jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, 
+					$jml_buku_protes, $jml_akta_fidusia, $jml_akta_badan_usaha, 
+					$jml_akta_wasiat, $fullDirBaru)) {
+						
+						echo "<script>alert('Laporan Berhasil Dikirim')</script>";
+						$link = $url."pengguna/index";
+						header("refresh:0.1; url=$link");
 				}
 				else{
 					echo "<script>alert('Gagal untuk mengirim Laporan')</script>";

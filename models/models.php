@@ -550,10 +550,22 @@
 		}
 	}
 
-	function unggahLaporan($koneksi, $id_notaris, $tanggal, $jml_buku_daftar, $jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes,$fullDirBaru){
+	function unggahLaporan(
+		$koneksi, $id_notaris, $tanggal, $jml_buku_daftar, 
+		$jml_tangan_dibukukan, $jml_tangan_disahkan, $jml_buku_protes, 
+		$jml_akta_fidusia, $jml_akta_badan_usaha, $jml_akta_wasiat, $fullDirBaru){
+
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$ambil=$koneksi->prepare("INSERT INTO laporan(id_notaris, tanggal, jml_buku_daftar, jml_tangan_dibukukan,jml_tangan_disahkan,jml_buku_protes, file_upload, status) VALUES (:id_notaris, :tanggal, :jml_buku_daftar, :jml_tangan_dibukukan, :jml_tangan_disahkan, :jml_buku_protes, :file_upload, :status)");
+		$ambil=$koneksi->prepare("
+				INSERT INTO laporan(
+					id_notaris, tanggal, jml_buku_daftar, 
+					jml_tangan_dibukukan,jml_tangan_disahkan,jml_buku_protes, 
+					jml_akta_fidusia, jml_akta_badan_usaha, jml_akta_wasiat, file_upload, status, created_at) 
+				VALUES (
+					:id_notaris, :tanggal, :jml_buku_daftar, 
+					:jml_tangan_dibukukan, :jml_tangan_disahkan, :jml_buku_protes, 
+					:jml_akta_fidusia, :jml_akta_badan_usaha, :jml_akta_wasiat, :file_upload, :status, NOW())");
 
 		$status = "Laporan Terkirim";
     	$ambil->BindParam(":id_notaris", $id_notaris, PDO::PARAM_INT);
@@ -562,6 +574,9 @@
     	$ambil->BindParam(":jml_tangan_dibukukan", $jml_tangan_dibukukan, PDO::PARAM_INT);
     	$ambil->BindParam(":jml_tangan_disahkan", $jml_tangan_disahkan, PDO::PARAM_INT);
     	$ambil->BindParam(":jml_buku_protes", $jml_buku_protes, PDO::PARAM_INT);
+		$ambil->BindParam(":jml_akta_fidusia", $jml_akta_fidusia, PDO::PARAM_INT);
+		$ambil->BindParam(":jml_akta_badan_usaha", $jml_akta_badan_usaha, PDO::PARAM_INT);
+		$ambil->BindParam(":jml_akta_wasiat", $jml_akta_wasiat, PDO::PARAM_INT);
     	$ambil->BindParam(":file_upload",$fullDirBaru, PDO::PARAM_STR);
     	$ambil->BindParam(":status",$status, PDO::PARAM_STR);
 
@@ -587,6 +602,9 @@
 		$jml_tangan_dibukukan,
 		$jml_tangan_disahkan,
 		$jml_buku_protes,
+		$jml_akta_fidusia,
+		$jml_akta_badan_usaha,
+		$jml_akta_wasiat,
 		$file_upload
 	){
 		$koneksi->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -598,6 +616,9 @@
 				jml_tangan_dibukukan = :b,
 				jml_tangan_disahkan = :c,
 				jml_buku_protes = :d,
+				jml_akta_fidusia = :fidu,
+				jml_akta_badan_usaha = :bu,
+				jml_akta_wasiat = :was,
 				file_upload = :f
 			WHERE id_laporan = :id
 		");
@@ -608,6 +629,9 @@
 			':b'       => $jml_tangan_dibukukan,
 			':c'       => $jml_tangan_disahkan,
 			':d'       => $jml_buku_protes,
+			':fidu'    => $jml_akta_fidusia,
+			':bu'      => $jml_akta_badan_usaha,
+			':was'     => $jml_akta_wasiat,
 			':f'       => $file_upload,
 			':id'      => $id_laporan
 		]);

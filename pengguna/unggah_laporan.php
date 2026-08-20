@@ -18,6 +18,9 @@ date_default_timezone_set('Asia/Jakarta');
 
         <!-- ================= FORM BULANAN ================= -->
         <div id="form_bulanan" style="display:none;">
+            <div class="alert alert-info">
+                <strong>Petunjuk:</strong> Jika nihil, silakan isi dengan angka 0.
+            </div>
             <form action="<?=$url;?>act/unggah-laporan_proses.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?=$_SESSION['kode_user']?>" readonly/>
                 <div class="row">
@@ -37,6 +40,16 @@ date_default_timezone_set('Asia/Jakarta');
                             <label>Jumlah Akta Surat Di Bawah Tangan Yang Dibukukan</label>
                             <input type="number" name="jml_tangan_dibukukan" class="form-control" required/>
                         </div>
+
+                        <div class="form-group">
+                            <label>Jumlah Akta Badan Usaha</label>
+                            <input type="number" name="jml_akta_badan_usaha" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jumlah Akta Wasiat</label>
+                            <input type="number" name="jml_akta_wasiat" class="form-control" required/>
+                        </div>
                     </div>
 
                     <div class="col-md-6">
@@ -48,6 +61,11 @@ date_default_timezone_set('Asia/Jakarta');
                         <div class="form-group">
                             <label>Jumlah Akta Protes</label>
                             <input type="number" name="jml_buku_protes" class="form-control" required/>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Jumlah Akta Fidusia</label>
+                            <input type="number" name="jml_akta_fidusia" class="form-control" required/>
                         </div>
 
                         <div class="form-group">
