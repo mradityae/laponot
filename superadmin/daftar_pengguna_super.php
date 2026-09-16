@@ -44,6 +44,9 @@ else{
                                             <th align='center'>Jumlah Akta Waarmeking</th>
                                             <th align='center'>Jumlah Akta Legalisasi</th>
                                             <th align='center'>Jumlah Akta Buku Protes</th>
+                                            <th align='center'>Jumlah Akta Fidusia</th>
+                                            <th align='center'>Jumlah Akta Badan Usaha</th>
+                                            <th align='center'>Jumlah Akta Wasiat</th>
                                             <th align='center'>Laporan</th>
                                             <th align='center'>Detail</th>
                                             <th align='center'>Hapus</th>
@@ -58,7 +61,10 @@ else{
                                                     COALESCE(SUM(l.jml_buku_daftar),0) AS total_jml_buku_daftar,
                                                     COALESCE(SUM(l.jml_tangan_dibukukan),0) AS total_jml_tangan_dibukukan,
                                                     COALESCE(SUM(l.jml_tangan_disahkan),0) AS total_jml_tangan_disahkan,
-                                                    COALESCE(SUM(l.jml_buku_protes),0) AS total_jml_buku_protes
+                                                    COALESCE(SUM(l.jml_buku_protes),0) AS total_jml_buku_protes,
+                                                    COALESCE(SUM(l.jml_akta_fidusia),0) AS total_jml_fidusia,
+                                                    COALESCE(SUM(l.jml_akta_badan_usaha),0) AS total_jml_badan_usaha,
+                                                    COALESCE(SUM(l.jml_akta_wasiat),0) AS total_jml_wasiat
                                                 FROM notaris n
                                                 JOIN kedudukan k
                                                     ON k.id_kedudukan = n.id_kedudukan
@@ -149,7 +155,9 @@ else{
                                                 echo "<td align='center'>".$row['total_jml_tangan_dibukukan']."</td>";
                                                 echo "<td align='center'>".$row['total_jml_tangan_disahkan']."</td>";
                                                 echo "<td align='center'>".$row['total_jml_buku_protes']."</td>";
-                                                
+                                                echo "<td align='center'>".$row['total_jml_fidusia']."</td>";
+                                                echo "<td align='center'>".$row['total_jml_badan_usaha']."</td>";
+                                                echo "<td align='center'>".$row['total_jml_wasiat']."</td>";
                                                 // DI SINI: Ditambahkan &kedudukan= pada parameter GET URL target _blank
                                                 echo "<td align='center'>
                                                         <a href='daftar_laporan_notaris.php?id=".$row['id_notaris']."&nama=".urlencode($row['nama'])."&kedudukan=".$row['id_kedudukan']."' target='_blank'>

@@ -30,6 +30,9 @@ $kedudukan = $_GET["kedudukan"];
                                         <th>Jumlah Akta Waarmeking</th>
                                         <th>Jumlah Akta Legalisasi</th>
                                         <th>Jumlah Akta Buku Protes</th>
+                                        <th>Jumlah Akta Fidusia</th>
+                                        <th>Jumlah Akta Badan Usaha</th>
+                                        <th>Jumlah Akta Wasiat</th>
                                         <th>File Laporan</th>
                                         <th>Status</th>
                                         <th>Keterangan</th>
@@ -51,6 +54,9 @@ $kedudukan = $_GET["kedudukan"];
                                                         l.jml_tangan_dibukukan,
                                                         l.jml_tangan_disahkan,
                                                         l.jml_buku_protes,
+                                                        l.jml_akta_fidusia,
+                                                        l.jml_akta_badan_usaha,
+                                                        l.jml_akta_wasiat,
                                                         l.file_upload,
                                                         l.status,
                                                         l.keterangan,
@@ -78,6 +84,9 @@ $kedudukan = $_GET["kedudukan"];
                                             echo "<td align='center'>".$row['jml_tangan_dibukukan']."</td>";
                                             echo "<td align='center'>".$row['jml_tangan_disahkan']."</td>";
                                             echo "<td align='center'>".$row['jml_buku_protes']."</td>";
+                                            echo "<td align='center'>".$row['jml_akta_fidusia']."</td>";
+                                            echo "<td align='center'>".$row['jml_akta_badan_usaha']."</td>";
+                                            echo "<td align='center'>".$row['jml_akta_wasiat']."</td>";
                                             echo "<td> <a href=".$row['file_upload']." target='_blank'>Lihat File Laporan</a>";
                                             echo "<td>".$row['status'];
                                             
