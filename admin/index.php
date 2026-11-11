@@ -143,7 +143,7 @@ $persentase = ($total_notaris > 0)
 
             <div class="col-md-12">
 
-                <form method="GET" class="form-inline">
+                <form method="GET" class="form-inline" style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
 
                     <label>Bulan Laporan Berjalan :</label>
 
@@ -191,6 +191,19 @@ $persentase = ($total_notaris > 0)
                         Tampilkan
 
                     </button>
+
+                    <!-- TOMBOL EXPORT EXCEL -->
+                    <div class="btn-group" style="margin-left: auto;">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-file-excel-o"></i> Export Excel <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a href="export_excel_kepatuhan.php?status=sudah&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>&id_kedudukan=<?= $kedudukan ?>">Export Sudah Melapor</a></li>
+                            <li><a href="export_excel_kepatuhan.php?status=belum&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>&id_kedudukan=<?= $kedudukan ?>">Export Belum Melapor</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="export_excel_kepatuhan.php?status=semua&bulan_berjalan=<?= $bulan_berjalan ?>&tahun=<?= $tahun ?>&id_kedudukan=<?= $kedudukan ?>">Export Keduanya</a></li>
+                        </ul>
+                    </div>
 
                 </form>
 
